@@ -18,7 +18,7 @@ Oblast AI agenata (eng. *AI agents*) raste brzinom koja je teška za praćenje �
   - [Modul 05 — Inženjering konteksta: šta agent zna u svakom trenutku](moduli/modul-05-inzenjering-konteksta.md) (budžet konteksta, sažimanje, kompaktni formati, trovanje kontekstom)
   - moduli 06–10: u izradi prema mapi
 - **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik pojmova korišćenih kroz kurs (preko četrdeset termina, sa uputom na modul u kome se pojavljuju).
-- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena. Kompletne (sa rešenjima vežbi): 01 i 02; skele (cilj, agenda po satima, vežbe, domaći, checklist materijala): 03–05.
+- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena. Kompletne (sa rešenjima vežbi): 01, 02 i 04; skele (cilj, agenda po satima, vežbe, domaći, checklist materijala): 03 i 05.
 - **[O-AUTORU.md](O-AUTORU.md)** — ko piše i zašto.
 
 ## Kako početi
