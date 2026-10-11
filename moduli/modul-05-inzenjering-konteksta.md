@@ -299,4 +299,4 @@ Redosled provere pri dijagnostici: **dnevnik troškova (gde raste?) → najveći
 
 ## Šta sledi
 
-Kontekst je sada pod kontrolom: meren, sažet, kompaktno formatiran i branjen. [**Modul 06 — Protokoli: MCP i povezivanje sa svetom**](../MAPA-UCENJA.md) otvara agenta ka spolja: šta je protokol konteksta modela (eng. *Model Context Protocol*, MCP), kako se piše mali MCP server i kako se povezuje bezbedno. A ako želite da proverite koliko vam je inženjering konteksta dao — to ćemo izmeriti u modulu 07, evaluacija. 🚀
+Kontekst je sada pod kontrolom: meren, sažet, kompaktno formatiran i branjen. [**Modul 06 — Protokoli: MCP i A2A**](modul-06-protokoli-mcp-a2a.md) otvara agenta ka spolja: šta je protokol konteksta modela (eng. *Model Context Protocol*, MCP), kako se piše mali MCP server i kako se povezuje bezbedno. A ako želite da proverite koliko vam je inženjering konteksta dao — to ćemo izmeriti u modulu 07, evaluacija. 🚀

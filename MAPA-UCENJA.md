@@ -28,7 +28,7 @@ Nije potreban prethodni iz uređaja mašinskog učenja — matematika koja vam t
              └───────────────┬───┴────────────────────┘
    ┌─────────┴─────────┐  ┌──┴─────────────┐  ┌────────┴──────────┐
    │ 06 — protokoli    │  │ 05 — inženjer. │  │ 04 — memorija i   │
-   │ (MCP)             │  │ konteksta      │  │ RAG               │
+   │ (MCP, A2A)        │  │    konteksta   │  │    RAG            │
    └─────────▲─────────┘  └──────▲─────────┘  └─────────▲─────────┘
              └───────────────┬───┴──────────────────────┘
    ┌─────────┴───────────────┴──┐
@@ -142,31 +142,35 @@ Kontekst je najskuplji resurs agenta. Upravljanje onim što model vidi u svakom 
 
 ---
 
-### Modul 06 — Protokoli: MCP i povezivanje sa svetom 🔜
+### Modul 06 — Protokoli: MCP i A2A ✅
 **Vreme:** 4–6 časova rada
 **Preduslovi:** moduli 02 i 03
 
-Protokol konteksta modela (eng. *Model Context Protocol*, MCP) i standardizovan način da agenti koriste spoljne alate i izvore podataka. Kako izgleda MCP server, kako se piše i kako se bezbedno povezuje.
+Šta protokoli rešavaju: N×M integracija postaje N+M jednim dogovorom o obliku poruka. Anatomija protokola konteksta modela (eng. *Model Context Protocol*, MCP): host, klijent i server, tri primitiva (alati, resursi, promptovi), JSON-RPC poruke i transporti. Vežbe: MCP-šema alata iz ruke, mali server sa rukovanjem (mock transport), klijent sa pravim modelom. Plus ideja protokola A2A (agent–agent) i bezbednost povezivanja: trovanje alatom i pravila poverenja.
 
 **Nakon ovog modula moći ćete da:**
-- objasnite problem koji MCP rešava i osnovne delove protokola;
-- pokrenete sopstveni mali MCP server i povežete ga sa klijentom;
-- procenite bezbednosne rizike povezivanja agenta na spoljne sisteme.
+- objasnite problem koji protokoli rešavaju (N puta M → N plus M) i osnovne delove MCP veze;
+- napišete MCP-šemu alata, mali server sa rukovanjem i klijenta koji šeme sa servera koristi u pozivu modela;
+- objasnite ideju protokola A2A (agent-kartica, zadatak, artefakti) i kada agent–agent umesto agent–alat;
+- procenite bezbednosne rizike povezivanja agenta na spoljne sisteme (trovanje alatom, rug pull, odbrane).
+
+→ [Modul 06: Protokoli: MCP i A2A](moduli/modul-06-protokoli-mcp-a2a.md) · povezana [radionica 06](radionice/radionica-06-protokoli.md)
 
 ---
 
-### Modul 07 — Evaluacija: kako znati da li je agent dobar? 🔜
+### Modul 07 — Evaluacija agenata ✅
 **Vreme:** 5–7 časova rada
 **Preduslovi:** moduli 03 i 04
 
-Bez merenja, svaki rad na agentu je nagađanje. Skupovi primera (eng. *test sets*), metrike, ocenjivanje pomoću modela (eng. *LLM-as-a-judge*), regresione testove za promptove i praćenje grešaka u radu.
+Bez merenja, svaki rad na agentu je nagađanje. Zašto se evaluacija razlikuje od jediničnih testova (više prihvatljivih odgovora, nedeterminizam, postepeno propadanje), scenario-skupovi sa determinističkim proverama, prolaz/pad sa pragom kao kapijom, razmišljanje u razlikama (dif pregled dva pokretanja) — i ocenjivanje pomoću modela (eng. *LLM-as-a-judge*) sa kalibracijom.
 
 **Nakon ovog modula moći ćete da:**
-- sastavite mali evaluacioni skup za sopstveni agent;
-- definišete metrike koje nešto zaista mere;
-- postavite petlju „izmena prompta → rezultat → odluka" umesto pogađanja.
+- sastavite mali scenario-skup za sopstveni agent, sa graničnim slučajevima;
+- definišete metrike koje nešto zaista mere i provere koje padaju glasno;
+- postavite pokretač sa pragom (izlazni kod) i dif pregled umesto pogađanja;
+- kalibrišete sudiju-model na primerima koje ste sami ocenili.
 
-→ povezana [radionica 05](radionice/radionica-05-evaluacija.md)
+→ [Modul 07: Evaluacija agenata](moduli/modul-07-evaluacija-agenata.md) · povezana [radionica 05](radionice/radionica-05-evaluacija.md)
 
 ---
 

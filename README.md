@@ -18,8 +18,8 @@ Kompletna mapa sa ishodima, preduslovima i procenom vremena po modulu je u [MAPA
 | 03 | [Agent od nule](moduli/modul-03-agent-od-nule.md) — petlja odlučivanja bez frameworka | ✅ | 6–8 časova | [03 🔜](radionice/radionica-03-agent-od-nule.md) |
 | 04 | [Memorija i RAG](moduli/modul-04-memorija-i-rag.md) — agent koji zna vaše dokumente | ✅ | 6–8 časova | [04 ✅](radionice/radionica-04-rag-memorija.md) |
 | 05 | [Inženjering konteksta](moduli/modul-05-inzenjering-konteksta.md) — šta agent zna u svakom trenutku | ✅ | 5–7 časova | — |
-| 06 | Protokoli: MCP i povezivanje sa svetom | 🔜 | 4–6 časova | — |
-| 07 | Evaluacija: kako znati da li je agent dobar? | 🔜 | 5–7 časova | [05 🔜](radionice/radionica-05-evaluacija.md) |
+| 06 | [Protokoli: MCP i A2A](moduli/modul-06-protokoli-mcp-a2a.md) — agent povezan sa svetom po ugovoru | ✅ | 4–6 časova | [06 ✅](radionice/radionica-06-protokoli.md) |
+| 07 | [Evaluacija agenata](moduli/modul-07-evaluacija-agenata.md) — kako znati da li je agent dobar | ✅ | 5–7 časova | [05 🔜](radionice/radionica-05-evaluacija.md) |
 | 08 | Multi-agent sistemi | 🔜 | 4–6 časova | — |
 | 09 | U produkciju: bezbednost, opservabilnost, troškovi | 🔜 | 5–7 časova | — |
 | 10 | Završni projekat: portfolio agent | 🔜 | 8–12 časova | — |
@@ -28,8 +28,8 @@ Kompletna mapa sa ishodima, preduslovima i procenom vremena po modulu je u [MAPA
 
 Pored modula:
 
-- **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik svih pojmova kursa (preko pedeset termina, sa uputom na modul u kome se pojavljuju).
-- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena: 01, 02 i 04 su kompletne sa rešenjima vežbi; 03 i 05 su skele.
+- **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik svih pojmova kursa (preko osamdeset termina, sa uputom na modul u kome se pojavljuju).
+- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena: 01, 02, 04 i 06 su kompletne sa rešenjima vežbi; 03 i 05 su skele.
 - **[O-AUTORU.md](O-AUTORU.md)** — ko piše i zašto.
 
 ## Odakle da krenem?
@@ -42,7 +42,7 @@ Pet brzih pitanja — odgovorite sebi iskreno, i prvo „ne“ pokazuje vaš mod
 4. **Jeste li sami napisali petlju agenta (bez frameworka)?** Ne → [modul 03](moduli/modul-03-agent-od-nule.md) — srce puta.
 5. **Treba vam agent koji odgovara iz vaših dokumenata, ili vas zanima kako se kontrolišu trošak i kvalitet konteksta?** Prvo → [modul 04](moduli/modul-04-memorija-i-rag.md); drugo → [modul 05](moduli/modul-05-inzenjering-konteksta.md) (idealno oba, redom).
 
-Na sva pet „da“ — nova polja (06–10) se pišu redom; pratite [mapu](MAPA-UCENJA.md) ili javite da pomognete.
+Na sva pet „da“ — [modul 06](moduli/modul-06-protokoli-mcp-a2a.md) (protokoli: MCP i A2A) i [modul 07](moduli/modul-07-evaluacija-agenata.md) (evaluacija agenata) su sledeći redom; polja 08–10 se pišu po [mapi](MAPA-UCENJA.md) ili javite da pomognete.
 
 **Šta vam treba za početak:** osnovni Python (promenljive, funkcije, pokretanje skripte), pristup jednom komercijalnom API-ju velikog modela (dovoljan je najjeftiniji plan; u vežbama koristimo z.ai/GLM, ali kod radi sa bilo kojim OpenAI-kompatibilnim provajderom) i Git nalog za portfolio. Jedno gvozdeno pravilo od prvog dana: **API ključ u environment varijabli, nikad u kodu.**
 
@@ -60,4 +60,4 @@ Sav sadržaj u ovom repozitorijumu objavljen je pod licencom **[Creative Commons
 
 ## Status projekta
 
-Radna verzija, otvorena za prve čitaoce i doprinosioce: mapa učenja, šest modula (00–05), rečnik pojmova i pet radionica (01, 02 i 04 kompletne sa rešenjima vežbi). Dalji moduli (06–10) se pišu redom po [mapi učenja](MAPA-UCENJA.md). ⚓
+Radna verzija, otvorena za prve čitaoce i doprinosioce: mapa učenja, osam modula (00–07), rečnik pojmova i šest radionica (01, 02, 04 i 06 kompletne sa rešenjima vežbi). Dalji moduli (08–10) se pišu redom po [mapi učenja](MAPA-UCENJA.md). ⚓

@@ -1,6 +1,6 @@
 # Radionica 05 — Evaluacija: kako znati da li je agent dobar?
 
-> **Povezani modul:** [modul 07 — Evaluacija: kako znati da li je agent dobar?](../MAPA-UCENJA.md)
+> **Povezani modul:** [modul 07 — Evaluacija agenata](../moduli/modul-07-evaluacija-agenata.md)
 > **Trajanje:** 4 časa · **Format:** predavanje 30% / vežbe 70% · **Nivo: napredni**
 
 ## Cilj radionice
