@@ -15,21 +15,21 @@ Kompletna mapa sa ishodima, preduslovima i procenom vremena po modulu je u [MAPA
 | 00 | [Uvod u agente](moduli/modul-00-uvod-u-agente.md) — šta je agent, zašto sad, kako se uči | ✅ | 2–3 časa | [01 ✅](radionice/radionica-01-prvi-koraci.md) |
 | 01 | [Osnove rada sa LLM-ovima](moduli/modul-01-osnove-llm.md) — tokeni, kontekst, prompt kao program | ✅ | 5–7 časova | [01 ✅](radionice/radionica-01-prvi-koraci.md) |
 | 02 | [Alati](moduli/modul-02-alati-tool-use.md) — kako agent deluje u svetu | ✅ | 4–6 časova | [02 ✅](radionice/radionica-02-alati-i-tool-use.md) |
-| 03 | [Agent od nule](moduli/modul-03-agent-od-nule.md) — petlja odlučivanja bez frameworka | ✅ | 6–8 časova | [03 🔜](radionice/radionica-03-agent-od-nule.md) |
+| 03 | [Agent od nule](moduli/modul-03-agent-od-nule.md) — petlja odlučivanja bez frameworka | ✅ | 6–8 časova | [03 ✅](radionice/radionica-03-agent-od-nule.md) |
 | 04 | [Memorija i RAG](moduli/modul-04-memorija-i-rag.md) — agent koji zna vaše dokumente | ✅ | 6–8 časova | [04 ✅](radionice/radionica-04-rag-memorija.md) |
 | 05 | [Inženjering konteksta](moduli/modul-05-inzenjering-konteksta.md) — šta agent zna u svakom trenutku | ✅ | 5–7 časova | — |
 | 06 | [Protokoli: MCP i A2A](moduli/modul-06-protokoli-mcp-a2a.md) — agent povezan sa svetom po ugovoru | ✅ | 4–6 časova | [06 ✅](radionice/radionica-06-protokoli.md) |
-| 07 | [Evaluacija agenata](moduli/modul-07-evaluacija-agenata.md) — kako znati da li je agent dobar | ✅ | 5–7 časova | [05 🔜](radionice/radionica-05-evaluacija.md) |
+| 07 | [Evaluacija agenata](moduli/modul-07-evaluacija-agenata.md) — kako znati da li je agent dobar | ✅ | 5–7 časova | [05 ✅](radionice/radionica-05-evaluacija.md) |
 | 08 | Multi-agent sistemi | ✅ | 4–6 časova | — |
 | 09 | U produkciju: bezbednost, opservabilnost, troškovi | ✅ | 5–7 časova | — |
-| 10 | Završni projekat: portfolio agent | 🔜 | 8–12 časova | — |
+| 10 | [Završni projekat: portfolio agent](moduli/modul-10-zavrsni-projekat.md) — od ideje do isporučenog agenta | ✅ | 8–12 časova | — |
 
-**Legenda:** ✅ napisano (modul / kompletna radionica sa rešenjima) · 🔜 planirano (radionica-skeleta: cilj, agenda, vežbe, domaći)
+**Legenda:** ✅ napisano (modul / kompletna radionica sa rešenjima) · 🔜 planirano
 
 Pored modula:
 
-- **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik svih pojmova kursa (preko osamdeset termina, sa uputom na modul u kome se pojavljuju).
-- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena: 01, 02, 04 i 06 su kompletne sa rešenjima vežbi; 03 i 05 su skele.
+- **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik svih pojmova kursa (sto i više termina, sa uputom na modul u kome se pojavljuju).
+- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena: svih šest (01–06) je kompletno, sa rešenjima vežbi.
 - **[O-AUTORU.md](O-AUTORU.md)** — ko piše i zašto.
 
 ## Odakle da krenem?
@@ -42,7 +42,7 @@ Pet brzih pitanja — odgovorite sebi iskreno, i prvo „ne" pokazuje vaš modul
 4. **Jeste li sami napisali petlju agenta (bez frameworka)?** Ne → [modul 03](moduli/modul-03-agent-od-nule.md) — srce puta.
 5. **Treba vam agent koji odgovara iz vaših dokumenata, ili vas zanima kako se kontrolišu trošak i kvalitet konteksta?** Prvo → [modul 04](moduli/modul-04-memorija-i-rag.md); drugo → [modul 05](moduli/modul-05-inzenjering-konteksta.md) (idealno oba, redom).
 
-Na sva pet „da" — [moduli 06](moduli/modul-06-protokoli-mcp-a2a.md) (protokoli: MCP i A2A), [07](moduli/modul-07-evaluacija-agenata.md) (evaluacija agenata), [08](moduli/modul-08-multi-agent-sistemi.md) (multi-agent sistemi) i [09](moduli/modul-09-u-produkciju.md) (u produkciju: bezbednost, opservabilnost, troškovi) su sledeći redom; polje 10 (završni projekat) se piše po [mapi](MAPA-UCENJA.md) ili javite da pomognete.
+Na sva pet „da" — [moduli 06](moduli/modul-06-protokoli-mcp-a2a.md) (protokoli: MCP i A2A), [07](moduli/modul-07-evaluacija-agenata.md) (evaluacija agenata), [08](moduli/modul-08-multi-agent-sistemi.md) (multi-agent sistemi) i [09](moduli/modul-09-u-produkciju.md) (u produkciju: bezbednost, opservabilnost, troškovi) su sledeći redom; a [modul 10](moduli/modul-10-zavrsni-projekat.md) je završni projekat u kome sve to spajate u sopstvenog portfolio agenta.
 
 **Šta vam treba za početak:** osnovni Python (promenljive, funkcije, pokretanje skripte), pristup jednom komercijalnom API-ju velikog modela (dovoljan je najjeftiniji plan; u vežbama koristimo z.ai/GLM, ali kod radi sa bilo kojim OpenAI-kompatibilnim provajderom) i Git nalog za portfolio. Jedno gvozdeno pravilo od prvog dana: **API ključ u environment varijabli, nikad u kodu.**
 
@@ -60,4 +60,4 @@ Sav sadržaj u ovom repozitorijumu objavljen je pod licencom **[Creative Commons
 
 ## Status projekta
 
-Radna verzija, otvorena za prve čitaoce i doprinosioce: mapa učenja, deset modula (00–09), rečnik pojmova i šest radionica (01, 02, 04 i 06 kompletne sa rešenjima vežbi). Poslednji modul (10 — završni projekat) se piše po [mapi učenja](MAPA-UCENJA.md). ⚓
+Prva potpuna verzija kursa: sva jedanaest modula (00–10, uključujući završni projekat), rečnik sa sto i više pojmova i svih šest radionica (01–06) kompletnih sa rešenjima vežbi. Dobrodošli su doprinosi: dodatni primeri, ispravke i nove radionice — vidi [CONTRIBUTING.md](CONTRIBUTING.md). ⚓

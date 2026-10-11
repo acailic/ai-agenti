@@ -143,6 +143,18 @@ Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan
 | keširanje odgovora | *response caching* | Identičan poziv vraća spremljen odgovor bez novog poziva API-ja; štedi na ponovljenim pitanjima. | [09](moduli/modul-09-u-produkciju.md) |
 | preusmeravanje modela | *model routing* | Lakši koraci idu jeftinijem modelu, teški glavnom; smanjuje trošak bez diranja najtežih delova. | [09](moduli/modul-09-u-produkciju.md) |
 
+## 8. Završni projekat
+
+| Termin | Na engleskom | Značenje | Modul |
+|---|---|---|---|
+| portfolio agent | *portfolio agent* | Agent napravljen da radi i posle kursa, kao javni dokaz veština: rešava stvaran problem, ima evaluaciju, ograničenja i dokumentaciju. | [10](moduli/modul-10-zavrsni-projekat.md) |
+| dosije projekta | *project brief* | Jedna strana pre koda: šta agent radi i za koga, podaci, mera uspeha, šta ne radi, rizici, arhitektura; mesto gde se obim zaustavlja dok je jeftin. | [10](moduli/modul-10-zavrsni-projekat.md) |
+| kontrolna tačka | *checkpoint* | Spisak tvrdnji koje moraju važiti pre prelaska na sledeći deo projekta; dogovor koji drži obim pod kontrolom. | [10](moduli/modul-10-zavrsni-projekat.md) |
+| isporuka | *deliverable* | Ono što projekat zaista predaje: javni repozitorijum sa agentom, skupom, dosijeom i README-om — ne osećaj da je „skoro gotovo". | [10](moduli/modul-10-zavrsni-projekat.md) |
+| minimalna održiva verzija | *minimum viable product* (MVP) | Najmanja verzija koja korisniku daje vrednost: jedna vrsta zadatka, jedan korisnik, jedan izvor podataka; širina dolazi proširenjima. | [10](moduli/modul-10-zavrsni-projekat.md) |
+| rubrika | *rubric* | Ocena po opisima, ne po osećaju: dimenzije i nivoi (0–3) koji određuju i koliko je urađeno i šta je sledeći korak. | [10](moduli/modul-10-zavrsni-projekat.md) |
+| prezentacija u tri rečenice | *elevator pitch* | Šta agent radi i za koga · kako (arhitektura imenom) · zašto mu verovati (evaluacija, logovi, kočnice) — po redu kojim će i drugi gledati. | [10](moduli/modul-10-zavrsni-projekat.md) |
+
 ---
 
 **Nedostaje vam pojam?** Ovo je živ dokument: ako ste na termin naišli u modulu, a nije ovde — to je greška kursa. Prijavite u *issue* ili pošaljite *pull request* (vidi [„Kako doprineti"](README.md#kako-doprineti) u README-u).
