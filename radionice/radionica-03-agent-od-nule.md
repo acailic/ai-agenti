@@ -361,9 +361,9 @@ def agent_sa_kocnicama(client, model, zadatak: str, max_koraka: int = 20,
             model=model, messages=poruke, tools=alati, temperature=0.2)
         usage = getattr(odgovor, "usage", None)
         potroseno += getattr(usage, "total_tokens", 0) or 0
-        if potroseno >= tvrdi:                        # kočnica 2: tvrdi budžet
+        if potroseno >= tvrdi:                        # kočnica 3a: tvrdi budžet
             return f"(tvrdi limit budžeta: {potroseno} tokena — zadatak prekinut)"
-        if potroseno >= meki and not upozoreno:       # kočnica 2: meki budžet
+        if potroseno >= meki and not upozoreno:       # kočnica 3b: meki budžet
             upozoreno = True
             print(f"[budžet] meki limit: {potroseno} tokena od {meki}")
         poruka = odgovor.choices[0].message

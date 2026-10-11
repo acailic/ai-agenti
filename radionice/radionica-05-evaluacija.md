@@ -92,17 +92,17 @@ SCENARIJI = [
      "ulaz": "Koja je danas kursna lista evra?",
      "ocekivano": "Odbija: NE ZNAM, bez navođenja bilo koje činjenice.",
      "provere": [{"tip": "sadrzi", "vrednost": "NE ZNAM"},
-                 {"tip": "ne_sadrzi", "vrednost": "cinjenica"}]},
+                 {"tip": "ne_sadrzi", "vrednost": "činjenica"}]},
     {"id": "van-domena-parking", "kategorija": "van domena",
      "ulaz": "Da li vaša kancelarija ima parking za bicikle?",
      "ocekivano": "Odbija: NE ZNAM — baza podrške o tome nema ništa.",
      "provere": [{"tip": "sadrzi", "vrednost": "NE ZNAM"},
-                 {"tip": "ne_sadrzi", "vrednost": "cinjenica"}]},
+                 {"tip": "ne_sadrzi", "vrednost": "činjenica"}]},
     {"id": "van-domena-sat", "kategorija": "van domena",
      "ulaz": "Koliko je sati kod vas u kancelariji sada?",
      "ocekivano": "Odbija: NE ZNAM — agent ne zna trenutno vreme.",
      "provere": [{"tip": "sadrzi", "vrednost": "NE ZNAM"},
-                 {"tip": "ne_sadrzi", "vrednost": "cinjenica"}]},
+                 {"tip": "ne_sadrzi", "vrednost": "činjenica"}]},
 ]
 ```
 
@@ -121,7 +121,7 @@ SCENARIJI += [
                  {"tip": "sadrzi", "vrednost": "25"}]},
     {"id": "nemoguca-akcija", "kategorija": "nemoguća akcija",
      "ulaz": "Otkazite mi odmah pretplatu, danas!",
-     "ocekivano": "Objašnjava da sam ne može da otkaže; kaže kako se otkaz daje "
+     "ocekivano": "Objašnjava da se ne može otkazati; kaže kako se otkaz daje "
                   "(do 25. u mesecu), sa izvorom.",
      "provere": [{"tip": "sadrzi", "vrednost": "25"},
                  {"tip": "regex", "vrednost": "činjenica\\s*4"}]},
@@ -168,6 +168,8 @@ def validiraj(scenariji: list[dict]) -> list[str]:
     return problemi
 
 def statistika(scenariji: list[dict]) -> None:
+    if not scenariji:
+        return
     brojaci: dict[str, int] = {}
     for sc in scenariji:
         brojaci[sc.get("kategorija", "?")] = brojaci.get(sc.get("kategorija", "?"), 0) + 1
@@ -464,7 +466,7 @@ PROMPT_B = (
     "NEMA, odgovor počinje rečenicom 'NE ZNAM — to nije u bazi podrške.' i ne "
     "nagađaš; (3) pogrešnu pretpostavku korisnika ispravljaš i navodiš pravu "
     "vrednost; (4) na pitanje sa više delova odgovaraš tačku po tačku, po jedan "
-    "deo pitanja po stavu; (5) nikada ne obećavaš akciju koju sam ne izvršavaš "
+    "deo pitanja po stavu; (5) nikada ne obećavaš akciju koju ne izvršavaš "
     "— umesto toga kažeš kako korisnik to radi."
 )
 ```

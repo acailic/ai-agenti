@@ -24,7 +24,7 @@ Odatle i glavno pravilo ovog modula: **sve što pišete, pišete kao da će to �
 
 ## 2. Izbor ideje: dobar projekat na jednom listu
 
-Idea određuje pola uspeha projekta — i to pre prvog reda koda. Dobra ideja za završni projekat prolazi pet provera; proverite svaku pre nego što se vežete:
+Ideja određuje pola uspeha projekta — i to pre prvog reda koda. Dobra ideja za završni projekat prolazi pet provera; proverite svaku pre nego što se vežete:
 
 1. **Stvaran problem, stvarni podaci.** Agent rešava nešto što bi vi (ili neko koga poznajete) inače radili ručno — nad podacima koji postoje: vaše beleške, dokumentacija tima, fascikla sa izveštajima. Ako podatke morate izmišljati, i vrednost agenta ćete izmišljati.
 2. **Uspeh se meri brojem ili listom.** „Odgovara korisno" je utisak; „na 15 pitanja iz dokumenta odgovara tačno sa izvorom, bar 12 puta" je meri. Ako ne možete da smislite kako da izmerite da li agent radi dobro — ideja (ili njeno razumevanje) još nije zrela.
@@ -244,14 +244,14 @@ def proveri(koren: Path) -> list[str]:
     gitignore = koren / ".gitignore"
     if gitignore.exists() and ".env" not in gitignore.read_text(encoding="utf-8"):
         problemi.append(".gitignore ne sadrži .env")
-    if (koren / ".env").exists():
-        problemi.append(".env postoji pored .env.example — proverite da nije u Git-u")
     return problemi
 
 def proveri_tajne_i_kod(koren: Path) -> list[str]:
     """Skenira .py fajlove: curenje ključeva i sintaksa (bez izvršavanja)."""
     problemi: list[str] = []
     for fajl in sorted(koren.rglob("*.py")):
+        if any(deo.startswith(".") for deo in fajl.relative_to(koren).parts[:-1]):
+            continue
         tekst = fajl.read_text(encoding="utf-8", errors="replace")
         if MUSTRA_KLJUCA.search(tekst):
             problemi.append(f"moguće curenje ključa u: {fajl.name}")
@@ -267,6 +267,9 @@ def main() -> None:
         sys.exit(f"Nije direktorijum: {koren}")
     print(f"provera isporuke: {koren}\n")
     problemi = proveri(koren) + proveri_tajne_i_kod(koren)
+    if (koren / ".env").exists():
+        print("info: .env postoji na disku — u redu dok je pokriven u "
+              ".gitignore-u (provera iznad)")
     for problem in problemi:
         print(f"✘ {problem}")
     if not problemi:
