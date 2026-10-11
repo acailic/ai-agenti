@@ -112,7 +112,7 @@ Srce puta: gradimo kompletnog agenta „od nule", bez frameworka — petlja agen
 
 ---
 
-### Modul 04 — Memorija i RAG 🔜
+### Modul 04 — Memorija i RAG ✅
 **Vreme:** 6–8 časova rada
 **Preduslovi:** moduli 01 i 03
 
@@ -123,11 +123,11 @@ Kako agent pamti: radna memorija kroz razgovor, sažimanje istorije i generisanj
 - implementirate RAG cevovod (eng. *pipeline*): pitanje → pretraga → kontekst → odgovor;
 - objasnite kada RAG pomaže, a kada pravi nove probleme.
 
-→ povezana [radionica 04](radionice/radionica-04-rag-memorija.md)
+→ [Modul 04: Memorija i RAG](moduli/modul-04-memorija-i-rag.md) · povezana [radionica 04](radionice/radionica-04-rag-memorija.md)
 
 ---
 
-### Modul 05 — Inženjering konteksta 🔜
+### Modul 05 — Inženjering konteksta ✅
 **Vreme:** 5–7 časova rada
 **Preduslovi:** moduli 03 i 04
 
@@ -137,6 +137,8 @@ Kontekst je najskuplji resurs agenta. Upravljanje onim što model vidi u svakom 
 - dizajnirate šta agent zna u svakom koraku, a ne samo šta kaže;
 - smanjite troškove i kašnjenje bez gubitka kvaliteta;
 - prepoznate „trovanje kontekstom" i znate kako da ga izbegnete.
+
+→ [Modul 05: Inženjering konteksta](moduli/modul-05-inzenjering-konteksta.md)
 
 ---
 

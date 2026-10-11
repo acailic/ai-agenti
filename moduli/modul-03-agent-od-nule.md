@@ -297,4 +297,4 @@ Iskustveno pravilo: **prvi prototip agenta uvek u čistom kodu** — da biste os
 
 ## Šta sledi
 
-Agent vidi samo ono što stane u kontekst — a kontekst je novčanik. [**Modul 04 — Memorija i RAG**](../MAPA-UCENJA.md) daje agentu dugoročno pamćenje: ugnežđene reprezentacije (eng. *embeddings*), vektorsku bazu i pretragu po smislu nad vašim dokumentima. Uživo ovaj modul možete odrađivati na [radionici 03](../radionice/radionica-03-agent-od-nule.md). 🚀
+Agent vidi samo ono što stane u kontekst — a kontekst je novčanik. [**Modul 04 — Memorija i RAG**](modul-04-memorija-i-rag.md) daje agentu trajnu memoriju: ugnežđene reprezentacije (eng. *embeddings*), vektorsku bazu i pretragu po smislu nad vašim dokumentima. Uživo ovaj modul možete odrađivati na [radionici 03](../radionice/radionica-03-agent-od-nule.md). 🚀
