@@ -292,7 +292,7 @@ Pokrenite `python 06a_sema.py` i pročitajte izlaz: štampana šema je identičn
 
 ### 7.2 Zadatak 2: server i rukovanje — protokol na stolu
 
-Sada server: rečnik, izvršioci alata, i `posalji` — naš „transport" koji prima JSON-RPC poruke i vraća odgovore. Klijentska strana je `rukovanje`: initialize → notifications/initialized → tools/list, uz ispis ko piše šta. Šeme alata i proveru argumenata prekopirajte iz `06a_sema.py` (fajlovi vežbi počinju cifrom, pa se ne mogu uvoziti — ponavljanje je cena tog imena, a na [radionici 06](../radionice/radionica-06-protokoli.md) fajlovi se zovu uvozivo). Sačuvajte kao `06b_server.py`:
+Sada server: rečnik, izvršioci alata, i `posalji` — naš „transport" koji prima JSON-RPC poruke i vraća odgovore. Klijentska strana je `rukovanje`: initialize → notifications/initialized → tools/list, uz ispis ko piše šta. Šeme alata i proveru argumenata prekopirajte iz `06a_sema.py` (fajlovi vežbi počinju cifrom, pa ih uobičajena `import` naredba ne može da uveze — ponavljanje je cena tog imena, a na [radionici 06](../radionice/radionica-06-protokoli.md) fajlovi nose uvoziva imena). Sačuvajte kao `06b_server.py`:
 
 ```python
 """Vežba 6.2 — MCP server u malom: rukovanje, otkrivanje, poziv (bez mreže).
