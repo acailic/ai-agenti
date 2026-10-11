@@ -174,7 +174,7 @@ Bez merenja, svaki rad na agentu je nagađanje. Zašto se evaluacija razlikuje o
 
 ---
 
-### Modul 08 — Multi-agent sistemi 🔜
+### Modul 08 — Multi-agent sistemi ✅
 **Vreme:** 4–6 časova rada
 **Preduslovi:** moduli 03 i 07
 
@@ -184,6 +184,8 @@ Kada jedan agent nije dovolj: podele uloga, komunikacija između agenata, orkest
 - dizajnirate sistem od više agenata sa jasnim ulogama i protokom informacija;
 - implementirate jednostavnu orkestraciju (planer + izvršilac);
 - argumentujete za i protiv multi-agent pristupa za konkretan zadatak.
+
+→ [Modul 08: Multi-agent sistemi](moduli/modul-08-multi-agent-sistemi.md)
 
 ---
 

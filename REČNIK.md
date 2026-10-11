@@ -121,7 +121,15 @@ Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan
 
 | Termin | Na engleskom | Značenje | Modul |
 |---|---|---|---|
-| višeagentski sistem | *multi-agent system* | Više agenata sa podeljenim ulogama, komunikacijom i orkestracijom (ko radi šta i kojim redom); moćno, ali rešenje samo kada jedan agent zaista nije dovolj. | [08](MAPA-UCENJA.md) |
+| višeagentski sistem | *multi-agent system* | Više agenata sa podeljenim ulogama, komunikacijom i orkestracijom (ko radi šta i kojim redom); moćno, ali rešenje samo kada jedan agent zaista nije dovolj. | [08](moduli/modul-08-multi-agent-sistemi.md) |
+| orkestracija | *orchestration* | Koordinacija više agenata: ko radi šta, kojim redom, ko sudi kad je gotovo; ista petlja kao kod jednog agenta, samo je „alat" sad drugi agent. | [08](moduli/modul-08-multi-agent-sistemi.md) |
+| orkestrator | *orchestrator* | Uloga (agent ili običan kod) koja dodeljuje zadatke, sabire rezultate i odlučuje o kraju; u malim sistemima spojena sa planerom. | [08](moduli/modul-08-multi-agent-sistemi.md) |
+| planer | *planner* | Uloga koja cilj razlaže na korake plana (potpitanja, podzadatke), obično u strogo definisanom JSON obliku. | [08](moduli/modul-08-multi-agent-sistemi.md) |
+| izvršilac | *worker*, *executor* | Uloga koja radi jedan dodeljeni korak do kraja; ne mora biti model — pretraga je odličan izvršilac. | [08](moduli/modul-08-multi-agent-sistemi.md) |
+| kriticar | *critic* | Uloga koja ocenjuje tuđi rezultat po rubrici; mora imati čvrstu granicu popravki, inače se agenti šalju u krug. | [08](moduli/modul-08-multi-agent-sistemi.md) |
+| ugovor (između agenata) | *contract* | Dogovoreni oblik poruka između uloga: šta agent prima (zadatak i kontekst), šta vraća (rezultat) i gde su granice. | [08](moduli/modul-08-multi-agent-sistemi.md) |
+| gluvi telefon | *context degradation* | Postepeno propadanje sadržaja kroz lanac prenošenja između agenata; lek: artefakt i samo potreban kontekst, ne istorija. | [08](moduli/modul-08-multi-agent-sistemi.md) |
+| razdeli i saberi | *fan-out/fan-in* | Orkestracija u kojoj se zadatak podeli na nezavisne delove, oni rade paralelno, pa se rezultati saberu. | [08](moduli/modul-08-multi-agent-sistemi.md) |
 | kvota | *quota*, *rate limit* | Ograničenje broja zahteva ili tokena u jedinici vremena; prekoračenje = greška koju kod mora da obradi. | [09](MAPA-UCENJA.md) |
 | opserverabilnost | *observability* | Moć da vidite šta agent radi u radu: logovi, tragovi, metrike; produkcija bez nje je crna kutija. | [09](MAPA-UCENJA.md) |
 
