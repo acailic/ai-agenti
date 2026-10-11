@@ -112,7 +112,7 @@ Srce puta: gradimo kompletnog agenta „od nule", bez frameworka — petlja agen
 
 ---
 
-### Modul 04 — Memorija i RAG 🔜
+### Modul 04 — Memorija i RAG ✅
 **Vreme:** 6–8 časova rada
 **Preduslovi:** moduli 01 i 03
 
@@ -123,7 +123,7 @@ Kako agent pamti: radna memorija kroz razgovor, sažimanje istorije i generisanj
 - implementirate RAG cevovod (eng. *pipeline*): pitanje → pretraga → kontekst → odgovor;
 - objasnite kada RAG pomaže, a kada pravi nove probleme.
 
-→ povezana [radionica 04](radionice/radionica-04-rag-memorija.md)
+→ [Modul 04: Memorija i RAG](moduli/modul-04-memorija-i-rag.md) · povezana [radionica 04](radionice/radionica-04-rag-memorija.md)
 
 ---
 

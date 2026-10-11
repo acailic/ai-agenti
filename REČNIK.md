@@ -54,12 +54,12 @@ Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan
 
 | Termin | Na engleskom | Značenje | Modul |
 |---|---|---|---|
-| memorija | *memory* | Sve što agent zna između koraka i između sesija: radna (istorija), sažeta, trajna (baza). | [04](MAPA-UCENJA.md) |
-| sažimanje | *summarization* | Sabijanje starije istorije u kraći tekst da bi se oslobodio kontekstni prozor. | [04](MAPA-UCENJA.md) |
-| ugnežđena reprezentacija | *embedding* | Tekst preveden u niz brojeva koji čuva značenje; tekstovi sličnog smisla su blizu jedni drugima. | [04](MAPA-UCENJA.md) |
-| vektorska baza | *vector database* | Skladište ugnežđenih reprezentacija sa pretragom po sličnosti. | [04](MAPA-UCENJA.md) |
-| RAG | *retrieval-augmented generation* | Obrazac: pronađi relevantne odlomke, ubaci ih u kontekst, pa tek onda generiši odgovor sa izvorom. | [04](MAPA-UCENJA.md) |
-| deljenje na odlomke | *chunking* | Sečenje dokumenata na komade pogodne za ugnežđivanje i pretragu; veličina i preklapanje imaju značaja. | [04](MAPA-UCENJA.md) |
+| memorija | *memory* | Sve što agent zna između koraka i između sesija: radna (istorija), sažeta, trajna (baza). | [04](moduli/modul-04-memorija-i-rag.md) |
+| sažimanje | *summarization* | Sabijanje starije istorije u kraći tekst da bi se oslobodio kontekstni prozor. | [04](moduli/modul-04-memorija-i-rag.md) |
+| ugnežđena reprezentacija | *embedding* | Tekst preveden u niz brojeva koji čuva značenje; tekstovi sličnog smisla su blizu jedni drugima. | [04](moduli/modul-04-memorija-i-rag.md) |
+| vektorska baza | *vector database* | Skladište ugnežđenih reprezentacija sa pretragom po sličnosti. | [04](moduli/modul-04-memorija-i-rag.md) |
+| RAG | *retrieval-augmented generation* | Obrazac: pronađi relevantne odlomke, ubaci ih u kontekst, pa tek onda generiši odgovor sa izvorom. | [04](moduli/modul-04-memorija-i-rag.md) |
+| deljenje na odlomke | *chunking* | Sečenje dokumenata na komade pogodne za ugnežđivanje i pretragu; veličina i preklapanje imaju značaja. | [04](moduli/modul-04-memorija-i-rag.md) |
 | inženjering konteksta | *context engineering* | Dizajn onoga što model vidi u svakom koraku: šta ulazi, šta se sažima, šta se pamti van prozora. | [05](MAPA-UCENJA.md) |
 
 ## 5. Evaluacija, povezivanje i produkcija

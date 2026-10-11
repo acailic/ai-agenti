@@ -14,7 +14,8 @@ Oblast AI agenata (eng. *AI agents*) raste brzinom koja je teška za praćenje �
   - [Modul 01 — Osnove rada sa LLM-ovima: tokeni, kontekst, prompt kao program](moduli/modul-01-osnove-llm.md) (uključuje prvu vežbu sa pravim API-jem)
   - [Modul 02 — Alati: kako agent deluje u svetu](moduli/modul-02-alati-tool-use.md) (tool use, šeme funkcija, bezbedno izvršavanje)
   - [Modul 03 — Agent od nule: petlja odlučivanja bez frameworka](moduli/modul-03-agent-od-nule.md)
-  - moduli 04–10: u izradi prema mapi
+  - [Modul 04 — Memorija i RAG: agent koji zna vaše dokumente](moduli/modul-04-memorija-i-rag.md) (memorija, ugnežđivanje, vektorska baza, RAG cevovod)
+  - moduli 05–10: u izradi prema mapi
 - **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik pojmova korišćenih kroz kurs (preko četrdeset termina, sa uputom na modul u kome se pojavljuju).
 - **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena. Kompletne (sa rešenjima vežbi): 01 i 02; skele (cilj, agenda po satima, vežbe, domaći, checklist materijala): 03–05.
 - **[O-AUTORU.md](O-AUTORU.md)** — ko piše i zašto.
@@ -35,4 +36,4 @@ Doprinosi **na srpskom jeziku** su srdačno dobrodošli: ispravke, novi primeri,
 
 ## Status projekta
 
-Radna verzija: mapa, četiri modula (00–03), rečnik pojmova i pet radionica (01 i 02 kompletne, 02 sa rešenjima vežbi). Redosled izrade daljih modula prati [mapa učenja](MAPA-UCENJA.md). ⚓
+Radna verzija: mapa, pet modula (00–04), rečnik pojmova i pet radionica (01 i 02 kompletne, 02 sa rešenjima vežbi). Redosled izrade daljih modula prati [mapa učenja](MAPA-UCENJA.md). ⚓
