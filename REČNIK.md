@@ -77,20 +77,53 @@ Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan
 | trovanje kontekstom | *context poisoning* | Sadržaj u kontekstu koji pogrešno usmerava modela: protivrečno, zastarelo, ubrizgano. | [05](moduli/modul-05-inzenjering-konteksta.md) |
 | ubrizgavanje uputstava | *prompt injection* | Tekst u dokumentu ili rezultatu alata koji glumi naredbu modelu. | [05](moduli/modul-05-inzenjering-konteksta.md) |
 
-## 5. Evaluacija, povezivanje i produkcija
+## 5. Protokoli i povezivanje
 
 | Termin | Na engleskom | Značenje | Modul |
 |---|---|---|---|
-| evaluacija | *evaluation* | Sistematsko merenje koliko je agent dobar; bez nje se radi naslepo. | [07](MAPA-UCENJA.md) |
-| evaluacioni skup | *evaluation set*, *test set* | Verzionisan spisak primera (ulaz → očekivano) na kome se agent meri, uključujući granične slučajeve. | [07](MAPA-UCENJA.md) |
-| metrika | *metric* | Broj koji nešto zaista meri (tačnost, potpunost, trošak po zadatku); bira se po slučaju upotrebe. | [07](MAPA-UCENJA.md) |
-| ocenjivanje pomoću modela | *LLM-as-a-judge* | Drugi model ocenjuje odgovore prvog; korisno, ali se kalibriše na primerima koje je čovek ocenio. | [07](MAPA-UCENJA.md) |
-| regresiona provera | *regression test* | Skup primera koji već radi; svaka izmena prompta mora proći i njega, da „popravka" ne pokvari tiho ostalo. | [07](MAPA-UCENJA.md) |
-| latencija | *latency* | Vreme od zahteva do odgovora; u agentima se sabira iz više koraka. | [07](MAPA-UCENJA.md) |
+| protokol | *protocol* | Pisani ugovor o obliku poruka između dve strane; N puta M integracija postaje N plus M. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| protokol konteksta modela | *Model Context Protocol* (MCP) | Otvoren standard za povezivanje modela sa spoljnim alatima i izvorima podataka. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| host | *host* | Aplikacija koja pokreće model i odlučuje sa kojim serverima se povezuje. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| MCP klijent | *MCP client* | Deo hosta koji vodi jednu vezu ka jednom serveru; granica na kojoj se proverava i ograničava. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| MCP server | *MCP server* | Program koji nudi alate, resurse i promptove preko protokola — lokalni proces ili udaljeni servis. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| primitiv | *primitive* | Vrsta ponude servera; deli se po tome ko odlučuje: alat (model), resurs (aplikacija), prompt (korisnik). | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| resurs | *resource* | Podatak koji server izlaže za čitanje; u kontekst ga ubacuje vaš kod, ne model. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| JSON-RPC | *JSON-RPC* | Format zahteva i odgovora (method, params, id) na kome počiva MCP; notifikacija je poruka bez id i bez odgovora. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| rukovanje | *handshake* | Prvi razgovor veze (initialize): ko je ko, koje verzije i sposobnosti — pre bilo kog posla. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| otkrivanje alata | *tool discovery* | Klijent pita server šta nudi (tools/list) i dobija šeme; menja ručno održavanu listu u kodu. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| transport | *transport* | Kanal kojim putuju poruke: stdio (lokalni proces) ili HTTP (udaljeni servis). | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| imenski prostor | *namespace* | Prefiks imena alata imenom servera (recnik.trazi), da se alati dva servera ne sudare. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| trovanje alatom | *tool poisoning* | Opis alata koji glumi uputstvo modelu; tuđi tekst ulazi u kontekst kao vaš. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| agent-kartica | *agent card* | JSON opis agenta za A2A: šta ume (veštine), gde se nalazi, koje sposobnosti podržava. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+| A2A | *Agent2Agent* | Protokol za saradnju agenata kao ravnopravnih učesnika: dodeljivanje zadataka, poruke u toku, artefakti. | [06](moduli/modul-06-protokoli-mcp-a2a.md) |
+
+## 6. Evaluacija
+
+| Termin | Na engleskom | Značenje | Modul |
+|---|---|---|---|
+| evaluacija | *evaluation* | Sistematsko merenje koliko je agent dobar; bez nje se radi naslepo. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| evaluacioni skup | *evaluation set*, *test set* | Verzionisan spisak primera (ulaz → očekivano) na kome se agent meri, uključujući granične slučajeve. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| scenario | *scenario* | Najmanja jedinica evaluacije: id, ulaz, očekivano ponašanje i provere koje padaju glasno. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| granični slučaj | *edge case* | Primer na granici domena: van domena, pogrešna pretpostavka, višedelni zahtev; pola vrednosti skupa. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| provera | *check* | Mali program uz scenario (sadrži / ne sadrži / regex); determinističke provere idu pre sudije. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| metrika | *metric* | Broj koji nešto zaista meri (tačnost, potpunost, trošak po zadatku); bira se po slučaju upotrebe. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| stopa prolaznosti | *pass rate* | Procenat scenarija koji prolaze sve provere; glavni broj, ali nikad jedini. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| prag | *threshold* | Donja granica stope ispod koje je crveno; kao izlazni kod skripte postaje kapija u CI. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| dif pregled | *diff review* | Upareno poređenje ishoda dva pokretanja po scenariju; flipovi objašnjavaju, agregat odlučuje. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| ocenjivanje pomoću modela | *LLM-as-a-judge* | Drugi model ocenjuje odgovore prvog po rubrici; korisno, ali se kalibriše na primerima koje je čovek ocenio. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| rubrika | *rubric* | Pisani kriterijumi po kojima sudija-model sudi; bez nje sudija je izvor nasumičnosti. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| kalibracija | *calibration* | Slaganje sudije sa ljudskim ocenama na par primera, pre nego što mu se poveri skup. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| pokretač | *harness* | Skripta koja spaja skup, agenta i provere: tabela, zapis rezultata, izlazni kod po pragu. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| regresiona provera | *regression test* | Scenario koji je jednom pao i bio popravljen; ostaje zauvek, da greška ne vrati tiho. | [07](moduli/modul-07-evaluacija-agenata.md) |
+| latencija | *latency* | Vreme od zahteva do odgovora; u agentima se sabira iz više koraka. | [07](moduli/modul-07-evaluacija-agenata.md) |
+
+## 7. Produkcija i multi-agent sistemi
+
+| Termin | Na engleskom | Značenje | Modul |
+|---|---|---|---|
+| višeagentski sistem | *multi-agent system* | Više agenata sa podeljenim ulogama, komunikacijom i orkestracijom (ko radi šta i kojim redom); moćno, ali rešenje samo kada jedan agent zaista nije dovolj. | [08](MAPA-UCENJA.md) |
 | kvota | *quota*, *rate limit* | Ograničenje broja zahteva ili tokena u jedinici vremena; prekoračenje = greška koju kod mora da obradi. | [09](MAPA-UCENJA.md) |
 | opserverabilnost | *observability* | Moć da vidite šta agent radi u radu: logovi, tragovi, metrike; produkcija bez nje je crna kutija. | [09](MAPA-UCENJA.md) |
-| protokol konteksta modela | *Model Context Protocol* (MCP) | Otvoren standard za povezivanje modela sa spoljnim alatima i izvorima podataka. | [06](MAPA-UCENJA.md) |
-| višeagentski sistem | *multi-agent system* | Više agenata sa podeljenim ulogama, komunikacijom i orkestracijom (ko radi šta i kojim redom); moćno, ali rešenje samo kada jedan agent zaista nije dovolj. | [08](MAPA-UCENJA.md) |
 
 ---
 
