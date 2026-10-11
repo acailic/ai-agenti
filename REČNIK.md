@@ -55,12 +55,27 @@ Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan
 | Termin | Na engleskom | Značenje | Modul |
 |---|---|---|---|
 | memorija | *memory* | Sve što agent zna između koraka i između sesija: radna (istorija), sažeta, trajna (baza). | [04](moduli/modul-04-memorija-i-rag.md) |
+| radna memorija | *short-term memory* | Istorija poruka u kontekstu — ono što agent „zna" tokom tekućeg zadatka. | [04](moduli/modul-04-memorija-i-rag.md) |
+| sažeta memorija | *summarized memory* | Sažetak starije istorije umesto svih poruka; oslobađa prozor, gubi detalje. | [04](moduli/modul-04-memorija-i-rag.md) |
+| trajna memorija | *long-term memory* | Sve što agent pamti van kontekstnog prozora (fajlovi, baze, indeks); vraća se po potrebi. | [04](moduli/modul-04-memorija-i-rag.md) |
+| model bez stanja | *stateless* | Model ne pamti ništa između dva poziva; sve što zna mora biti u kontekstu poziva. | [04](moduli/modul-04-memorija-i-rag.md) |
+| povraćaj | *retrieval* | Izdvajanje upravo relevantnog sadržaja iz trajne memorije nazad u kontekst. | [04](moduli/modul-04-memorija-i-rag.md) |
 | sažimanje | *summarization* | Sabijanje starije istorije u kraći tekst da bi se oslobodio kontekstni prozor. | [04](moduli/modul-04-memorija-i-rag.md) |
 | ugnežđena reprezentacija | *embedding* | Tekst preveden u niz brojeva koji čuva značenje; tekstovi sličnog smisla su blizu jedni drugima. | [04](moduli/modul-04-memorija-i-rag.md) |
 | vektorska baza | *vector database* | Skladište ugnežđenih reprezentacija sa pretragom po sličnosti. | [04](moduli/modul-04-memorija-i-rag.md) |
 | RAG | *retrieval-augmented generation* | Obrazac: pronađi relevantne odlomke, ubaci ih u kontekst, pa tek onda generiši odgovor sa izvorom. | [04](moduli/modul-04-memorija-i-rag.md) |
 | deljenje na odlomke | *chunking* | Sečenje dokumenata na komade pogodne za ugnežđivanje i pretragu; veličina i preklapanje imaju značaja. | [04](moduli/modul-04-memorija-i-rag.md) |
+| preklapanje | *overlap* | Deo teksta koji se ponavlja između susednih odlomaka, da granica ne preseče činjenicu. | [04](moduli/modul-04-memorija-i-rag.md) |
+| pretraga po smislu | *semantic search* | Traženje odlomaka po značenju (blizina ugnežđenih reprezentacija), a ne po poklapanju reči. | [04](moduli/modul-04-memorija-i-rag.md) |
+| kosinusna sličnost | *cosine similarity* | Mera blizine dva vektora (1 = najbliže, 0 = bez veze); osnova pretrage po smislu. | [04](moduli/modul-04-memorija-i-rag.md) |
+| k najbližih suseda | *k-nearest neighbours* (k-NN) | Povraćaj k vektora najbližih vektoru pitanja. | [04](moduli/modul-04-memorija-i-rag.md) |
+| navođenje izvora | *citation* | Odgovor uz oznaku odakle je tvrdnja (odlomak, dokument); čini odgovor proverljivim. | [04](moduli/modul-04-memorija-i-rag.md) |
+| metapodatak | *metadata* | Podaci o podatku: izvor fajla, broj odlomka, datum izmene. | [04](moduli/modul-04-memorija-i-rag.md) |
+| izgubljen usred konteksta | *lost in the middle* | Relevantan podatak usred dugačkog konteksta se lakše ignoriše. | [04](moduli/modul-04-memorija-i-rag.md) |
 | inženjering konteksta | *context engineering* | Dizajn onoga što model vidi u svakom koraku: šta ulazi, šta se sažima, šta se pamti van prozora. | [05](moduli/modul-05-inzenjering-konteksta.md) |
+| politika konteksta | *context policy* | Pisani dogovor šta ulazi u kontekst: uvek / aktivno / sažeto / van prozora. | [05](moduli/modul-05-inzenjering-konteksta.md) |
+| trovanje kontekstom | *context poisoning* | Sadržaj u kontekstu koji pogrešno usmerava modela: protivrečno, zastarelo, ubrizgano. | [05](moduli/modul-05-inzenjering-konteksta.md) |
+| ubrizgavanje uputstava | *prompt injection* | Tekst u dokumentu ili rezultatu alata koji glumi naredbu modelu. | [05](moduli/modul-05-inzenjering-konteksta.md) |
 
 ## 5. Evaluacija, povezivanje i produkcija
 

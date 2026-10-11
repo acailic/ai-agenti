@@ -1,40 +1,63 @@
 # AI i agenti na srpskom
 
-> Mapa učenja i radionice o izgradnji AI agenata — na srpskom jeziku, za developere u Srbiji i regionu.
+> Kompletan, praktičan kurs o izgradnji AI agenata — na srpskom jeziku, za developere u Srbiji i regionu. Od prvog poziva API-ju do sopstvenog agenta u produkciji, sa vežbama na svakom koraku.
 
 ## Zašto ovaj repozitorijum postoji
 
-Oblast AI agenata (eng. *AI agents*) raste brzinom koja je teška za praćenje — ali gotovo sav sistematski materijal je na engleskom. Za developere koji najbrže uče na maternjem jeziku, to je realna barijera. Ovde se gradi kompletan, praktičan kurs na srpskom: od prvog poziva API-ju (šta je token, šta je kontekst, šta je prompt kao program) do sopstvenog agenta u produkciji — sa vežbama, domaćim, radionicama i evaluacijom. Bez kopiranja, bez prevoda tuđeg gradiva: originalan materijal na srpskom.
+Oblast AI agenata (eng. *AI agents*) raste brzinom koja je teška za praćenje — ali gotovo sav sistematski materijal je na engleskom. Za developere koji najbrže uče na maternjem jeziku, to je realna barijera. Ovde se gradi kompletan kurs na srpskom: od toga šta je token i šta je kontekst, preko alata i petlje agenta, do memorije, evaluacije i produkcije — sa vežbama, domaćim, radionicama i rečnikom pojmova. Bez kopiranja, bez prevoda tuđeg gradiva: originalan materijal na srpskom, licenciran tako da se slobodno koristi (CC BY 4.0).
 
-## Šta ćete naći
+## Mapa modula
 
-- **[MAPA-UCENJA.md](MAPA-UCENJA.md)** — kompletna mapa učenja: 11 modula (00–10), sa ishodima, preduslovima i procenom vremena po modulu.
-- **[moduli/](moduli/)** — gradivo po modulima. Napisano:
-  - [Modul 00 — Uvod u agente: šta je agent, zašto sad, kako se uči](moduli/modul-00-uvod-u-agente.md)
-  - [Modul 01 — Osnove rada sa LLM-ovima: tokeni, kontekst, prompt kao program](moduli/modul-01-osnove-llm.md) (uključuje prvu vežbu sa pravim API-jem)
-  - [Modul 02 — Alati: kako agent deluje u svetu](moduli/modul-02-alati-tool-use.md) (tool use, šeme funkcija, bezbedno izvršavanje)
-  - [Modul 03 — Agent od nule: petlja odlučivanja bez frameworka](moduli/modul-03-agent-od-nule.md)
-  - [Modul 04 — Memorija i RAG: agent koji zna vaše dokumente](moduli/modul-04-memorija-i-rag.md) (memorija, ugnežđivanje, vektorska baza, RAG cevovod)
-  - [Modul 05 — Inženjering konteksta: šta agent zna u svakom trenutku](moduli/modul-05-inzenjering-konteksta.md) (budžet konteksta, sažimanje, kompaktni formati, trovanje kontekstom)
-  - moduli 06–10: u izradi prema mapi
-- **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik pojmova korišćenih kroz kurs (preko četrdeset termina, sa uputom na modul u kome se pojavljuju).
-- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena. Kompletne (sa rešenjima vežbi): 01, 02 i 04; skele (cilj, agenda po satima, vežbe, domaći, checklist materijala): 03 i 05.
+Kompletna mapa sa ishodima, preduslovima i procenom vremena po modulu je u [MAPA-UCENJA.md](MAPA-UCENJA.md). Pregled ukratko:
+
+| # | Modul | Status | Vreme | Radionica |
+|---|---|---|---|---|
+| 00 | [Uvod u agente](moduli/modul-00-uvod-u-agente.md) — šta je agent, zašto sad, kako se uči | ✅ | 2–3 časa | [01 ✅](radionice/radionica-01-prvi-koraci.md) |
+| 01 | [Osnove rada sa LLM-ovima](moduli/modul-01-osnove-llm.md) — tokeni, kontekst, prompt kao program | ✅ | 5–7 časova | [01 ✅](radionice/radionica-01-prvi-koraci.md) |
+| 02 | [Alati](moduli/modul-02-alati-tool-use.md) — kako agent deluje u svetu | ✅ | 4–6 časova | [02 ✅](radionice/radionica-02-alati-i-tool-use.md) |
+| 03 | [Agent od nule](moduli/modul-03-agent-od-nule.md) — petlja odlučivanja bez frameworka | ✅ | 6–8 časova | [03 🔜](radionice/radionica-03-agent-od-nule.md) |
+| 04 | [Memorija i RAG](moduli/modul-04-memorija-i-rag.md) — agent koji zna vaše dokumente | ✅ | 6–8 časova | [04 ✅](radionice/radionica-04-rag-memorija.md) |
+| 05 | [Inženjering konteksta](moduli/modul-05-inzenjering-konteksta.md) — šta agent zna u svakom trenutku | ✅ | 5–7 časova | — |
+| 06 | Protokoli: MCP i povezivanje sa svetom | 🔜 | 4–6 časova | — |
+| 07 | Evaluacija: kako znati da li je agent dobar? | 🔜 | 5–7 časova | [05 🔜](radionice/radionica-05-evaluacija.md) |
+| 08 | Multi-agent sistemi | 🔜 | 4–6 časova | — |
+| 09 | U produkciju: bezbednost, opservabilnost, troškovi | 🔜 | 5–7 časova | — |
+| 10 | Završni projekat: portfolio agent | 🔜 | 8–12 časova | — |
+
+**Legenda:** ✅ napisano (modul / kompletna radionica sa rešenjima) · 🔜 planirano (radionica-skeleta: cilj, agenda, vežbe, domaći)
+
+Pored modula:
+
+- **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik svih pojmova kursa (preko pedeset termina, sa uputom na modul u kome se pojavljuju).
+- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena: 01, 02 i 04 su kompletne sa rešenjima vežbi; 03 i 05 su skele.
 - **[O-AUTORU.md](O-AUTORU.md)** — ko piše i zašto.
 
-## Kako početi
+## Odakle da krenem?
 
-Otvorite [mapu učenja](MAPA-UCENJA.md) i krenite redom — moduli se nadovezuju, a preduslovi su naznačeni. Dovoljan je osnovni Python i pristup jednom (najjeftinijem) planu bilo kog velikog modela sa OpenAI-kompatibilnim interfejsom (eng. *OpenAI-compatible interface*); u vežbama koristimo z.ai/GLM. Jedno gvozdeno pravilo od prvog dana: **API ključ u environment varijabli, nikad u kodu.**
+Pet brzih pitanja — odgovorite sebi iskreno, i prvo „ne“ pokazuje vaš modul:
 
-## Licenca i zahvalnice
+1. **Znate li šta je AI agent i po čemu se razlikuje od chatbota?** Ne → počnite sa [modulom 00](moduli/modul-00-uvod-u-agente.md) (2–3 časa, bez preduslova).
+2. **Jeste li već pozvali API nekog velikog modela iz sopstvenog Python koda?** Ne → [modul 01](moduli/modul-01-osnove-llm.md) (tu je i prva vežba sa pravim API-jem).
+3. **Znate li šta je poziv alata (tool call) i zašto se argumenti parsiraju iz JSON teksta?** Ne → [modul 02](moduli/modul-02-alati-tool-use.md).
+4. **Jeste li sami napisali petlju agenta (bez frameworka)?** Ne → [modul 03](moduli/modul-03-agent-od-nule.md) — srce puta.
+5. **Treba vam agent koji odgovara iz vaših dokumenata, ili vas zanima kako se kontrolišu trošak i kvalitet konteksta?** Prvo → [modul 04](moduli/modul-04-memorija-i-rag.md); drugo → [modul 05](moduli/modul-05-inzenjering-konteksta.md) (idealno oba, redom).
 
-Sav sadržaj u ovom repozitorijumu objavljen je pod licencom **[Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE)**.
+Na sva pet „da“ — nova polja (06–10) se pišu redom; pratite [mapu](MAPA-UCENJA.md) ili javite da pomognete.
 
-**Inspiracija:** redosled tema (osnove LLM-ova → alati → agent od nule → memorija/RAG → inženjering konteksta → protokoli → evaluacija → multi-agent sistemi → produkcija) prati konsenzus oblasti, a kao struktura inspirisan je sjajnim open-source kursom [datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) (licenciran CC BY-NC-SA 4.0). **Sav tekst, kod, vežbe i primeri u ovom repozitorijumu su originalno delo, pisani za ovaj kurs** — ništa nije preuzeto niti prevedeno iz tog ili bilo kog drugog kursa.
+**Šta vam treba za početak:** osnovni Python (promenljive, funkcije, pokretanje skripte), pristup jednom komercijalnom API-ju velikog modela (dovoljan je najjeftiniji plan; u vežbama koristimo z.ai/GLM, ali kod radi sa bilo kojim OpenAI-kompatibilnim provajderom) i Git nalog za portfolio. Jedno gvozdeno pravilo od prvog dana: **API ključ u environment varijabli, nikad u kodu.**
 
 ## Kako doprineti
 
-Doprinosi **na srpskom jeziku** su srdačno dobrodošli: ispravke, novi primeri, prevod termina, izveštaji o nejasnoćama. Otvorite *issue* ili pošaljite *pull request* — za veće izmene (novi modul, radionica) prvo se javite u issue-u da se dogovorimo o obimu i pravcu. Jezička pravila kursa: **latinica, ekavica**, topli nastavnički ton; termini na engleskom u zagradi pri prvoj upotrebi.
+Doprinosi **na srpskom jeziku** su srdačno dobrodošli: ispravke, novi primeri, prijave nejasnoća, prevodi termina. Kratko: otvorite *issue* za grešku ili nejasnoću, *pull request* za konkretne ispravke; za veće izmene (novi modul, radionica) prvo se javite u issue-u da se dogovorimo o obimu. Jezička pravila kursa: **latinica, ekavica**, topli nastavnički ton; termini na engleskom u zagradi pri prvoj upotrebi, u skladu sa [REČNIK-om](REČNIK.md).
+
+Kompletan vodič (šta je dobrodošlo, jezička i tehnička pravila, kako proveriti izmene pre slanja) je u [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Licenca i zahvalnice
+
+Sav sadržaj u ovom repozitorijumu objavljen je pod licencom **[Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE)** — slobodno ga koristite, prilagođavajte i gradite na njemu, uz navođenje izvora.
+
+**Inspiracija:** redosled tema (osnove LLM-ova → alati → agent od nule → memorija/RAG → inženjering konteksta → protokoli → evaluacija → multi-agent sistemi → produkcija) prati konsenzus oblasti, a kao struktura inspiriran je sjajnim open-source kursom [datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) (licenciran CC BY-NC-SA 4.0). **Sav tekst, kod, vežbe i primeri u ovom repozitorijumu su originalno delo, pisani za ovaj kurs** — ništa nije preuzeto niti prevedeno iz tog ili bilo kog drugog kursa.
 
 ## Status projekta
 
-Radna verzija: mapa, šest modula (00–05), rečnik pojmova i pet radionica (01 i 02 kompletne, 02 sa rešenjima vežbi). Redosled izrade daljih modula prati [mapa učenja](MAPA-UCENJA.md). ⚓
+Radna verzija, otvorena za prve čitaoce i doprinosioce: mapa učenja, šest modula (00–05), rečnik pojmova i pet radionica (01, 02 i 04 kompletne sa rešenjima vežbi). Dalji moduli (06–10) se pišu redom po [mapi učenja](MAPA-UCENJA.md). ⚓

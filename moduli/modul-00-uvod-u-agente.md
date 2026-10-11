@@ -71,7 +71,7 @@ Iskreno: ovo nije oblast koja se uči čitanjem. Tri načela koja ćemo poštova
 
 ## 4. Kratki rečnik za početak
 
-Ovi termini vraćaće se stalno; evo ih na jednom mestu. Detaljno se obrađuju u svojim modulima, a kompletan rečnik celog kursa (preko četrdeset pojmova) držimo u [REČNIK.md](../REČNIK.md).
+Ovi termini vraćaće se stalno; evo ih na jednom mestu. Detaljno se obrađuju u svojim modulima, a kompletan rečnik celog kursa (preko pedeset pojmova) držimo u [REČNIK.md](../REČNIK.md).
 
 | Termin | Značenje |
 |---|---|
