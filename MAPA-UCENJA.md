@@ -174,7 +174,7 @@ Bez merenja, svaki rad na agentu je nagađanje. Zašto se evaluacija razlikuje o
 
 ---
 
-### Modul 08 — Multi-agent sistemi 🔜
+### Modul 08 — Multi-agent sistemi ✅
 **Vreme:** 4–6 časova rada
 **Preduslovi:** moduli 03 i 07
 
@@ -185,9 +185,11 @@ Kada jedan agent nije dovolj: podele uloga, komunikacija između agenata, orkest
 - implementirate jednostavnu orkestraciju (planer + izvršilac);
 - argumentujete za i protiv multi-agent pristupa za konkretan zadatak.
 
+→ [Modul 08: Multi-agent sistemi](moduli/modul-08-multi-agent-sistemi.md)
+
 ---
 
-### Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi 🔜
+### Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi ✅
 **Vreme:** 5–7 časova rada
 **Preduslovi:** moduli 03 i 07
 
@@ -197,6 +199,8 @@ Agent koji radi na vašem računaru i agent koji radi kod klijenta — dva razli
 - primenite osnovne bezbednosne obrasce za agente sa pristupom alatima;
 - postavite beleženje (eng. *logging*) i praćenje ponašanja agenta;
 - procenite i kontrolišete troškove po koraku, po zadatku i po mesecu.
+
+→ [Modul 09: U produkciju: bezbednost, opservabilnost, troškovi](moduli/modul-09-u-produkciju.md)
 
 ---
 

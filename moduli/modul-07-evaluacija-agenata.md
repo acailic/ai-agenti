@@ -429,4 +429,4 @@ Redosled provere pri dijagnostici: **koji je scenario pao (id!) → odgovor u re
 
 ## Šta sledi
 
-Agent je sada i izmeren: scenario-skup u Git-u, kapija koja pada glasno, i dif koji svaku izmenu pretvara u odluku sa objašnjenjem. [**Modul 08 — Multi-agent sistemi**](../MAPA-UCENJA.md) otvara poslednje veliko proširenje: kada jednog agenta zaista nije dovoljno — podele uloga, komunikacija, orkestracija — i, najvažnije, kada multi-agent sistem *nije* rešenje. Uživo ovaj modul možete da odrađujete na [radionici 05](../radionice/radionica-05-evaluacija.md). 🚀
+Agent je sada i izmeren: scenario-skup u Git-u, kapija koja pada glasno, i dif koji svaku izmenu pretvara u odluku sa objašnjenjem. [**Modul 08 — Multi-agent sistemi**](modul-08-multi-agent-sistemi.md) otvara poslednje veliko proširenje: kada jednog agenta zaista nije dovoljno — podele uloga, komunikacija, orkestracija — i, najvažnije, kada multi-agent sistem *nije* rešenje. Uživo ovaj modul možete da odrađujete na [radionici 05](../radionice/radionica-05-evaluacija.md). 🚀
