@@ -208,6 +208,6 @@ Tri navike koje vas čine inženjerom, a ne srećnim korisnikom:
 
 ## Šta sledi
 
-Imate prvi poziv, osećaj za tokene i šablon za prompt. U [**modulu 02 — Alati**](../MAPA-UCENJA.md) dajemo modelu ruke: definišemo funkcije koje on može da zatraži, i prvi put puštamo da on bira — a naš kod izvršava. To je prvi korak ka pravom agentu.
+Imate prvi poziv, osećaj za tokene i šablon za prompt. U [**modulu 02 — Alati**](modul-02-alati-tool-use.md) dajemo modelu ruke: definišemo funkcije koje on može da zatraži, i prvi put puštamo da on bira — a naš kod izvršava. To je prvi korak ka pravom agentu.
 
 A u međuvremenu, ako želite da ovo pređete uživo: pogledajte [radionicu 01](../radionice/radionica-01-prvi-koraci.md). 🚀

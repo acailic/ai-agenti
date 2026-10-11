@@ -14,7 +14,7 @@ Učesnici samostalno izvršavaju pozive LLM API-ju iz Pythona: razumeju tokene i
 | **1. sat** | Dobro došli i razbijanje leda (10 min). Šta je agent, šta je chatbot — radna definicija i pitanja (25 min). Kako model radi: token, verovatnoća, temperatura — sa živim demonstracijama (25 min). |
 | **2. sat** | Kontekstni prozor kao novčanik: cena po tokenu, ulaz/izlaz, zašto se istorija plaća svaki put (20 min). Zajednička vežba: priprema okruženja, `pip install openai`, postavljanje `Z_AI_API_KEY` (40 min). **Zastavica:** niko ne nastavlja dok svima ne radi `import openai`. |
 | **3. sat** | Vežba 1: prvi poziv — `01_prvi_poziv.py` iz modula 01, uz objašnjenje svake linije (30 min). Vežba 2: temperatura 0.0 vs 1.5, pet ponavljanja, uporediti (30 min). |
-| **4. sat** | Vežba 3: JSON izlaz koji kod parsira, uključujući obradu lošeg formatu (35 min). Pregled šablona prompta i zajednička diskusija: gde je greška u promptu, a gde u kodu (15 min). Domaći, zatvaranje i gde dalje (10 min). |
+| **4. sat** | Vežba 3: JSON izlaz koji kod parsira, uključujući obradu lošeg formata (35 min). Pregled šablona prompta i zajednička diskusija: gde je greška u promptu, a gde u kodu (15 min). Domaći, zatvaranje i gde dalje (10 min). |
 
 ## Vežbe
 

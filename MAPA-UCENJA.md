@@ -2,7 +2,7 @@
 
 > Put od prvog poziva API-ju do sopstvenog agenta u produkciji — korak po korak, na srpskom, sa praksom na svakom koraku.
 
-Dobro došli! Ova mapa je vaš kompas kroz celo gradivo. Polazimo od nule (šta je uopšte agent i kako radi veliki jezički model, eng. *large language model*, LLM) i stićemo do ozbiljnih tema: alata, memorije, protokola, evaluacije i produkcije. Nigde ne preskačemo praktičan rad — svaki modul završava vežbama u kojima sami pišete kod.
+Dobro došli! Ova mapa je vaš kompas kroz celo gradivo. Polazimo od nule (šta je uopšte agent i kako radi veliki jezički model, eng. *large language model*, LLM) i stićemo do ozbiljnih tema: alata, memorije, protokola, evaluacije i produkcije. Nigde ne preskačemo praktičan rad — svaki modul završava vežbama u kojima sami pišete kod. Pojmove sa kojima se prvi put srećete proverite u [REČNIK-u](REČNIK.md) — srpsko-engleskom rečniku celog kursa.
 
 **Za koga je ova mapa?**
 - za developere (i studente poslednjih godina) koji znaju osnove programiranja — najbolje Pythona — a žele da ozbiljno uđu u svet AI agenata (eng. *AI agents*);
@@ -82,7 +82,7 @@ Kako veliki jezički model zapravo radi: tokeni (eng. *tokens*), kontekstni proz
 
 ---
 
-### Modul 02 — Alati: kako agent deluje u svetu 🔜
+### Modul 02 — Alati: kako agent deluje u svetu ✅
 **Vreme:** 4–6 časova rada
 **Preduslovi:** modul 01
 
@@ -93,11 +93,11 @@ Kako model iz „razgovarača" postaje „učesnik": definisanje alata (eng. *to
 - implementirate petlju „model traži — kod izvršava — rezultat vraća modelu";
 - prepoznate tipične greške u korišćenju alata i znate kako da ih izbegnete.
 
-→ povezana [radionica 02](radionice/radionica-02-alati-i-tool-use.md)
+→ [Modul 02: Alati](moduli/modul-02-alati-tool-use.md) · povezana [radionica 02](radionice/radionica-02-alati-i-tool-use.md)
 
 ---
 
-### Modul 03 — Agent od nule 🔜
+### Modul 03 — Agent od nule ✅
 **Vreme:** 6–8 časova rada
 **Preduslovi:** moduli 01 i 02
 
@@ -108,7 +108,7 @@ Srce puta: gradimo kompletnog agenta „od nule", bez frameworka — petlja agen
 - objasnite ciklus opažaj → razmišljaj → deluj (eng. *perceive–think–act*);
 - odlučite kada vam framework treba, a kada je čist kod bolji.
 
-→ povezana [radionica 03](radionice/radionica-03-agent-od-nule.md)
+→ [Modul 03: Agent od nule](moduli/modul-03-agent-od-nule.md) · povezana [radionica 03](radionice/radionica-03-agent-od-nule.md)
 
 ---
 
@@ -190,7 +190,7 @@ Agent koji radi na vašem računaru i agent koji radi kod klijenta — dva razli
 **Nakon ovog modula moći ćete da:**
 - primenite osnovne bezbednosne obrasce za agente sa pristupom alatima;
 - postavite beleženje (eng. *logging*) i praćenje ponašanja agenta;
-- procenite i kontrolšete troškove po koraku, po zadatku i po mesecu.
+- procenite i kontrolišete troškove po koraku, po zadatku i po mesecu.
 
 ---
 
