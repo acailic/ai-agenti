@@ -550,7 +550,7 @@ Pokrenite:
 python 09d_budzet.py
 ```
 
-Zadatak A pokazuje celu hronologiju iz sekcije 4: pad, zadrška, pad, duža zadrška, uspeh — i cenu uspeha upisanu u budžet. Zadatak B pokazuje zašto meki i tvrdi limit nisu isto: upozorenje je prošlo tiho (500-tokena budžetu je i meki prag već previsok), pa je tvrdi limit prekinuo zadatak **izuzetkom** — što u pravom agentu znači: pad u log (sekcija 3), čista poruka korisniku, izlazni kod ≠ 0 (modul 07). I tabla na kraju je poenta sekcije 5: **isti agent, tri skale** — 50 zadataka dnevno je zanemarljivo, 5.000 je ozbiljan mesečni račun, a razlika je samo množilac; zato se procena radi pre lansiranja, na izmerenoj proseku, a ne na osećaju.
+Zadatak A pokazuje celu hronologiju iz sekcije 4: pad, zadrška, pad, duža zadrška, uspeh — i cenu uspeha upisanu u budžet. Zadatak B pokazuje zašto meki i tvrdi limit nisu isto: ovaj veliki korak preskoči i meki prag i tvrdi limit u jednom pozivu, pa tvrdi limit prekine zadatak **izuzetkom** pre nego što bi meko upozorenje stiglo da se ispiše — što u pravom agentu znači: pad u log (sekcija 3), čista poruka korisniku, izlazni kod ≠ 0 (modul 07). I tabla na kraju je poenta sekcije 5: **isti agent, tri skale** — 50 zadataka dnevno je zanemarljivo, 5.000 je ozbiljan mesečni račun, a razlika je samo množilac; zato se procena radi pre lansiranja, na izmerenoj proseku, a ne na osećaju.
 
 ### 6.5 Zadatak 5 (domaći): keš, izveštaj iz logova, i rušenje na miru
 

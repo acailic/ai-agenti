@@ -348,7 +348,7 @@ Dve stvari da primetite. Prvo: temperatura 0.2 i JSON format — plan je **podat
 
 ### 6.3 Zadatak 3: ceo sistem — tri prave uloge i njihovi troškovi
 
-Sada sve tri uloge postaju model, i to tri **različita** posla (sekcija 2: uloga = prompt + alati + podaci): planer pravi plan (isti kao u 08b), tražilac je mali agent sa jednim alatom — pretragom po korpusu — i petljom iz modula 03/07, a sastavljač dobija **samo izvode** kao kontekst i piše pregled. Uz to brojimo tokene po ulozi: prvi put vidimo trošak svakog agenta ponaosob. Sačuvajte kao `08c_sistem.py` (korpus i `trazi_u_korpusu` su isti kao u 08a — duplirajte ih ispod, po obrascu iz modula 04):
+Sada sve tri uloge postaju model, i to tri **različita** posla (sekcija 2: uloga = prompt + alati + podaci): planer pravi plan (isti plan kao u 08b, ali čitan golim `json.loads` — bez retry petlje i `proveri_plan` provere iz 08b: format je ovde tražen u zahtevu, a ne proveravan), tražilac je mali agent sa jednim alatom — pretragom po korpusu — i petljom iz modula 03/07, a sastavljač dobija **samo izvode** kao kontekst i piše pregled. Uz to brojimo tokene po ulozi: prvi put vidimo trošak svakog agenta ponaosob. Sačuvajte kao `08c_sistem.py` (korpus i `trazi_u_korpusu` su isti kao u 08a — duplirajte ih ispod, po obrascu iz modula 04):
 
 ```python
 """Vežba 8.3 — sistem „Jutarnji pregled": planer + tražilac + sastavljač.
@@ -413,7 +413,7 @@ def pozovi(client, model, poruke, tools=None, temperatura=0.2):
     return poruka, potroseno
 
 def planer(client, model, cilj, trag):
-    """Isti ugovor kao u 08b — plan je JSON podatak koji se proverava."""
+    """Isti plan kao u 08b, ali golim json.loads — bez retry petlje i provere iz 08b."""
     poruke = [{"role": "system", "content": SYSTEM_PLANER},
               {"role": "user", "content": f"Tema pregleda: {cilj}"}]
     poruka, t = pozovi(client, model, poruke)
@@ -462,7 +462,7 @@ def orkestruj(client, model, cilj: str) -> str:
     izvodi = []
     for k in plan:
         r = trazilac(client, model, k["pitanje"], trag)
-        print(f"  [tražilac {k['redni']}] {r.splitlines()[0][:60]}")
+        print(f"  [tražilac {k['redni']}] {(r.splitlines() or [''])[0][:60]}")
         if not r.startswith("NEMA"):
             izvodi.append(r)
     pregled = (sastavljac(client, model, cilj, "\n\n".join(izvodi), trag)
@@ -632,7 +632,7 @@ if __name__ == "__main__":
     main()
 ```
 
-(Napomena o poštenju eksperimenta: u `strana_b_sistem` plan se ne proverava sa retry-em kao u 08b/08c — prenesite tu proveru kad budete pokretali ozbiljno; ovde je skraćeno da tabela ostane čitljiva. I jedna sitnica iz 08c koja je ovde namerno izostavljena: trag po ulogama — dodajte ga u domaćem.)
+(Napomena o poštenju eksperimenta: u `strana_b_sistem` plan se ne proverava sa retry-em kao u 08b — prenesite tu proveru kad budete pokretali ozbiljno; ovde je skraćeno da tabela ostane čitljiva. I jedna sitnica iz 08c koja je ovde namerno izostavljena: trag po ulogama — dodajte ga u domaćem.)
 
 Pokrenite dva-tri puta (nedeterminizam! — modul 07):
 

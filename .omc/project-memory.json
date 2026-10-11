@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1791735445938,
+  "projectRoot": "/home/nistrator/.no-mistakes/worktrees/dbc1b1befc21/01M4NW2B8GB2VNQYBCBVMN804W",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "moduli": {
+      "path": "moduli",
+      "purpose": null,
+      "fileCount": 10,
+      "lastAccessed": 1791735445935,
+      "keyFiles": [
+        "modul-00-uvod-u-agente.md",
+        "modul-01-osnove-llm.md",
+        "modul-02-alati-tool-use.md",
+        "modul-03-agent-od-nule.md",
+        "modul-04-memorija-i-rag.md"
+      ]
+    },
+    "radionice": {
+      "path": "radionice",
+      "purpose": null,
+      "fileCount": 6,
+      "lastAccessed": 1791735445935,
+      "keyFiles": [
+        "radionica-01-prvi-koraci.md",
+        "radionica-02-alati-i-tool-use.md",
+        "radionica-03-agent-od-nule.md",
+        "radionica-04-rag-memorija.md",
+        "radionica-05-evaluacija.md"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "moduli/modul-08-multi-agent-sistemi.md",
+      "accessCount": 5,
+      "lastAccessed": 1791736262330,
+      "type": "file"
+    },
+    {
+      "path": "moduli/modul-09-u-produkciju.md",
+      "accessCount": 2,
+      "lastAccessed": 1791736264700,
+      "type": "file"
+    },
+    {
+      "path": "REČNIK.md",
+      "accessCount": 1,
+      "lastAccessed": 1791736264842,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

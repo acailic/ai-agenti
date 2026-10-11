@@ -131,7 +131,7 @@ Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan
 | gluvi telefon | *context degradation* | Postepeno propadanje sadržaja kroz lanac prenošenja između agenata; lek: artefakt i samo potreban kontekst, ne istorija. | [08](moduli/modul-08-multi-agent-sistemi.md) |
 | razdeli i saberi | *fan-out/fan-in* | Orkestracija u kojoj se zadatak podeli na nezavisne delove, oni rade paralelno, pa se rezultati saberu. | [08](moduli/modul-08-multi-agent-sistemi.md) |
 | kvota | *quota*, *rate limit* | Ograničenje broja zahteva ili tokena u jedinici vremena; prekoračenje = greška koju kod mora da obradi. | [09](moduli/modul-09-u-produkciju.md) |
-| opserverabilnost | *observability* | Moć da vidite šta agent radi u radu: logovi, tragovi, metrike; produkcija bez nje je crna kutija. | [09](moduli/modul-09-u-produkciju.md) |
+| opservabilnost | *observability* | Moć da vidite šta agent radi u radu: logovi, tragovi, metrike; produkcija bez nje je crna kutija. | [09](moduli/modul-09-u-produkciju.md) |
 | potvrda korisnika | *human-in-the-loop* | Kapija pred skupim ili nepovratnim akcijama: čovek odobrava, a svaka odluka se upisuje u dnevnik. | [09](moduli/modul-09-u-produkciju.md) |
 | suvi rad | *dry run* | Izvršavanje na papiru: izveštaj „šta bih uradio" bez ijedne promene; najjeftinija odbrana pre opasne akcije. | [09](moduli/modul-09-u-produkciju.md) |
 | dnevnik odluka | *audit log* | Zapis svake odluke o potvrdama (ko, šta, kada, zašto); odgovor na „a ko je to dozvolio?" dolazi iz zapisa, ne iz sećanja. | [09](moduli/modul-09-u-produkciju.md) |
