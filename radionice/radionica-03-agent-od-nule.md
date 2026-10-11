@@ -1,6 +1,6 @@
 # Radionica 03 — Agent od nule: petlja odlučivanja bez frameworka
 
-> **Povezani modul:** [modul 03 — Agent od nule](../MAPA-UCENJA.md)
+> **Povezani modul:** [modul 03 — Agent od nule](../moduli/modul-03-agent-od-nule.md)
 > **Trajanje:** 4 časa · **Format:** predavanje 20% / vežbe 80% · **Nivo: srednji**
 
 ## Cilj radionice
@@ -26,13 +26,13 @@ Svakom učesniku, iz početka i bez frameworka, izlazi sopstveni agent: petlja (
 
 - Proširiti agenta sa jednim alatom po izboru i pokrenuti ga na tri različita zadatka; zapisati gde je odstupio od plana i zašto.
 - Isključiti ograničenje `max_koraka` (namerno!) i dokumentovati šta se desilo sa troškom posle 30+ koraka — bolje sada, na 50 dinara, nego posle na 50 evra.
-- Za napredne: sažeti istoriju razgovora kada predje N tokena (prvi susret sa modulom 05).
+- Za napredne: sažeti istoriju razgovora kada pređe N tokena (prvi susret sa modulom 05).
 
 ## Materijali — checklist za učesnike
 
 - [ ] odrađene radionice 01 i 02 (alati rade, ključ u environment varijabli);
 - [ ] test direktorijum `radionica03-sandbox/` sa 5–10 „neurednih" fajlova (može i generisanih);
-- [ ] modul 01 pročitan u potpunosti; modul 03 u izradi — radionica je samostalna;
+- [ ] moduli 01 i 02 odrađeni (alati rade, ključ u environment varijabli); [modul 03](../moduli/modul-03-agent-od-nule.md) preporučen pre radionice;
 - [ ] čitav rad u virtuelnom okruženju, projekat u Git-u (ovo je već navika, zar ne?).
 
 ## Za voditelja

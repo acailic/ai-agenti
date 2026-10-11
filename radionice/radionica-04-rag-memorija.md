@@ -19,7 +19,7 @@ Učesnici grade mini pretraživač nad sopstvenim dokumentima: dele tekst na del
 ## Vežbe
 
 1. **Deljenje teksta (30 min):** jedan duži dokument (npr. pravilnik) → odlomci od ~300 tokena sa preklapanjem; uporediti na pragu rečenice naspram fiksne dužine.
-2. **Indeks (30 min):** izračunati ugnežđene reprezentacije za sve odlomke; sačuvati ( SQLite + numeričke kolone sasvim dovoljno za radionicu); provera „sličnosti" dva odlomka ručno.
+2. **Indeks (30 min):** izračunati ugnežđene reprezentacije za sve odlomke; sačuvati (SQLite + numeričke kolone sasvim dovoljno za radionicu); provera „sličnosti" dva odlomka ručno.
 3. **Upit (50 min):** za pitanje korisnika — ugnežđivanje pitanja, pretraga k-najbližih, slaganje prompta sa citatima; odgovor obavezno sa izvorom („prema odlomku #4…").
 4. **Granice (30 min):** pitanja bez pokrića u dokumentima — šta odgovara model? Dodati ograničenje „ako nema izvora, reci otvoreno".
 

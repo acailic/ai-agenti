@@ -12,13 +12,11 @@ Oblast AI agenata (eng. *AI agents*) raste brzinom koja je teška za praćenje �
 - **[moduli/](moduli/)** — gradivo po modulima. Napisano:
   - [Modul 00 — Uvod u agente: šta je agent, zašto sad, kako se uči](moduli/modul-00-uvod-u-agente.md)
   - [Modul 01 — Osnove rada sa LLM-ovima: tokeni, kontekst, prompt kao program](moduli/modul-01-osnove-llm.md) (uključuje prvu vežbu sa pravim API-jem)
-  - moduli 02–10: u izradi prema mapi
-- **[radionice/](radionice/)** — skele radionica (cilj, agenda po satima, vežbe, domaći, checklist materijala):
-  1. [Prvi koraci: LLM API u praksi](radionice/radionica-01-prvi-koraci.md)
-  2. [Alati i tool use](radionice/radionica-02-alati-i-tool-use.md)
-  3. [Agent od nule](radionice/radionica-03-agent-od-nule.md)
-  4. [Memorija i RAG](radionice/radionica-04-rag-memorija.md)
-  5. [Evaluacija](radionice/radionica-05-evaluacija.md)
+  - [Modul 02 — Alati: kako agent deluje u svetu](moduli/modul-02-alati-tool-use.md) (tool use, šeme funkcija, bezbedno izvršavanje)
+  - [Modul 03 — Agent od nule: petlja odlučivanja bez frameworka](moduli/modul-03-agent-od-nule.md)
+  - moduli 04–10: u izradi prema mapi
+- **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik pojmova korišćenih kroz kurs (preko četrdeset termina, sa uputom na modul u kome se pojavljuju).
+- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena. Kompletne (sa rešenjima vežbi): 01 i 02; skele (cilj, agenda po satima, vežbe, domaći, checklist materijala): 03–05.
 - **[O-AUTORU.md](O-AUTORU.md)** — ko piše i zašto.
 
 ## Kako početi
@@ -37,4 +35,4 @@ Doprinosi **na srpskom jeziku** su srdačno dobrodošli: ispravke, novi primeri,
 
 ## Status projekta
 
-Radna verzija (seed): mapa, dva modula, pet radionica. Redosled izrade daljih modula prati [mapa učenja](MAPA-UCENJA.md). ⚓
+Radna verzija: mapa, četiri modula (00–03), rečnik pojmova i pet radionica (01 i 02 kompletne, 02 sa rešenjima vežbi). Redosled izrade daljih modula prati [mapa učenja](MAPA-UCENJA.md). ⚓

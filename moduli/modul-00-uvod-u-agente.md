@@ -31,7 +31,7 @@ Najlakše je razumeti razliku kroz poređenje:
 | Trajanje | jedan odgovor | više koraka, čak i minuti rada |
 | Primer | čet za podršku koji daje savete | sistem koji sam pregleda tikete, nađe uzrok i pripremi odgovor |
 
-Granicu ne treba precrtavati nožem: mnogi proizvodi su negde između. Ali kada čujete „agent", u pozadini je gotovo uvek petlja odlučivanja sa alatima — a to je tačno ono što ćemo sami izgraditi u [modulu 03](../MAPA-UCENJA.md).
+Granicu ne treba precrtavati nožem: mnogi proizvodi su negde između. Ali kada čujete „agent", u pozadini je gotovo uvek petlja odlučivanja sa alatima — a to je tačno ono što ćemo sami izgraditi u [modulu 03](modul-03-agent-od-nule.md).
 
 ### Model je motor, ne auto
 
@@ -71,7 +71,7 @@ Iskreno: ovo nije oblast koja se uči čitanjem. Tri načela koja ćemo poštova
 
 ## 4. Kratki rečnik za početak
 
-Ovi termini vraćaće se stalno; evo ih na jednom mestu. Detaljno se obrađuju u svojim modulima.
+Ovi termini vraćaće se stalno; evo ih na jednom mestu. Detaljno se obrađuju u svojim modulima, a kompletan rečnik celog kursa (preko četrdeset pojmova) držimo u [REČNIK.md](../REČNIK.md).
 
 | Termin | Značenje |
 |---|---|
