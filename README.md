@@ -34,7 +34,7 @@ Pored modula:
 
 ## Odakle da krenem?
 
-Pet brzih pitanja — odgovorite sebi iskreno, i prvo „ne“ pokazuje vaš modul:
+Pet brzih pitanja — odgovorite sebi iskreno, i prvo „ne" pokazuje vaš modul:
 
 1. **Znate li šta je AI agent i po čemu se razlikuje od chatbota?** Ne → počnite sa [modulom 00](moduli/modul-00-uvod-u-agente.md) (2–3 časa, bez preduslova).
 2. **Jeste li već pozvali API nekog velikog modela iz sopstvenog Python koda?** Ne → [modul 01](moduli/modul-01-osnove-llm.md) (tu je i prva vežba sa pravim API-jem).
@@ -42,7 +42,7 @@ Pet brzih pitanja — odgovorite sebi iskreno, i prvo „ne“ pokazuje vaš mod
 4. **Jeste li sami napisali petlju agenta (bez frameworka)?** Ne → [modul 03](moduli/modul-03-agent-od-nule.md) — srce puta.
 5. **Treba vam agent koji odgovara iz vaših dokumenata, ili vas zanima kako se kontrolišu trošak i kvalitet konteksta?** Prvo → [modul 04](moduli/modul-04-memorija-i-rag.md); drugo → [modul 05](moduli/modul-05-inzenjering-konteksta.md) (idealno oba, redom).
 
-Na sva pet „da“ — [moduli 06](moduli/modul-06-protokoli-mcp-a2a.md) (protokoli: MCP i A2A), [07](moduli/modul-07-evaluacija-agenata.md) (evaluacija agenata), [08](moduli/modul-08-multi-agent-sistemi.md) (multi-agent sistemi) i [09](moduli/modul-09-u-produkciju.md) (u produkciju: bezbednost, opservabilnost, troškovi) su sledeći redom; polje 10 (završni projekat) se piše po [mapi](MAPA-UCENJA.md) ili javite da pomognete.
+Na sva pet „da" — [moduli 06](moduli/modul-06-protokoli-mcp-a2a.md) (protokoli: MCP i A2A), [07](moduli/modul-07-evaluacija-agenata.md) (evaluacija agenata), [08](moduli/modul-08-multi-agent-sistemi.md) (multi-agent sistemi) i [09](moduli/modul-09-u-produkciju.md) (u produkciju: bezbednost, opservabilnost, troškovi) su sledeći redom; polje 10 (završni projekat) se piše po [mapi](MAPA-UCENJA.md) ili javite da pomognete.
 
 **Šta vam treba za početak:** osnovni Python (promenljive, funkcije, pokretanje skripte), pristup jednom komercijalnom API-ju velikog modela (dovoljan je najjeftiniji plan; u vežbama koristimo z.ai/GLM, ali kod radi sa bilo kojim OpenAI-kompatibilnim provajderom) i Git nalog za portfolio. Jedno gvozdeno pravilo od prvog dana: **API ključ u environment varijabli, nikad u kodu.**
 
