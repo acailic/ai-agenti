@@ -130,8 +130,18 @@ Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan
 | ugovor (između agenata) | *contract* | Dogovoreni oblik poruka između uloga: šta agent prima (zadatak i kontekst), šta vraća (rezultat) i gde su granice. | [08](moduli/modul-08-multi-agent-sistemi.md) |
 | gluvi telefon | *context degradation* | Postepeno propadanje sadržaja kroz lanac prenošenja između agenata; lek: artefakt i samo potreban kontekst, ne istorija. | [08](moduli/modul-08-multi-agent-sistemi.md) |
 | razdeli i saberi | *fan-out/fan-in* | Orkestracija u kojoj se zadatak podeli na nezavisne delove, oni rade paralelno, pa se rezultati saberu. | [08](moduli/modul-08-multi-agent-sistemi.md) |
-| kvota | *quota*, *rate limit* | Ograničenje broja zahteva ili tokena u jedinici vremena; prekoračenje = greška koju kod mora da obradi. | [09](MAPA-UCENJA.md) |
-| opserverabilnost | *observability* | Moć da vidite šta agent radi u radu: logovi, tragovi, metrike; produkcija bez nje je crna kutija. | [09](MAPA-UCENJA.md) |
+| kvota | *quota*, *rate limit* | Ograničenje broja zahteva ili tokena u jedinici vremena; prekoračenje = greška koju kod mora da obradi. | [09](moduli/modul-09-u-produkciju.md) |
+| opserverabilnost | *observability* | Moć da vidite šta agent radi u radu: logovi, tragovi, metrike; produkcija bez nje je crna kutija. | [09](moduli/modul-09-u-produkciju.md) |
+| potvrda korisnika | *human-in-the-loop* | Kapija pred skupim ili nepovratnim akcijama: čovek odobrava, a svaka odluka se upisuje u dnevnik. | [09](moduli/modul-09-u-produkciju.md) |
+| suvi rad | *dry run* | Izvršavanje na papiru: izveštaj „šta bih uradio" bez ijedne promene; najjeftinija odbrana pre opasne akcije. | [09](moduli/modul-09-u-produkciju.md) |
+| dnevnik odluka | *audit log* | Zapis svake odluke o potvrdama (ko, šta, kada, zašto); odgovor na „a ko je to dozvolio?" dolazi iz zapisa, ne iz sećanja. | [09](moduli/modul-09-u-produkciju.md) |
+| strukturisano beleženje | *structured logging* | Svaki događaj je jedna JSON linija sa poznatim poljima; čita ga program (filtriranje, brojanje), ne samo čovek. | [09](moduli/modul-09-u-produkciju.md) |
+| id traga | *trace ID* | Identifikator jednog zadatka koji nose svi njegovi događaji, kroz sve agente; jedan id — svi učesnici — jedan pregled. | [09](moduli/modul-09-u-produkciju.md) |
+| idempotencija | *idempotency* | Svojstvo akcije da izvršena dva puta daje ishod kao jednom; uslov za bezbedan ponovni pokušaj. | [09](moduli/modul-09-u-produkciju.md) |
+| eksponencijalna zadrška | *exponential backoff* | Ponovni pokušaji sa sve dužim čekanjem (1s, 2s, 4s); provajderu se daje vremena da odahne, umesto da ga zaturimo. | [09](moduli/modul-09-u-produkciju.md) |
+| budžet | *budget* | Granica troška po zadatku: meki deo upozorava, tvrdi prekida izuzetkom; budžet bez tvrdog limita je dekoracija. | [09](moduli/modul-09-u-produkciju.md) |
+| keširanje odgovora | *response caching* | Identičan poziv vraća spremljen odgovor bez novog poziva API-ja; štedi na ponovljenim pitanjima. | [09](moduli/modul-09-u-produkciju.md) |
+| preusmeravanje modela | *model routing* | Lakši koraci idu jeftinijem modelu, teški glavnom; smanjuje trošak bez diranja najtežih delova. | [09](moduli/modul-09-u-produkciju.md) |
 
 ---
 

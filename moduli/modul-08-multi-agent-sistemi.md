@@ -676,4 +676,4 @@ Redosled provere pri dijagnostici pada: **koji je scenario pao (id) → trag sis
 
 ## Šta sledi
 
-Sistem je sada podeljen, orkestriran i izmeren — ali sve je to i dalje na vašem računaru, sa vašim ključem i vašim logovima. [**Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi**](../MAPA-UCENJA.md) vodi agenta u svet u kome radi za druge: ograničenja i potvrde umesto poverenja, beleženje i praćenje umesto gledanja preko ramena, i troškovi koji se mere po koraku, po zadatku i po mesecu. 🚀
+Sistem je sada podeljen, orkestriran i izmeren — ali sve je to i dalje na vašem računaru, sa vašim ključem i vašim logovima. [**Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi**](modul-09-u-produkciju.md) vodi agenta u svet u kome radi za druge: ograničenja i potvrde umesto poverenja, beleženje i praćenje umesto gledanja preko ramena, i troškovi koji se mere po koraku, po zadatku i po mesecu. 🚀
