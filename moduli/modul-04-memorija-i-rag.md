@@ -22,12 +22,12 @@ Usvojimo odmah jednu disciplinu mišljenja koja važi do kraja kursa: **memorija
 
 ## 2. Radna memorija: istorija i njena cena
 
-U petlji agenta istorija poruka raste: korisnički zahtev, plan modela, pozivi alata, rezultati, korekcije... Sve to, podsetimo se iz modula 01, plaća se **na svakom pozivu iznova** — kontekst je jedina „radna memorija" koju model ima, i ona se naplaćuje po kvadratu nestrpljenja: agent koji radi 30 koraka sa punom istorijom platio je istu staru istoriju trideset puta.
+U petlji agenta istorija poruka raste: korisnički zahtev, plan modela, pozivi alata, rezultati, korekcije... Sve to, podsetimo se iz modula 01, plaća se **na svakom pozivu iznova** — kontekst je jedina „radna memorija" koju model ima, i svaki je korak plaća iznova: agent koji radi 30 koraka sa punom istorijom platio je istu staru istoriju trideset puta.
 
-Prvo utešno, pa pravo rešenje:
+Prvo utešna vest, pa pravo rešenje:
 
 1. **Ponekad istorija nije problem.** Za zadatke od 5–10 koraka, cena istorije je mala prema ceni razmišljanja. Ne optimizujte unapred — merite (modul 07), pa secite.
-2. **Sažimanje (eng. *summarization*).** Kada istorija pređe dogovorenu granicu, starije poruke zamenite jednim sažetkom: šta je cilj, šta je urađeno, ključni podaci, šta je ostalo. Modelu, uz sažetak i poslednjih nekoliko poruka, obično treba manje nego što mislite da bi trebalo.
+2. **Sažimanje (eng. *summarization*).** Kada istorija pređe dogovorenu granicu, starije poruke zamenite jednim sažetkom: šta je cilj, šta je urađeno, ključni podaci, šta je ostalo. Modelu, uz sažetak i poslednjih nekoliko poruka, obično treba manje nego što mislite.
 
 Funkcija koja stariju istoriju sabija u sažetak — ista ideja koju traži i domaći iz modula 03:
 
@@ -49,13 +49,13 @@ def sazetak_istorije(client, model, starije_poruke: list) -> str:
     return odgovor.choices[0].message.content
 ```
 
-Zamena „starije poruke → sažetak" je najjeftiniji oblik trajne memorije unutar jednog zadatka, ali ona gubi detalje: broj fajla, tačan iznos, ime kolege. Zato je pravilo: **sažimajte ono što je obradjeno, čuvajte sveže ono što je u toku** (poslednjih N poruka ide u originalu). U modulu 05 ovo postaje sistem — sa budžetom, redosledom i formatima; ovde nam treba samo pojam.
+Zamena „starije poruke → sažetak" je najjeftinija štednja konteksta unutar jednog zadatka, ali ona gubi detalje: broj fajla, tačan iznos, ime kolege. Zato je pravilo: **sažimajte ono što je obrađeno, čuvajte sveže ono što je u toku** (poslednjih N poruka ide u originalu). U modulu 05 ovo postaje sistem — sa budžetom, redosledom i formatima; ovde nam treba samo pojam.
 
 ## 3. Trajna memorija: od ključnih reči do značenja
 
 Sada drugi problem, ozbiljniji. Recimo da agent treba da odgovara iz vaše interne dokumentacije: pravilnici, beleške sa sastanaka, uputstva — zajedno stotine stranica. Kontekstni prozor je veliki, ali ne toliko, a i kad bi stalo — plaćali biste sve te tokene na svakom pozivu, i model bi se davio u šumu (sećate se „izgubljenog usred konteksta": relevantna činjenica usred gomile podataka se lakše ignoriše). Znači: u kontekst ide **samo ono što je relevantno za trenutno pitanje**. Kako naći baš to?
 
-Prvi odgovor koji svako da jeste pretraga po ključnim rečima (eng. *keyword search*) — `grep`, `LIKE` u SQL-u, tražilica fajlova. Ona je brza, jeftina, razumljiva... i puca na najzanimljivijim pitanjima. Tražite „gde sme da radi izvan kancelarije", a dokument kaže „rad na daljinu se odobrava dva dana nedeljno". Nijedna reč se ne poklapa — a smisao je isti. Obrnuto: pitanje „kolika je kvota" nađe reč „kvota" u deset odlomaka gde se misli na deset različitih stvari. Ključne reči pogađaju **oblik** teksta, ne **značenje**.
+Prvi odgovor koji svakom padne na pamet jeste pretraga po ključnim rečima (eng. *keyword search*) — `grep`, `LIKE` u SQL-u, tražilica fajlova. Ona je brza, jeftina, razumljiva... i puca na najzanimljivijim pitanjima. Tražite „gde sme da radi izvan kancelarije", a dokument kaže „rad na daljinu se odobrava dva dana nedeljno". Nijedna reč se ne poklapa — a smisao je isti. Obrnuto: pitanje „kolika je kvota" nađe reč „kvota" u deset odlomaka gde se misli na deset različitih stvari. Ključne reči pogađaju **oblik** teksta, ne **značenje**.
 
 Rešenje je ugnežđena reprezentacija (eng. *embedding*): poseban model prevodi svaki tekst u **niz brojeva** fiksne dužine — vektor (eng. *vector*) — sa ključnim svojstvom: tekstovi **sličnog značenja** dobijaju **geometrijski bliske** vektore, i pored različitih reči. „Radi od kuće" i „rad na daljinu" nemaju zajedničku reč, ali njihovi vektori su susedi; vektor rečenice o godišnjem odmoru je daleko. Pretraga po smislu (eng. *semantic search*) onda glasi: pretvori pitanje u vektor, nađi najbliže vektore dokumenata — i dobiješ odlomke po značenju, a ne po obliku reči.
 
@@ -68,11 +68,11 @@ Dva upozorenja pre prve vežbe:
 
 Ne ugnježđujemo ceo dokument odjednom. Zamislite zašto: ugnežđivanje celog pravilnika od 10 strana daje **prosek** svih tema u njemu — i taj prosek nije blizu ničemu konkretnom. Pitanje o godišnjem odmoru traži vektor koji je blizu baš tom pasusu, a prosek celog dokumenta je „negde u sredini svega". Zato dokument delimo na odlomke (eng. *chunking*): komade koji su dovoljno mali da budu **o jednoj temi**, a dovoljno veliki da imaju **svoje značenje**.
 
-Tri parametra se biraju, i svi tri imaju posledice:
+Tri parametra se biraju, i sva tri imaju posledice:
 
 - **Veličina.** Radna okvirna vrednost: 200–400 tokena (za srpski ~600–1.200 znakova, po aritmetici iz modula 01). Manji odlomci → preciznija pretraga, ali kontekst se cepa na pola činjenice; veći → celovitije, ali razblažen signal i skuplji kontekst.
-- **Preklapanje (eng. *overlap*).** Susedni odlomci se preklapaju za ~15–20%: ako se činjenica desi baš na spoju, postoji u oba, pa je presek ne ubija. Više preklapanja = sigurnost protiv ponavljanja (isti tekst se može vratiti dva puta u kontekst).
-- **Granice.** Sekemo po rečenici ili pasusu, ne nasumično usred reči. Pravilo: poštuje se struktura dokumenta (naslovi, pasusi), jer je ona već podela na teme koju je napisao čovek.
+- **Preklapanje (eng. *overlap*).** Susedni odlomci se preklapaju za ~15–20%: ako se činjenica desi baš na spoju, postoji u oba, pa je presek ne ubija. Više preklapanja = veća sigurnost, po ceni ponavljanja (isti tekst se može vratiti dva puta u kontekst).
+- **Granice.** Sečemo po rečenici ili pasusu, ne nasumično usred reči. Pravilo: poštuje se struktura dokumenta (naslovi, pasusi), jer je ona već podela na teme koju je napisao čovek.
 
 ```text
   ┌────────────────────────────────────────────┐
@@ -94,7 +94,7 @@ Uz svaki odlomak čuva se i **metapodatak** (eng. *metadata*): iz kog fajla je, 
 
 ## 5. Vektorska baza i pretraga po sličnosti
 
-Gde čuvamo vektore odlomaka? U vektorskoj bazi (eng. *vector database*) — a to zvuči velelno, a u osnovi je skromno: **skladište vektora koje ume da nađe k najbližih suseda** (eng. *k-nearest neighbours*) zadatom vektoru. Za kurs pravimo najjednostavniju moguću: jedan JSON fajl sa odlomcima i njihovim vektorima, i pretragu kroz `numpy`. Namerno „glupa" — da se svaki korak vidi; kada baza postane velika (desetine hiljada odlomaka), istu ulogu preuzimaju prava rešenja (Faiss, Chroma, pgvector, Qdrant...), a princip ostaje isti.
+Gde čuvamo vektore odlomaka? U vektorskoj bazi (eng. *vector database*) — što zvuči velelepno, a u osnovi je skromno: **skladište vektora koje ume da nađe k najbližih suseda** (eng. *k-nearest neighbours*) zadatom vektoru. Za kurs pravimo najjednostavniju moguću: jedan JSON fajl sa odlomcima i njihovim vektorima, i pretragu kroz `numpy`. Namerno „glupa" — da se svaki korak vidi; kada baza postane velika (desetine hiljada odlomaka), istu ulogu preuzimaju prava rešenja (Faiss, Chroma, pgvector, Qdrant...), a princip ostaje isti.
 
 Kako se meri blizina dva vektora? Kosinusnom sličnošću (eng. *cosine similarity*): kosinus ugla između vektora:
 
@@ -117,7 +117,7 @@ kos(A, C) = (0.9·0.1 + 0.1·0.9 + 0 + 0)      / (|A|·|C|) ≈ 0,16   → nema 
 
 Slično značenje, veliki broj; različito, mali. Cela pretraga po sličnosti (eng. *similarity search*) je onda tri koraka: (1) ugnježdi pitanje, (2) izračunaj kosinus sa svakim odlomkom u bazi, (3) vrati k najbližih, po opadajućoj sličnosti. To je sve — i baš to radimo u vežbi.
 
-Još jedna stvar koja se ne vidi iz formule, a važi: **apsolutne vrednosti sličnosti zavise od modela** i ne postoji univerzalna granica „iznad ove sličnosti je pokriveno". Zato ćemo posle, za pitanja bez pokrića, pouzdaju ne prag (eng. *threshold*), nego pravilo modelu: „ako odlomci ne sadrže odgovor — reci to otvoreno". Pragovi su korisni kao alarm, ali kao jedina odbrana su krti.
+Još jedna stvar koja se ne vidi iz formule, a važi: **apsolutne vrednosti sličnosti zavise od modela** i ne postoji univerzalna granica „iznad ove sličnosti je pokriveno". Zato ćemo posle, za pitanja bez pokrića, oslanjati se ne na prag (eng. *threshold*), nego na pravilo modelu: „ako odlomci ne sadrže odgovor — reci to otvoreno". Pragovi su korisni kao alarm, ali kao jedina odbrana su krti.
 
 
 ## 6. RAG: cevovod od pitanja do odgovora sa izvorom
