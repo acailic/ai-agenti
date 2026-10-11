@@ -60,7 +60,7 @@ Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan
 | vektorska baza | *vector database* | Skladište ugnežđenih reprezentacija sa pretragom po sličnosti. | [04](moduli/modul-04-memorija-i-rag.md) |
 | RAG | *retrieval-augmented generation* | Obrazac: pronađi relevantne odlomke, ubaci ih u kontekst, pa tek onda generiši odgovor sa izvorom. | [04](moduli/modul-04-memorija-i-rag.md) |
 | deljenje na odlomke | *chunking* | Sečenje dokumenata na komade pogodne za ugnežđivanje i pretragu; veličina i preklapanje imaju značaja. | [04](moduli/modul-04-memorija-i-rag.md) |
-| inženjering konteksta | *context engineering* | Dizajn onoga što model vidi u svakom koraku: šta ulazi, šta se sažima, šta se pamti van prozora. | [05](MAPA-UCENJA.md) |
+| inženjering konteksta | *context engineering* | Dizajn onoga što model vidi u svakom koraku: šta ulazi, šta se sažima, šta se pamti van prozora. | [05](moduli/modul-05-inzenjering-konteksta.md) |
 
 ## 5. Evaluacija, povezivanje i produkcija
 

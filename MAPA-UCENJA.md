@@ -127,7 +127,7 @@ Kako agent pamti: radna memorija kroz razgovor, sažimanje istorije i generisanj
 
 ---
 
-### Modul 05 — Inženjering konteksta 🔜
+### Modul 05 — Inženjering konteksta ✅
 **Vreme:** 5–7 časova rada
 **Preduslovi:** moduli 03 i 04
 
@@ -137,6 +137,8 @@ Kontekst je najskuplji resurs agenta. Upravljanje onim što model vidi u svakom 
 - dizajnirate šta agent zna u svakom koraku, a ne samo šta kaže;
 - smanjite troškove i kašnjenje bez gubitka kvaliteta;
 - prepoznate „trovanje kontekstom" i znate kako da ga izbegnete.
+
+→ [Modul 05: Inženjering konteksta](moduli/modul-05-inzenjering-konteksta.md)
 
 ---
 
