@@ -172,10 +172,22 @@ def lazni_model(poruke: list) -> SimpleNamespace:
 MAX_KORAKA = 5
 ALATI = {"procitaj_tiket": procitaj_tiket, "dodeli_timu": dodeli_timu}
 
-def pokreni(tid: str) -> str:
+def u_recnik(poruka) -> dict:
+    """Poruka kao običan rečnik — kakav god mozak vratio (dict sa mock-a ili
+    objekat iz pravog SDK-a); petlja uvek radi sa istim oblikom."""
+    if isinstance(poruka, dict):
+        return poruka
+    pozivi = [{"id": p.id, "type": "function",
+               "function": {"name": p.function.name,
+                            "arguments": p.function.arguments}}
+              for p in (poruka.tool_calls or [])]
+    return {"role": poruka.role, "content": poruka.content,
+            "tool_calls": pozivi}
+
+def pokreni_petlju(mozak, tid: str) -> str:
     poruke = [{"role": "user", "content": json.dumps(tid)}]
     for korak in range(1, MAX_KORAKA + 1):
-        odgovor = lazni_model(poruke).choices[0].message
+        odgovor = u_recnik(mozak(poruke).choices[0].message)
         poruke.append(odgovor)
         pozivi = odgovor.get("tool_calls")
         if not pozivi:
@@ -190,13 +202,16 @@ def pokreni(tid: str) -> str:
                                                  ensure_ascii=False)})
     return "GREŠKA: prekoračen broj koraka"  # izlaz 2
 
+def pokreni(tid: str) -> str:
+    return pokreni_petlju(lazni_model, tid)
+
 if __name__ == "__main__":
     print(pokreni(sys.argv[1] if len(sys.argv) > 1 else "t-101"))
 ```
 
 Pokrenite sa `python v1_agent.py t-104`, pa probajte `t-111` (namerno mutan: nema jasnih ključnih reči, pa pravilo pada na „pitanje" i tim Podrška — razumna odbrana od nagađanja) i `t-109` (dupla naplata: po ključnoj reči „dupl-" agent kaže Backend, a čovek iz podrške preusmerio bi ga sebi — zapamtite taj tiket, vraćamo mu se u vežbi 2). Zatim pokvarite nešto namerno: `python v1_agent.py t-999` — alat vraća NEZNAM, i agent ipak završi uredno.
 
-**Debrief (5 min, na kraju vežbe):** gde u kodu je „agent"? Samo funkcija `pokreni` — petnaestak linija. Sve ostalo su alati i mozak. Tri izlaza nisu ukras: bez `MAX_KORAKA` agent koji se zaglavi troši novac zauvek, a bez greške na nepoznat alat pucate na prvoj promeni imena. Argumenti alata stižu kao **JSON tekst** koji vi parsirate — zato model ume da „pogreši" argument: to je string, ne poziv funkcije (detaljno u [modulu 02](../moduli/modul-02-alati-tool-use.md)).
+**Debrief (5 min, na kraju vežbe):** gde u kodu je „agent"? Samo funkcija `pokreni_petlju` — petnaestak linija. Sve ostalo su alati i mozak. Tri izlaza nisu ukras: bez `MAX_KORAKA` agent koji se zaglavi troši novac zauvek, a bez greške na nepoznat alat pucate na prvoj promeni imena. Argumenti alata stižu kao **JSON tekst** koji vi parsirate — zato model ume da „pogreši" argument: to je string, ne poziv funkcije (detaljno u [modulu 02](../moduli/modul-02-alati-tool-use.md)).
 
 **Live varijanta (ko ima ključ, ~10 min):** zamenite samo `lazni_model` pravim pozivom; petlja i alati ostaju netaknuti:
 
@@ -204,7 +219,7 @@ Pokrenite sa `python v1_agent.py t-104`, pa probajte `t-111` (namerno mutan: nem
 # v1_live.py — mozak pravog modela, ista petlja iz v1_agent.py
 import json, os
 from openai import OpenAI
-from v1_agent import pokreni_petlju  # videti napomenu ispod
+from v1_agent import pokreni_petlju
 
 klijent = OpenAI(api_key=os.environ["Z_AI_API_KEY"],
                  base_url=os.getenv("Z_AI_BASE_URL", "https://api.z.ai/api/paas/v4"))
@@ -230,7 +245,7 @@ def pravi_model(poruke):
 print(pokreni_petlju(pravi_model, "t-111"))
 ```
 
-Da bi ovo radilo, u `v1_agent.py` izdvojite petlju u `pokreni_petlju(mozak, tid)` koje prima mozak kao argument (isto kao `pokreni`, samo sa još jednim parametrom), a `lazni_model` prosledite kao podrazumevani. Prava lekcija zamene: **petlja ne zna koji je mozak** — to je podela koju vredi osetiti rukama.
+Petlja prima mozak kao argument, a svaku njegovu poruku provlači kroz `u_recnik` — mock već vraća rečnik, a objekat pravog SDK-a (`choices[0].message`) pretvara u isti običan rečnik sa `role`, `content` i `tool_calls`, pa je razmena sa pravim API-jem istog oblika kao sa lažnim. Prava lekcija zamene: **petlja ne zna koji je mozak** — nijedno ime mozga nije ukucano u nju (eng. *hard-code*), ona ga samo prima kao argument i traži jednu stvar: da poruka stigne u obliku koji razume. To je podela koju vredi osetiti rukama.
 
 ---
 
