@@ -30,18 +30,17 @@
     const snippet = (text, tokens, hit) => {
       const start = Math.max(0, hit - 80);
       const end = Math.min(text.length, hit + 140);
-      let raw = (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
-      raw = esc(raw);
+      const raw = (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
       let out = '';
       let i = 0;
       while (i < raw.length) {
-        const seg = foldText(raw.slice(i));
+        const seg = foldQuery(raw.slice(i));
         let best = -1, bestTok = null;
         for (const t of tokens) {
           const at = seg.indexOf(t);
           if (at !== -1 && (best === -1 || at < best)) { best = at; bestTok = t; }
         }
-        if (best === -1) { out += raw.slice(i); break; }
+        if (best === -1) { out += esc(raw.slice(i)); break; }
         out += esc(raw.slice(i, i + best)) + '<mark>' + esc(raw.slice(i + best, i + best + bestTok.length)) + '</mark>';
         i += best + bestTok.length;
       }

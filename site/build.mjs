@@ -64,8 +64,12 @@ function addHeadingIds(html) {
   return { html: out, toc };
 }
 
-/* čist tekst iz renderovanog HTML-a (za pretragu i opise) */
-const stripTags = (html) => decodeEntities(html.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+/* čist tekst iz renderovanog HTML-a (za pretragu i opise);
+   blok tagovi razdvajaju reči, inline tagovi se uklanjaju bez prostora */
+const stripTags = (html) => decodeEntities(
+  html.replace(/<\/?(p|li|h[1-6]|tr|td|th|table|blockquote|pre|div|ul|ol|hr)[^>]*>/gi, ' ')
+      .replace(/<[^>]+>/g, '')
+).replace(/\s+/g, ' ').trim();
 
 /* ── prepisivanje veza: relativne → sajtske strane ili GitHub ──── */
 
