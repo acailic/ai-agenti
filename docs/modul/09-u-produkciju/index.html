@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi — AI i agenti na srpskom</title>
+<meta name="description" content="Agent koji radi na vašem računaru i agent koji radi kod klijenta — dva su različita sveta. Na vašem računaru, kad nešto pođe naopako, vi ste tamo: vidite izlaz, prekinete petlju, popravite">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/modul/09-u-produkciju/">
+<meta property="og:title" content="Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi — AI i agenti na srpskom">
+<meta property="og:description" content="Agent koji radi na vašem računaru i agent koji radi kod klijenta — dva su različita sveta. Na vašem računaru, kad nešto pođe naopako, vi ste tamo: vidite izlaz, prekinete petlju, popravite">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/modul/09-u-produkciju/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="../../radionice/">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#1-dva-sveta-vas-racunar-i-tudji">1. Dva sveta: vaš računar i tuđi</a></li><li><a href="#2-bezbednost-ogranicenja-umesto-poverenja">2. Bezbednost: ograničenja umesto poverenja</a></li><li><a href="#3-opservabilnost-videti-sta-agent-radi">3. Opservabilnost: videti šta agent radi</a></li><li><a href="#4-otpornost-na-greske-padati-glasno-ustajati-polako">4. Otpornost na greške: padati glasno, ustajati polako</a></li><li><a href="#5-troskovi-po-koraku-po-zadatku-po-mesecu">5. Troškovi: po koraku, po zadatku, po mesecu</a></li><li><a href="#6-vezbe-arhivar-ide-u-produkciju">6. Vežbe: „Arhivar" ide u produkciju</a></li><li><a href="#7-tipicne-greske-i-dijagnoza">7. Tipične greške — i dijagnoza</a></li><li><a href="#8-pitanja-za-samoproveru">8. Pitanja za samoproveru</a></li><li><a href="#sta-sledi">Šta sledi</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi</h1>
+    <div class="meta-chips"><span class="chip modnum">modul 09</span><span class="chip ">⏱ 5–7 časova</span></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Vreme:</strong> 5–7 časova rada · <strong>Preduslovi:</strong> <a href="../03-agent-od-nule/">moduli 03</a> i <a href="../07-evaluacija-agenata/">07</a> · <strong>Stanje:</strong> prva radna verzija</p>
+</blockquote>
+<p>Agent koji radi na vašem računaru i agent koji radi kod klijenta — dva su različita sveta. Na vašem računaru, kad nešto pođe naopako, vi ste tamo: vidite izlaz, prekinete petlju, popravite prompt, pokušate ponovo. U produkciji vas nema. Agent radi za druge, po noći i preko vikenda, sa vašim API ključem, nad tuđim podacima, i svaka njegova greška je vaša greška — samo sa zakašnjenjem od nekoliko dana, dok ne stigne mail. Zato produkcija nije „isti agent, veći server&quot;; to je <strong>drugi režim rada</strong>, sa tri stuba na kojima stoji: <strong>ograničenja umesto poverenja</strong> (bezbednost — agentu se ne veruje na reč, nego se ograđuje), <strong>dokazi umesto utiska</strong> (opservabilnost — svaki korak ostavlja trag koji se posle čita) i <strong>budžet umesto improvizacije</strong> (troškovi — koliko agent sme da potroši po koraku, po zadatku i po mesecu). Kraj modula: agent „Arhivar&quot; iz modula 03 u produkcijskom oklopu — bezbedne putanje, potvrde za opasne akcije, strukturisani logovi sa jednim tragom kroz ceo zadatak, i budžet koji prekida pre nego što račun eksplodira.</p>
+<hr>
+<h2 id="1-dva-sveta-vas-racunar-i-tudji">1. Dva sveta: vaš računar i tuđi</h2>
+<p>Počnimo tablicom, jer razlika najbolje stoji u redovima. Isti agent, dva sveta:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>vaš računar (razvoj)</th>
+<th>produkcija (kod klijenta)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ko gleda izlaz</td>
+<td>vi, odmah</td>
+<td>korisnik; vi sa zakašnjenjem</td>
+</tr>
+<tr>
+<td>kad agent pogreši</td>
+<td>prekinete, popravite, ponovo</td>
+<td>greška je već viđena, mora da se <strong>rekonstruiše</strong></td>
+</tr>
+<tr>
+<td>ključ API-ja</td>
+<td>vaš, sa vašim limitom</td>
+<td>često tuđi, sa tuđim novcem</td>
+</tr>
+<tr>
+<td>podaci</td>
+<td>vaš <code>sandbox/</code> sa dva fajla</td>
+<td>tuđi fajlovi, možda osetljivi</td>
+</tr>
+<tr>
+<td>trošak gajbe</td>
+<td>koliko ste sami potrošili</td>
+<td>koliko je potrošio <strong>svaki korisnik, svakog dana</strong></td>
+</tr>
+<tr>
+<td>kad padne mreža</td>
+<td>probate ponovo ručno</td>
+<td>kod mora sam: sačekati, ponoviti, odustati čisto</td>
+</tr>
+</tbody></table>
+<p>Tri posledice iz tablice vrede da ih izdvojimo, jer objašnjavaju ceo ostatak modula. Prvo: <strong>greška se rekonstruiše</strong> — pošto vas nema kad se desi, jedini svedok je ono što je agent sam zapisao; zato se pišu logovi (sekcija 3). Drugo: <strong>nove su sile koje deluju na agenta</strong> — korisnički fajlovi kao ulaz, kvote provajdera, prekidi mreže; zato se gradi otpornost (sekcija 4). Treće: <strong>novac se množi</strong> — trošak koji vam je kod kuće bio zanemarljiv, u produkciji se množi brojem korisnika i dana; zato se uvodi budžet (sekcija 5). A bezbednost (sekcija 2) je zapravo pretpostavka za sve tri: agent bez ograničenja u tuđem svetu je ne upošljavate — to je poziv na nesreću.</p>
+<p>Još jedna stvar, pre nego što krenemo: ništa u ovom modulu nije teško. Svaki obrazac ovde je 10–30 linija običnog Pythona — sanitizacija putanje, jedna <code>if</code> granica pre opasne akcije, jedna funkcija <code>zapisi()</code> za log, jedna klasa <code>Budzet</code>. Ono što je novo nije težina koda nego <strong>disciplina</strong>: obrazac se primenjuje uvek, ne &quot;kad se setimo&quot;; jer upravo onaj dan kad se ne primeni biva dan kad je trebalo. Zato su vežbe ovog modula, više nego ikad, „napravite jednom, koristite zauvek&quot;.</p>
+<h2 id="2-bezbednost-ogranicenja-umesto-poverenja">2. Bezbednost: ograničenja umesto poverenja</h2>
+<p>Prvo pravilo je staro kao bezbednost sama: <strong>najmanja dozvola</strong> (eng. <em>least privilege</em>, modul 02). Alat koji agentu <strong>ne postoji</strong>, agent ne može da zloupotrebi — ni greškom, ni kad ga neko navuče (trovanje kontekstom, modul 05; trovanje alatom, modul 06). Zato se u produkciji počinje od spiska: šta agent <strong>mora</strong> da ume da bi uradio posao — i ništa preko toga. Agent koji sređuje direktorijume treba da ume da lista, čita i preimenuje; ne treba mu brisanje (pa ako baš treba — u zaseban, potvrđen korak), ne treba mu šel, ne treba mu pristup van jednog direktorijuma. Svaki alat koji dodate „jer može zatrebati&quot; je rizik koji ste preuzeli bez potrebe.</p>
+<p>Drugo pravilo: <strong>sandbox kako treba</strong>. U modulu 02 napravili smo sandbox — jedan direktorijum i ništa van njega. Sad ga radimo kako se radi u produkciji, jer naivne verzije imaju rupu kroz koju se prolazi na prvi pogled:</p>
+<pre><code class="language-text">naivno:  putanja.startswith(&quot;sandbox&quot;)     → prolazi „sandbox-zli/../../tajne.txt&quot; ❌
+         putanja ne sadrži „..&quot;             → prolazi simbolička veza ❌
+redovno: (KOREN / putanja).resolve()       → stvarna putanja, simveze razrešene
+         pa proveri .is_relative_to(KOREN)  → van korena? ODBIJ ✓
+</code></pre>
+<p>Ključ je u redosledu: <strong>putanja se razreši do kraja, pa se tek onda proverava</strong> da li je unutar dozvoljenog korena. Provera na sirovom unosu („ne sadrži …&quot;) je provera onoga što je korisnik **napisao&quot;, a ne onoga što sistem **izvršava&quot; — a bezbednost se piše za ovo drugo. Ista disciplina važi za sve argumente alata: šema (modul 02) kaže kakav tip stiže, a kod alata <strong>proverava i ograničava vrednost</strong> — alat je granica poverenja, ne modelovo dobroćudno stajalište.</p>
+<p>Treće: <strong>potvrde korisnika</strong> (eng. <em>human-in-the-loop</em>) za ono što je skupo ili nepovratno. Ne traži se potvrda za sve (agent koji za svaki korak pita čoveka je čovek sa skupim međukoracima) — traži se za akcije iz gornjih kategorija rizika:</p>
+<table>
+<thead>
+<tr>
+<th>kategorija</th>
+<th>primer akcija</th>
+<th>potvrda</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>čitanje</td>
+<td>listaj, procitaj, pretraga</td>
+<td>ne (jeftino, povratno)</td>
+</tr>
+<tr>
+<td>pisanje</td>
+<td>preimenuj, upiši belešku</td>
+<td>potvrda, ili prvo suvi rad</td>
+</tr>
+<tr>
+<td>nepovratno</td>
+<td>briši, pošalji mail, plaćanje</td>
+<td>potvrda + suvi rad, uvek</td>
+</tr>
+</tbody></table>
+<p><strong>Suvi rad</strong> (eng. <em>dry run</em>) je izveštaj „evo šta bih uradio&quot; bez ijedne izvršene promene — najjeftinija odbrana na svetu: akcija se prvo odigra **na papiru&quot;, pa je čovek potvrdi, pa se izvrši. Uz potvrde ide i <strong>dnevnik odluka</strong> (ko je šta odobrio, kada) — ne zato što ne verujemo korisniku, nego zato što se u produkciji svako „a ko je to dozvolio?&quot; odgovara iz zapisa, ne iz sećanja.</p>
+<p>Četvrto: <strong>tajni</strong> (eng. <em>secrets</em>). Pravila su kratka i bez izuzetaka: ključ se čita iz environment varijable (modul 01), <code>.env</code> ide u <code>.gitignore</code> (a ne u Git), ključ se <strong>nikad ne loguje</strong> (sekcija 3 će to ponoviti — jer je najčešći slučaj curenja baš log), i ključ agenta nije ključ baze: agent dobija <strong>sopstveni, minimalni ključ</strong> (može samo ono što agent sme), pa se po potrebi <strong>rotira</strong> — promeni — bez ikoga drugog. Kad ključ jednog dana procuri (a to je „kad&quot;, ne „ako&quot;), ograničen i rotiran ključ je incident od deset minuta; glavni ključ baze je incident od nedelju dana.</p>
+<p>I peto, što nas vraća na početak kursa: <strong>kočnice su bezbednost</strong> (modul 03). Ograničenje koraka, budžet tokena i vremenska granica po zadatku nisu samo zaštita od troška — to su i bezbednosne odbrane: agent u petlji nije samo skup, on je i <strong>nedeterminisan sistem koji radi nešto</strong> dok ga niko ne gleda. Sve što ga zaustavlja, štiti i vas.</p>
+<h2 id="3-opservabilnost-videti-sta-agent-radi">3. Opservabilnost: videti šta agent radi</h2>
+<p>Opservabilnost (eng. <em>observability</em>) je moć da vidite šta agent radi — ne na vašem ekranu, nego <strong>u radu, bez vas</strong>. Produkcija bez nje je crna kutija: pitanje „zašto je agent juče obrisao pola direktorijuma?&quot; se ne može postaviti, jer odgovor ne postoji nigde. Gradi se od tri sloja, od najsićušnijeg do najapstraktnijeg:</p>
+<p><strong>Sloj 1: beleženje (eng. <em>logging</em>).</strong> Svaki događaj — poziv modela, poziv alata, potvrda korisnika, pad — postaje jedna linija u datoteci. U razvoju smo logove pisali sa <code>print()</code> (trag iz modula 03); u produkciji se piše <strong>strukturisano</strong> (eng. <em>structured logging</em>): svaka linija je samostalan JSON objekat, jer se JSON posle <strong>čita programski</strong> — filtrira po vrsti, broji po danu, pretražuje po id-u. Osnovni događaj nosi šest polja:</p>
+<pre><code class="language-text">vreme      — ISO vreme događaja
+trag_id    — identifikator zadatka (o njemu odmah)
+dogadjaj   — vrsta: &quot;poziv_modela&quot; | &quot;poziv_alata&quot; | &quot;potvrda&quot; | &quot;pad&quot;
+korak      — redni broj koraka u zadatku
+sadrzaj    — kratak sažetak ulaza i izlaza (ne sve!)
+trajanje_ms, tokeni — koliko je trajalo i šta je koštalo
+</code></pre>
+<p>Uz to tri navike koje prave razliku između loga koji pomaže i loga koji smeta. <strong>Loguj nameru pre izvršenja, rezultat posle</strong>: ako agent pukne usred koraka, u logu ostaje zapisano šta je <strong>namerao</strong> da uradi — polomljeni trag bez namere je pola informacije. <strong>Ne loguj tajne ni ceo kontekst</strong>: ključ nikad (sekcija 2), a ceo kontekst ni ne treba — loguje se sažetak, jer log koji sadrži sve skupo stoji i nevaljano miriše po tuđim podacima. <strong>Loguj i srećne slučajeve</strong>: log nije samo za padove; stopa uspeha iz logova je besplatna evaluacija u malom (modul 07).</p>
+<p><strong>Sloj 2: trag (eng. <em>trace</em>).</strong> <code>trag_id</code> je identifikator <strong>jednog zadatka</strong> — niz znakova koji se stvara na početku (npr. <code>uuid4().hex[:8]</code>) i prati svaki događaj do kraja: svaki poziv modela, svaki alat, svaka potvrda. Bez njega su logovi gomila nesortiranih događaja; sa njim je jedan zadatak jedna priča: <code>grep trag_id</code> izvuče sve njegove korake redom. U sistemu od više agenata (modul 08) trag se <strong>prosleđuje kroz sve agente</strong> — potpuno isto polje u njihovim logovima — pa pitanje „ko je pogrešio?&quot; prestaje da bude arheologija: jedan id, svi učesnici, jedan pregled.</p>
+<p><strong>Sloj 3: metrike.</strong> Metrika je broj izračunat iz logova, gledan kroz vreme: poziva dnevno, prosečni tokeni po zadatku, procenat zadataka sa padom, prosečno trajanje. Pojedinačni događaj kaže „šta se desilo&quot;; metrika kaže „da li se to dešava <strong>često</strong>&quot; — a razlika između incidenta i obrazaca upravo tu živi. Izvestaj od juče: 312 zadataka, 9 padova (2,9%), od toga 7 po kvoti — to je metrika koja kaže da je vreme za veći plan kvota (sekcija 5), pre nego što korisnici sami kažu, ljutito.</p>
+<p>I dijagnostički redosled kad nešto padne, nasleđen iz modula 07 i proširen: <strong>zadatak (trag_id) → događaji traga → zadnji uspešan korak → izlaz koji ga je pokvario → tek onda prompt/model</strong>. Prva tri koraka su čitanje logova; četvrti je čitanje primera; tek peti dira kod. U praksi se skoro sve reši na prvom i drugom — jer je agent, zahvaljujući logovima, sam napisao svoj izveštaj o nesreći.</p>
+<h2 id="4-otpornost-na-greske-padati-glasno-ustajati-polako">4. Otpornost na greške: padati glasno, ustajati polako</h2>
+<p>U produkciji agenta čekaju greške koje na vašem računaru nikad niste videli, jer ste vi bili filter: mreža se prekine, provajder vrati 429 (prekoračena kvota — previše zahteva u jedinici vremena), provajder vrati 500, zahtev visi trideset sekundi, model vrati pokvaren JSON. Otpornost (eng. <em>resilience</em>) je veština da se preživi <strong>prolazna</strong> greška bez čoveka, i da se <strong>trajna</strong> greška prekine čisto, sa tragom. Deli se na tri navike.</p>
+<p><strong>Ponovi — ali samo prolazno, i sa zadrškom.</strong> Prolazna greška (429, 5xx, prekid mreže, timeout) znači „sad ne može, za trenutak možda može&quot;; nju rešava ponovni pokušaj (eng. <em>retry</em>) sa <strong>eksponencijalnom zadrškom</strong> (eng. <em>exponential backoff</em>): svaki sledeći pokušaj čeka sve duže — 1s, pa 2s, pa 4s — da provajderu damo vremena da se oporavi, a ne da ga zaturimo još jače. Dve granice su obavezne: <strong>maksimum pokušaja</strong> (posle trećeg odustaje se čisto — petlja koja pokušava beskonačno je samo skuplja inačica pada) i <strong>ne ponavljaj neprolazno</strong>: greška 400 (loš zahtev — recimo loša šema alata) neće proći ni iz trećeg puta; nju treba prijaviti i popraviti, ne pokušavati.</p>
+<p><strong>Budi idempotentan.</strong> Idempotencija (eng. <em>idempotency</em>) znači: ako se akcija izvrši <strong>dva puta</strong>, ishod je kao da se izvršila jednom. Zvuči apstraktno, a u praksi je konkretno: preimenovanje fajla koje je prvi put uspelo, drugi put pada („fajl ne postoji&quot;) — zato se pre akcije <strong>proverava da li je već urađena</strong>; poziv API-ja koji je možda stigao do provajdera a možda i ne, ponavlja se mirno samo ako je bezbedno ponoviti. Pravilo: retry bez idempotencije pretvara prolaznu grešku u <strong>dvostruku</strong> akciju — plaćanje koje je prošlo, a poruka o grešci nije stigla, pa klijent klikne „plati ponovo&quot;. Zato se rizične akcije (sekcija 2: nepovratne) ne ponavljaju automatski nikad.</p>
+<p><strong>Padni glasno.</strong> Poslednja odbrana je i prva lekcija modula 07: kad greška nije prolazna, ili je pokušaja bilo dovoljno — agent <strong>stane</strong>, upiše pad u log sa punim tragom, javi korisniku čisto poruku („zadatak nije završen, pokušajte ponovo ili pišite podršci, id traga: a1b2c3&quot;), i vrati izlazni kod ≠ 0. Šta se <strong>ne</strong> radi: gutati izuzetak i nastaviti (agent koji je izgubio korak, a radi dalje, proizvodi pouzdano loše rezultate — najgora kombinacija: pouzdano i loše), vraćati delimičan posao kao potpun, i skrivati haos od loga dok ga glatko pokazujete korisniku. Korisnik vidi smireno „pokušajte kasnije&quot;; log vidi sve.</p>
+<p>Sve tri navike su male funkcije — retry petlja sa tri parametra, <code>if</code> provera pre akcije, jedan <code>except</code> koji loguje i diže ruke. Njihova snaga je, kao i uvek u ovom modulu, u tome da postoje <strong>pre</strong> dana kad zatrebaju.</p>
+<h2 id="5-troskovi-po-koraku-po-zadatku-po-mesecu">5. Troškovi: po koraku, po zadatku, po mesecu</h2>
+<p>Odakle uopšte dolazi cena agenta? Iz dva množenja. Prvo: <strong>tokeni puta cena</strong> — svaki poziv API-ja plaća ulazne tokene (sve što je u kontekstu: sistemski prompt, istorija, rezultati alata) i izlazne (odgovor), po ceni po milon tokena; izlazni su obično nekoliko puta skuplji od ulaznih. Drugo, i u agentima podmuklije: <strong>istorija raste sa koracima</strong> — peti poziv u petlji plaća i prva četiri (modul 05), pa trošak po zadatku raste brže nego broj koraka. Agent sa deset koraka nije deset poziva — to je deset poziva sa sve dužim kontekstom.</p>
+<p>Prvi korak kontrole je <strong>merenje</strong>, jer nenadgledan trošak je neograničen trošak. Svaki odgovor API-ja nosi <code>usage</code> (modul 07): ulazni, izlazni, ukupno. U produkciji se sabira <strong>po zadatku</strong> (koliko me košta jedan korisnički zahtev, kroz sve korake) i <strong>po danu</strong> (iz logova, sekcija 3), pa se zna prosečan trošak po interakciji. Kad znate da vas jedan zadatak košta 0,015 € i da ih dnevno bude 400, mesečni račun više nije iznenađenje nego aritmetika: <strong>prosečan trošak po interakciji × broj interakcija dnevno × 30</strong>. (Cifre u vežbama su ilustrativne — cenovnici se menjaju i razlikuju po provajderu; uvek proverite važeći cenovnik svog modela.)</p>
+<p>Drugi korak je <strong>budžet</strong>: granica koja se <strong>nameće</strong>, ne preporučuje. Dva nivoa: <strong>meki limit</strong> (upozorenje u log: „zadatak je potrošio 80% budžeta&quot;) i <strong>tvrdi limit</strong> (izuzetak koji prekida zadatak čisto, sa padom u log i poštenom porukom korisniku). Bez tvrdog limita, budžet je dekoracija: agent u petlji se ne zaustavlja sam — uvo se navikne na upozorenja, a račun ne. Granica po koraku postoji i kao <code>max_koraka</code> (modul 03); granica po zadatku je novi sloj: <strong>budžet tokena za ceo zadatak</strong>, sabran kroz sve pozive.</p>
+<p>Treći korak je <strong>smanjivanje</strong> — pet poluga, redom po tome koliko su bezazlene:</p>
+<ol>
+<li><strong>Sažimanje istorije</strong> (modul 05): svaki korak ne mora da nosi celu prošlost; sažetak starijih koraka košta jednom, štedi na svakom sledećem.</li>
+<li><strong>Keširanje odgovora</strong> (eng. <em>response caching</em>): identičan poziv (isti model, ista poruka, temperatura 0) vraća spremljen odgovor umesto novi poziv — besplatno za ponovljena pitanja, a njih u radu sa korisnicima uvek ima.</li>
+<li><strong>Jeftiniji model za lake korake</strong> (eng. <em>model routing</em>): ne mora svaki korak glavni model — klasifikacija pitanja, izdvajanje pojmova, formatiranje — to rade i mali, jeftini modeli; glavni dođe na teški deo.</li>
+<li><strong>Manje koraka</strong>: bolji prompt i bolji alati (moduli 02 i 07 — mereno!) skraćuju petlju; svaki izbačen korak štedi i svoj poziv i njegov doprinos istoriji.</li>
+<li><strong>Manji kontekst</strong>: samo ono što treba (modul 05) — dokument od 50 stranica u kontekstu „jer možda zatreba&quot; plaća se na svakom koraku.</li>
+</ol>
+<p>I četvrta stavka koja se lako zaboravi: <strong>trošak greške</strong>. Pad koji se ne vidi, petlja koja se ne prekida, retry bez granice — sve je to novac. Zato su kočnice iz sekcija 2 i 4 istovremeno i finansijska odbrana: budžet, granica koraka i maksimum pokušaja štite i podatke i novčanik. U produkciji je „koliko košta&quot; uvek <strong>tri odgovora</strong>: po koraku (usage), po zadatku (budžet) i po mesecu (aritmetika) — i sva tri se znaju unapred, ne posle računa.</p>
+<h2 id="6-vezbe-arhivar-ide-u-produkciju">6. Vežbe: „Arhivar&quot; ide u produkciju</h2>
+<p>Predmet vežbi je agent <strong>„Arhivar&quot;</strong> — sređivač direktorijuma u duhu agenta iz modula 03: prima zadatak („sredi beleške&quot;), poziva alate (listaj, čita, preimenuje). U modulu 03 gradili smo mu pamet; sada mu gradimo <strong>oklop</strong>. Četiri sloja, redom kao sekcije: bezbedne putanje i ograničenja, potvrde i suvi rad, logovi sa tragom, budžet i ponovni pokušaji. Po obrascu iz modula 08: prve tri vežbe rade <strong>bez ijednog poziva API-ju</strong> (model u njima je mok — fiksiran spisak zahteva), jer se oklop testira na najgore moguće unose, a to se radi jeftino i offline; četvrta vežba simulira i provajdera. Kao i uvek: ključ, ako zatreba, samo u <code>Z_AI_API_KEY</code> (opciono <code>Z_AI_BASE_URL</code>, <code>Z_AI_MODEL</code>).</p>
+<h3 id="6-1-zadatak-1-oklop-sandbox-kako-treba">6.1 Zadatak 1: oklop — sandbox kako treba</h3>
+<p>Prvi sloj oklopa su dva pravila iz sekcije 2: <strong>putanja se razreši pa se proveri</strong> i <strong>sve izvršavanje ide kroz jedno mesto</strong>. Sačuvajte kao <code>09a_oklop.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 9.1 — oklop za „Arhivar&quot;: bezbedne putanje i jedno mesto izvršavanja.
+
+Bez ijednog poziva API-ju: oklop se testira na najgore moguće unose.
+
+Upotreba: python 09a_oklop.py
+&quot;&quot;&quot;
+
+from pathlib import Path
+
+KOREN = (Path(__file__).parent / &quot;sandbox&quot;).resolve()
+
+# kategorije rizika iz sekcije 2: svaki alat ima svoju, po nazivu
+RIZIK = {&quot;listaj&quot;: &quot;citanje&quot;, &quot;procitaj&quot;: &quot;citanje&quot;, &quot;preimenuj&quot;: &quot;pisanje&quot;}
+
+def bezbedna_putanja(ime: str) -&gt; Path:
+    &quot;&quot;&quot;Putanja unutar KOREN-a — ili ValueError. Redosled je sve:
+    PRVO resolve (…, simboličke veze, apsolutizuje), PA provera granice.
+    Provera na sirovom unosu je provera teksta, ne putanje.
+    &quot;&quot;&quot;
+    kandidat = (KOREN / ime).resolve()
+    if not kandidat.is_relative_to(KOREN):
+        raise ValueError(f&quot;putanja izlazi van sandbox-a: {ime!r}&quot;)
+    return kandidat
+
+def listaj() -&gt; str:
+    &quot;&quot;&quot;Spisak fajlova u sandbox-u.&quot;&quot;&quot;
+    KOREN.mkdir(exist_ok=True)
+    imena = sorted(p.name for p in KOREN.iterdir())
+    return &quot;\n&quot;.join(imena) if imena else &quot;(prazno)&quot;
+
+def procitaj(ime: str) -&gt; str:
+    putanja = bezbedna_putanja(ime)
+    if not putanja.is_file():
+        return f&quot;GREŠKA: fajl &#39;{ime}&#39; ne postoji u sandbox-u.&quot;
+    return putanja.read_text(encoding=&quot;utf-8&quot;)
+
+def preimenuj(staro: str, novo: str) -&gt; str:
+    &quot;&quot;&quot;Pisanje — zato prvo provera: novo ime NE SME postojati
+    (idempotencija iz sekcije 4: dva poziva = jedan ishod).&quot;&quot;&quot;
+    stara, nova = bezbedna_putanja(staro), bezbedna_putanja(novo)
+    if not stara.is_file():
+        return f&quot;GREŠKA: fajl &#39;{staro}&#39; ne postoji.&quot;
+    if nova.exists():
+        return f&quot;GREŠKA: &#39;{novo}&#39; već postoji — ne pišem preko.&quot;
+    stara.rename(nova)
+    return f&quot;OK: &#39;{staro}&#39; → &#39;{novo}&#39;&quot;
+
+ALATI = {&quot;listaj&quot;: listaj, &quot;procitaj&quot;: procitaj, &quot;preimenuj&quot;: preimenuj}
+
+def izvrsi(ime_alata: str, **argumenti) -&gt; str:
+    &quot;&quot;&quot;Jedino mesto kroz koje se bilo koji alat izvršava.
+
+    Model u produkciji samo TRAŽI poziv alata — izvršava ga ovaj kod,
+    sa svim ograničenjima na jednom mestu: nepoznat alat ne postoji,
+    poznat alat se poziva sa proverenim argumentima, greška se vraća
+    kao tekst modelu (a u 09c se loguje).
+    &quot;&quot;&quot;
+    if ime_alata not in ALATI:                      # podrazumevano: ne
+        return f&quot;GREŠKA: nepoznat alat {ime_alata!r}&quot;
+    try:
+        return str(ALATI[ime_alata](**argumenti))
+    except (ValueError, TypeError) as g:
+        return f&quot;GREŠKA: {g}&quot;
+
+if __name__ == &quot;__main__&quot;:
+    KOREN.mkdir(exist_ok=True)
+    (KOREN / &quot;beleska.txt&quot;).write_text(&quot;beleška sa sastanka&quot;, encoding=&quot;utf-8&quot;)
+    napadi = [                                        # najgore što pada na pamet
+        (&quot;procitaj&quot;, {&quot;ime&quot;: &quot;beleska.txt&quot;}),        # normalan poziv
+        (&quot;procitaj&quot;, {&quot;ime&quot;: &quot;../moduli/modul-03-agent-od-nule.md&quot;}),
+        (&quot;procitaj&quot;, {&quot;ime&quot;: &quot;sandbox-zli/../../README.md&quot;}),
+        (&quot;izbrisi_sve&quot;, {}),                          # alat koji ne postoji
+        (&quot;preimenuj&quot;, {&quot;staro&quot;: &quot;beleska.txt&quot;, &quot;novo&quot;: &quot;beleska.txt&quot;}),
+    ]
+    for alat, args in napadi:
+        print(f&quot;[{alat} {args}]\n  → {izvrsi(alat, **args)[:70]}&quot;)
+</code></pre>
+<p>Pokrenite i čitajte izlaz redom:</p>
+<pre><code class="language-bash">python 09a_oklop.py
+</code></pre>
+<p>Prvi poziv prolazi; druga dva padaju na istoj proveri — <code>../</code> varijanta i „lažni prefiks&quot; varijanta (koja počinje sa <code>sandbox</code>, pa bi naivna <code>startswith</code> provera pustila) — jer posle <code>resolve()</code> obe vode <strong>van korena</strong>, i tu ih čeka odbijanje. Četvrti pokazuje podrazumevano odbijanje: alat koji nije na spisku ne postoji, ma kako dramatično zvučalo njegovo ime. Peti je idempotencija na delu: preimenovanje u postojeće ime se odbija, jer bi drugi poziv istog zahteva (sekcija 4) preko naivne verzije prebrisao sadržaj. Kad završite, dodajte još jedan napad po svom ukusu — na primer apsolutnu putanju (<code>/etc/passwd</code> ili <code>C:\Windows\...</code>) — i uverite se da provera iz <code>resolve()</code> hvata i nju. To je cela poenta ovog zadatka: <strong>pet linija provere, pet klasa napada zatvoreno</strong>.</p>
+<h3 id="6-2-zadatak-2-potvrde-suvi-rad-i-dnevnik-odluka">6.2 Zadatak 2: potvrde, suvi rad i dnevnik odluka</h3>
+<p>Drugi sloj je kapija između kategorija rizika: akcije iz kategorije <strong>pisanje</strong> ne izvršavaju se bez potvrde, a potvrda ima tri režima rada — <strong>suvi rad</strong> (podrazumevan: ništa se ne izvršava, pravi se izveštaj „šta bi bilo urađeno&quot;), <strong>pitaj</strong> (klasično pitanje čoveku) i <strong>automatski</strong> (za testove i povratne akcije, uz zapis u dnevniku). Svaka odluka — odobreno ili odbijeno — ide u <strong>dnevnik odluka</strong> (JSON linije), pa se svako kasnije „a ko je to dozvolio?&quot; odgovara iz zapisa. Sačuvajte kao <code>09b_potvrde.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 9.2 — potvrde za „Arhivar&quot;: kapija za pisanje + dnevnik odluka.
+
+Režim rada se bira environment varijablom ARHIVAR_REZIM:
+  suvi-rad   — podrazumevano: pisanje se NE izvršava, samo izveštaj
+  pitaj      — za svako pisanje se pita korisnika [d/N]
+  automatski — pisanje se izvršava (za testove), uz zapis u dnevniku
+
+Upotreba: python 09b_potvrde.py
+&quot;&quot;&quot;
+
+import json
+import os
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+# oklop iz 09a — ovde dupliran (imena sa cifrom se ne uvoze; modul 04)
+KOREN = (Path(__file__).parent / &quot;sandbox&quot;).resolve()
+RIZIK = {&quot;listaj&quot;: &quot;citanje&quot;, &quot;procitaj&quot;: &quot;citanje&quot;, &quot;preimenuj&quot;: &quot;pisanje&quot;}
+
+def bezbedna_putanja(ime: str) -&gt; Path:
+    kandidat = (KOREN / ime).resolve()
+    if not kandidat.is_relative_to(KOREN):
+        raise ValueError(f&quot;putanja izlazi van sandbox-a: {ime!r}&quot;)
+    return kandidat
+
+def listaj() -&gt; str:
+    KOREN.mkdir(exist_ok=True)
+    imena = sorted(p.name for p in KOREN.iterdir())
+    return &quot;\n&quot;.join(imena) if imena else &quot;(prazno)&quot;
+
+def procitaj(ime: str) -&gt; str:
+    putanja = bezbedna_putanja(ime)
+    if not putanja.is_file():
+        return f&quot;GREŠKA: fajl &#39;{ime}&#39; ne postoji.&quot;
+    return putanja.read_text(encoding=&quot;utf-8&quot;)
+
+def preimenuj(staro: str, novo: str) -&gt; str:
+    stara, nova = bezbedna_putanja(staro), bezbedna_putanja(novo)
+    if not stara.is_file():
+        return f&quot;GREŠKA: fajl &#39;{staro}&#39; ne postoji.&quot;
+    if nova.exists():
+        return f&quot;GREŠKA: &#39;{novo}&#39; već postoji — ne pišem preko.&quot;
+    stara.rename(nova)
+    return f&quot;OK: preimenovano &#39;{staro}&#39; → &#39;{novo}&#39;&quot;
+
+ALATI = {&quot;listaj&quot;: listaj, &quot;procitaj&quot;: procitaj, &quot;preimenuj&quot;: preimenuj}
+DNEVNIK = Path(&quot;dnevnik-odluka.jsonl&quot;)
+
+# --- kapija: potvrde + dnevnik -----------------------------------------------
+
+REZIM = os.environ.get(&quot;ARHIVAR_REZIM&quot;, &quot;suvi-rad&quot;)
+
+def zapisi_odluku(alat, argumenti, odluka: str, razlog: str) -&gt; None:
+    &quot;&quot;&quot;Dnevnik odluka: ko-šta-kada — bez obzira na ishod.&quot;&quot;&quot;
+    zapis = {&quot;vreme&quot;: datetime.now(timezone.utc).isoformat(timespec=&quot;seconds&quot;),
+             &quot;alat&quot;: alat, &quot;argumenti&quot;: argumenti,
+             &quot;odluka&quot;: odluka, &quot;razlog&quot;: razlog}
+    with DNEVNIK.open(&quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(json.dumps(zapis, ensure_ascii=False) + &quot;\n&quot;)
+
+def trazi_potvrdu(alat: str, argumenti: dict) -&gt; bool:
+    &quot;&quot;&quot;Human-in-the-loop kapija za akcije iz kategorije pisanje.&quot;&quot;&quot;
+    if REZIM == &quot;pitaj&quot;:
+        odgovor = input(f&quot;  Izvršiti {alat} {argumenti}? [d/N] &quot;).strip().lower()
+        odluka = odgovor == &quot;d&quot;
+        zapisi_odluku(alat, argumenti, &quot;odobreno&quot; if odluka else &quot;odbijeno&quot;,
+                      &quot;potvrda korisnika&quot;)
+        return odluka
+    if REZIM == &quot;automatski&quot;:
+        zapisi_odluku(alat, argumenti, &quot;odobreno&quot;, &quot;režim automatski (test)&quot;)
+        return True
+    zapisi_odluku(alat, argumenti, &quot;preskočeno&quot;, &quot;suvi rad — ništa se ne menja&quot;)
+    return False
+
+def izvrsi(ime_alata: str, **argumenti) -&gt; str:
+    &quot;&quot;&quot;Izvršavanje iz 09a + kapija za pisanje.&quot;&quot;&quot;
+    if ime_alata not in ALATI:
+        return f&quot;GREŠKA: nepoznat alat {ime_alata!r}&quot;
+    if RIZIK[ime_alata] == &quot;pisanje&quot; and not trazi_potvrdu(ime_alata, argumenti):
+        return f&quot;PRESKOČENO (potrebna potvrda): {ime_alata} {argumenti}&quot;
+    try:
+        return str(ALATI[ime_alata](**argumenti))
+    except (ValueError, TypeError) as g:
+        return f&quot;GREŠKA: {g}&quot;
+
+# --- mok „agent&quot;: fiksiran plan zahteva (kao da je model tražio) --------------
+PLAN = [
+    {&quot;alat&quot;: &quot;listaj&quot;, &quot;argumenti&quot;: {}},
+    {&quot;alat&quot;: &quot;procitaj&quot;, &quot;argumenti&quot;: {&quot;ime&quot;: &quot;beleska.txt&quot;}},
+    {&quot;alat&quot;: &quot;preimenuj&quot;, &quot;argumenti&quot;: {&quot;staro&quot;: &quot;beleska.txt&quot;,
+                                        &quot;novo&quot;: &quot;2025-10-beleska.txt&quot;}},
+]
+
+if __name__ == &quot;__main__&quot;:
+    KOREN.mkdir(exist_ok=True)
+    (KOREN / &quot;beleska.txt&quot;).write_text(&quot;beleška sa sastanka&quot;, encoding=&quot;utf-8&quot;)
+    print(f&quot;režim rada: {REZIM}&quot;)
+    for korak, zahtev in enumerate(PLAN, start=1):
+        ishod = izvrsi(zahtev[&quot;alat&quot;], **zahtev[&quot;argumenti&quot;])
+        print(f&quot;{korak}. [{zahtev[&#39;alat&#39;]}] → {ishod[:70]}&quot;)
+    print(f&quot;\ndnevnik odluka ({DNEVNIK}):&quot;)
+    if DNEVNIK.exists():
+        for linija in DNEVNIK.read_text(encoding=&quot;utf-8&quot;).splitlines():
+            print(&quot;  &quot;, linija[:90])
+</code></pre>
+<p>Pokrenite prvo u podrazumevanom režimu, pa u ostala dva:</p>
+<pre><code class="language-bash">python 09b_potvrde.py                          # suvi rad: pisanje preskočeno
+ARHIVAR_REZIM=automatski python 09b_potvrde.py # pisanje izvršeno + zapis
+ARHIVAR_REZIM=pitaj python 09b_potvrde.py      # pitate se sami sebi
+</code></pre>
+<p>U prvom pokretanju, fajl <code>beleska.txt</code> posle svega <strong>i dalje postoji</strong> pod starim imenom — agent je „radio&quot;, ništa nije menjeno, a vi ste dobili izveštaj šta bi promenio. To je suvi rad: pogled na akciju pre akcije. U drugom, preimenovanje je stvarno izvršeno — i ponovnim pokretanjem videćete zašto postoji provera iz 09a: fajl više ne postoji pod starim imenom, pa alat vraća <code>GREŠKA</code>, a ne prazan uspeh. I obratite pažnju na treće pokretanje kad odbijete: ništa se ne dešava, ali <strong>dnevnik beleži i odbijanje</strong> — dnevnik odluka je dnevnik odluka, ne dnevnik uspeha.</p>
+<h3 id="6-3-zadatak-3-logovi-i-trag-jedan-zadatak-jedna-prica">6.3 Zadatak 3: logovi i trag — jedan zadatak, jedna priča</h3>
+<p>Treći sloj je struktura koja se posle čita programski: svaki događaj jedna JSON linija, svaki događaj nosi <code>trag_id</code>, i — najvažnija navika — <strong>namera se loguje pre izvršenja, rezultat posle</strong>, pa agent koji pukne usred koraka u logu ipak ostavlja trag šta je namerao. Sačuvajte kao <code>09c_trag.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 9.3 — strukturisani logovi sa tragom za „Arhivara&quot;.
+
+Svaki događaj = jedna JSON linija u log/agent.jsonl; svi događaji jednog
+zadatka dele trag_id. Namere se loguju PRE izvršenja, rezultati POSLE.
+
+Upotreba: python 09c_trag.py
+&quot;&quot;&quot;
+
+import json
+import time
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+
+# oklop iz 09a/09b — dupliran (imena sa cifrom se ne uvoze; modul 04)
+KOREN = (Path(__file__).parent / &quot;sandbox&quot;).resolve()
+RIZIK = {&quot;listaj&quot;: &quot;citanje&quot;, &quot;procitaj&quot;: &quot;citanje&quot;, &quot;preimenuj&quot;: &quot;pisanje&quot;}
+
+def bezbedna_putanja(ime: str) -&gt; Path:
+    kandidat = (KOREN / ime).resolve()
+    if not kandidat.is_relative_to(KOREN):
+        raise ValueError(f&quot;putanja izlazi van sandbox-a: {ime!r}&quot;)
+    return kandidat
+
+def listaj() -&gt; str:
+    KOREN.mkdir(exist_ok=True)
+    imena = sorted(p.name for p in KOREN.iterdir())
+    return &quot;\n&quot;.join(imena) if imena else &quot;(prazno)&quot;
+
+def procitaj(ime: str) -&gt; str:
+    putanja = bezbedna_putanja(ime)
+    if not putanja.is_file():
+        return f&quot;GREŠKA: fajl &#39;{ime}&#39; ne postoji.&quot;
+    return putanja.read_text(encoding=&quot;utf-8&quot;)
+
+def preimenuj(staro: str, novo: str) -&gt; str:
+    stara, nova = bezbedna_putanja(staro), bezbedna_putanja(novo)
+    if not stara.is_file():
+        return f&quot;GREŠKA: fajl &#39;{staro}&#39; ne postoji.&quot;
+    if nova.exists():
+        return f&quot;GREŠKA: &#39;{novo}&#39; već postoji — ne pišem preko.&quot;
+    stara.rename(nova)
+    return f&quot;OK: preimenovano&quot;
+
+ALATI = {&quot;listaj&quot;: listaj, &quot;procitaj&quot;: procitaj, &quot;preimenuj&quot;: preimenuj}
+LOG = Path(&quot;log&quot;) / &quot;agent.jsonl&quot;
+
+# --- beleženje: jedna funkcija, jedan oblik -----------------------------------
+
+def zapisi(dogadjaj: str, **polja) -&gt; None:
+    &quot;&quot;&quot;Jedan događaj = jedna JSON linija: vreme, trag_id, događaj, ostalo.
+
+    Zašto JSON a ne print: ovo čita program (filtriranje, brojanje,
+    izveštaji u domaćem), a print čita samo čovek — i to danas.
+    &quot;&quot;&quot;
+    zapis = {&quot;vreme&quot;: datetime.now(timezone.utc).isoformat(timespec=&quot;milliseconds&quot;),
+             &quot;dogadjaj&quot;: dogadjaj, **polja}
+    LOG.parent.mkdir(exist_ok=True)
+    with LOG.open(&quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(json.dumps(zapis, ensure_ascii=False) + &quot;\n&quot;)
+
+def izvrsi_sa_logom(trag_id: str, korak: int, ime_alata: str,
+                     **argumenti) -&gt; str:
+    &quot;&quot;&quot;izvrsi() iz 09a + log: namera PRE, rezultat POSLE, vreme uvek.&quot;&quot;&quot;
+    zapisi(&quot;namera_alata&quot;, trag_id=trag_id, korak=korak,
+           alat=ime_alata, argumenti=argumenti)
+    pocetak = time.perf_counter()
+    if ime_alata not in ALATI:
+        ishod = f&quot;GREŠKA: nepoznat alat {ime_alata!r}&quot;
+    else:
+        try:
+            ishod = str(ALATI[ime_alata](**argumenti))
+        except (ValueError, TypeError) as g:
+            ishod = f&quot;GREŠKA: {g}&quot;
+    zapisi(&quot;rezultat_alata&quot;, trag_id=trag_id, korak=korak,
+           alat=ime_alata, trajanje_ms=round((time.perf_counter() - pocetak) * 1000),
+           ishod=ishod[:80])          # sažetak! ne ceo sadržaj fajla
+    return ishod
+
+# --- mok „agent&quot; (kao u 09b) + jedan pokvaren zahtev -------------------------
+PLAN = [
+    {&quot;alat&quot;: &quot;listaj&quot;, &quot;argumenti&quot;: {}},
+    {&quot;alat&quot;: &quot;procitaj&quot;, &quot;argumenti&quot;: {&quot;ime&quot;: &quot;beleska.txt&quot;}},
+    {&quot;alat&quot;: &quot;preimenuj&quot;, &quot;argumenti&quot;: {&quot;staro&quot;: &quot;beleska.txt&quot;,
+                                        &quot;novo&quot;: &quot;2025-10-beleska.txt&quot;}},
+    {&quot;alat&quot;: &quot;izbrisi_sve&quot;, &quot;argumenti&quot;: {}},        # nepoznat alat
+]
+
+if __name__ == &quot;__main__&quot;:
+    KOREN.mkdir(exist_ok=True)
+    (KOREN / &quot;beleska.txt&quot;).write_text(&quot;beleška sa sastanka&quot;, encoding=&quot;utf-8&quot;)
+    trag_id = uuid.uuid4().hex[:8]                     # jedan zadatak, jedan trag
+    zapisi(&quot;zadatak_pocetak&quot;, trag_id=trag_id, koraka=len(PLAN))
+    for korak, zahtev in enumerate(PLAN, start=1):
+        ishod = izvrsi_sa_logom(trag_id, korak, zahtev[&quot;alat&quot;],
+                                **zahtev[&quot;argumenti&quot;])
+        print(f&quot;{korak}. [{zahtev[&#39;alat&#39;]}] → {ishod[:60]}&quot;)
+    zapisi(&quot;zadatak_kraj&quot;, trag_id=trag_id)
+    print(f&quot;\ntrag: {trag_id} — log: {LOG}&quot;)
+    for linija in LOG.read_text(encoding=&quot;utf-8&quot;).splitlines()[-4:]:
+        print(&quot;  &quot;, linija[:100])
+</code></pre>
+<p>Pokrenite dva puta zaredom i uporedite:</p>
+<pre><code class="language-bash">python 09c_trag.py
+python 09c_trag.py
+</code></pre>
+<p>Otvorite <code>log/agent.jsonl</code> i čitajte ga kao što biste čitali tuđi log (jer jednom hoćete): svaka linija je samostalan JSON; prvo pokretanje ima svoj <code>trag_id</code>, drugo svoj — dva zadatka, dve priče, jedna datoteka. U svakoj priči vidite nameru pa rezultat po koraku, sa trajanjem; četvrti korak (nepoznat alat) je odbijen — ali <strong>zabeležen</strong>, i to je razlika između „bacio je grešku&quot; i „evo šta je tražio, kad i zašto&quot;. I primetite sažetak: <code>ishod[:80]</code> — log pamti šta se desilo, ne celu belešku; kontekst i privatnost (sekcija 3) važe i za logove.</p>
+<h3 id="6-4-zadatak-4-budzet-kvote-i-ponovni-pokusaji">6.4 Zadatak 4: budžet, kvote i ponovni pokušaji</h3>
+<p>Četvrti sloj spaja sekcije 4 i 5: budžet koji se <strong>nameće</strong> (meki upozori, tvrdi prekine), retry sa eksponencijalnom zadrškom za prolazne greške (429, 5xx) — i aritmetiku mesečnog računa. Provajdera simulira lažni klijent, pa sve radi offline. Sačuvajte kao <code>09d_budzet.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 9.4 — budžet tokena, retry sa zadrškom, mesečni račun.
+
+Lažni klijent simulira provajdera: prva dva poziva padaju na kvoti (429),
+treći uspeva — pa se vidi cela mehanika bez ijednog poziva API-ju.
+
+Upotreba: python 09d_budzet.py
+&quot;&quot;&quot;
+
+import time
+
+class PrekrsenBudzet(Exception):
+    &quot;&quot;&quot;Tvrdi limit: zadatak se prekida čisto — ovo nije greška nego kapija.&quot;&quot;&quot;
+
+class KvotaGreska(Exception):
+    &quot;&quot;&quot;Prolazna greška: 429 — retry sa zadrškom ima smisla.&quot;&quot;&quot;
+
+class Budzet:
+    &quot;&quot;&quot;Budžet tokena po zadatku: meki deo upozorava, tvrdi prekida.&quot;&quot;&quot;
+
+    def __init__(self, max_tokena: int, meki_deo: float = 0.8):
+        self.max_tokena, self.meki = max_tokena, int(max_tokena * meki_deo)
+        self.potroseno = 0
+
+    def dodaj(self, tokeni: int) -&gt; None:
+        self.potroseno += tokeni
+        if self.potroseno &gt; self.max_tokena:            # tvrdi limit
+            raise PrekrsenBudzet(
+                f&quot;potrošeno {self.potroseno} &gt; {self.max_tokena} tokena&quot;)
+        if self.potroseno &gt; self.meki:                   # meki limit
+            print(f&quot;  [budžet] UPOZORENJE: {self.potroseno}/{self.max_tokena} &quot;
+                  f&quot;tokena (preko {self.meki})&quot;)
+
+class LazniKlijent:
+    &quot;&quot;&quot;Provajder za vežbu: 429, 429, pa uspeh — svaki poziv košta tokene.&quot;&quot;&quot;
+
+    def __init__(self):
+        self.pozivi = 0
+
+    def pozovi(self) -&gt; dict:
+        self.pozivi += 1
+        if self.pozivi &lt;= 2:
+            raise KvotaGreska(&quot;429: prekoračena kvota — pokušajte kasnije&quot;)
+        return {&quot;tekst&quot;: &quot;OK&quot;, &quot;ulazni&quot;: 900, &quot;izlazni&quot;: 120}
+
+def pozovi_sa_pokusajima(klijent, budzet, max_pokusaja: int = 3) -&gt; dict:
+    &quot;&quot;&quot;Retry sa eksponencijalnom zadrškom — samo za PROLAZNE greške.
+
+    Zadrška u vežbi je 0,05s/0,1s/… da demo traje sekundu;
+    u produkciji: 1s, 2s, 4s — provajderu se daje vremena da odahne.
+    &quot;&quot;&quot;
+    for pokusaj in range(1, max_pokusaja + 1):
+        try:
+            odgovor = klijent.pozovi()
+            budzet.dodaj(odgovor[&quot;ulazni&quot;] + odgovor[&quot;izlazni&quot;])
+            return odgovor
+        except KvotaGreska as g:
+            if pokusaj == max_pokusaja:                  # odustani čisto
+                raise KvotaGreska(
+                    f&quot;ni iz {max_pokusaja}. pokušaja: {g}&quot;) from g
+            zadrška = 0.05 * 2 ** (pokusaj - 1)
+            print(f&quot;  [retry] {pokusaj}. pokušaj pao ({g}); čekam {zadrška}s&quot;)
+            time.sleep(zadrška)
+    raise AssertionError(&quot;nedostižno&quot;)                   # radi čitača
+
+# --- aritmetika računa: po koraku → po zadatku → po mesecu --------------------
+
+CENOVNIK = {&quot;glm-4.6&quot;: {&quot;ulazni&quot;: 0.6, &quot;izlazni&quot;: 2.2}}   # € / MILION tokena
+# (ilustrativno — uvek proverite važeći cenovnik svog provajdera!)
+
+def mesecni_racun(prosecni_tokeni_po_zadatku: dict, zadataka_dnevno: int,
+                   model: str = &quot;glm-4.6&quot;) -&gt; float:
+    &quot;&quot;&quot;Prosečan zadatak × broj dnevno × 30 — pre računa, ne posle.&quot;&quot;&quot;
+    cena = CENOVNIK[model]
+    po_zadatku = (prosecni_tokeni_po_zadatku[&quot;ulazni&quot;] * cena[&quot;ulazni&quot;]
+                  + prosecni_tokeni_po_zadatku[&quot;izlazni&quot;] * cena[&quot;izlazni&quot;]) / 1_000_000
+    return po_zadatku * zadataka_dnevno * 30
+
+if __name__ == &quot;__main__&quot;:
+    klijent, budzet = LazniKlijent(), Budzet(max_tokena=1500)
+    print(&quot;— zadatak A: provajder posrće (429, 429, uspeh) —&quot;)
+    try:
+        odgovor = pozovi_sa_pokusajima(klijent, budzet)
+        print(f&quot;  odgovor: {odgovor[&#39;tekst&#39;]}, potrošeno: {budzet.potroseno}&quot;)
+    except KvotaGreska as g:
+        print(f&quot;  PAD: {g}&quot;)
+
+    print(&quot;— zadatak B: budžet je pre mali — tvrdi limit prekida —&quot;)
+    budzet_b = Budzet(max_tokena=500)
+    try:
+        pozovi_sa_pokusajima(LazniKlijent(), budzet_b)
+    except PrekrsenBudzet as g:
+        print(f&quot;  PREKINUTO ČISTO: {g} (bolje nego petlja na tuđi račun)&quot;)
+
+    print(&quot;— račun za tri pretpostavke o saobraćaju —&quot;)
+    prosek = {&quot;ulazni&quot;: 6_000, &quot;izlazni&quot;: 700}        # izmeriti na svom agentu!
+    for dnevno in (50, 500, 5_000):
+        print(f&quot;  {dnevno:&gt;5} zadataka dnevno → &quot;
+              f&quot;{mesecni_racun(prosek, dnevno):&gt;8.2f} € / mesec&quot;)
+</code></pre>
+<p>Pokrenite:</p>
+<pre><code class="language-bash">python 09d_budzet.py
+</code></pre>
+<p>Zadatak A pokazuje celu hronologiju iz sekcije 4: pad, zadrška, pad, duža zadrška, uspeh — i cenu uspeha upisanu u budžet. Zadatak B pokazuje zašto meki i tvrdi limit nisu isto: ovaj veliki korak preskoči i meki prag i tvrdi limit u jednom pozivu, pa tvrdi limit prekine zadatak <strong>izuzetkom</strong> pre nego što bi meko upozorenje stiglo da se ispiše — što u pravom agentu znači: pad u log (sekcija 3), čista poruka korisniku, izlazni kod ≠ 0 (modul 07). I tabla na kraju je poenta sekcije 5: <strong>isti agent, tri skale</strong> — 50 zadataka dnevno je zanemarljivo, 5.000 je ozbiljan mesečni račun, a razlika je samo množilac; zato se procena radi pre lansiranja, na izmerenoj proseku, a ne na osećaju.</p>
+<h3 id="6-5-zadatak-5-domaci-kes-izvestaj-iz-logova-i-rusenje-na-miru">6.5 Zadatak 5 (domaći): keš, izveštaj iz logova, i rušenje na miru</h3>
+<ol>
+<li><strong>Keš odgovora.</strong> Dodajte u <code>09d_budzet.py</code> keš (dict sa ključem <code>(model, poruke, temperatura)</code>): identičan poziv vraća spremljen odgovor i <strong>ne dodaje tokene u budžet</strong>. Zatim pustite da lažni klijent primi tri ista zahteva u nizu — izmerite uštedu, i odgovorite: za koje pozive u agentu (modul 03/08) keš ima smisla, a za koje je opasan (odgovor koji zavisi od vremena? od stanja fajlova?).</li>
+<li><strong>Dnevni izveštaj iz logova.</strong> Napišite <code>09e_izvestaj.py</code>: čita <code>log/agent.jsonl</code> iz 09c i ispisuje po danu — koliko zadataka, koliko poziva alata, koliko padova (<code>ishod</code> počinje sa <code>GREŠKA</code>). To su metrike iz sekcije 3, izračunate iz logova koje već imate; ubuduće vam je to jutarnja prva stranica.</li>
+<li><strong>Rušenje na miru.</strong> Ubacite u 09c mid-run pad (npr. <code>raise KeyboardInterrupt</code> posle drugog koraka) i pročitajte log: da li se vidi <strong>šta je bilo u toku</strong>? Ako nedostaje zapis o prekidu — dodajte <code>try/finally</code> oko petlje koja upisuje <code>zadatak_prekid</code>, pa opet srušite i proverite da trag sada priča celu priču. Ovo je vežba koju ne možete da uradite „kad bude vremena&quot; — jer onda kad bude trebalo, biće produkcija.</li>
+<li><strong>Produkcijski checklist.</strong> Za agenta kojeg planirate u modulu 10, napišite deset linija: pet dijagnoza/obrana iz sekcija 2–5 koje vaš agent <strong>mora</strong> da ima, i po jednu rečenicu kako ćete znati da rade (test? log? budžet?). Lista je kratka zato što je provera za svaku jeftina — po obrascu ovog modula: napravite jednom, koristite zauvek.</li>
+</ol>
+<h2 id="7-tipicne-greske-i-dijagnoza">7. Tipične greške — i dijagnoza</h2>
+<table>
+<thead>
+<tr>
+<th>Simptom</th>
+<th>Uzrok</th>
+<th>Lek</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Agent u produkciji menja što ne sme</td>
+<td>alati bez kategorija rizika i kapije</td>
+<td>jedna tabela rizika + potvrde za pisanje (09b)</td>
+</tr>
+<tr>
+<td>Napad putanjom prošao („../…&quot;)</td>
+<td>provera na sirovom unosu, ne na razrešenoj putanji</td>
+<td><code>resolve()</code> pa <code>is_relative_to</code> (09a)</td>
+</tr>
+<tr>
+<td>„Ne znam šta se desilo juče u 3h&quot;</td>
+<td>nema logova, ili su <code>print</code> u konzoli koja je nestala</td>
+<td>strukturisani JSON log + trag_id (09c)</td>
+</tr>
+<tr>
+<td>Ključ u logu / u Git-u</td>
+<td>loguje se ceo zahtev; <code>.env</code> u repozitorijumu</td>
+<td>sažeci u log; <code>.gitignore</code>; poseban minimalni ključ</td>
+</tr>
+<tr>
+<td>Retry oluja: stotine poziva u minuti</td>
+<td>retry bez zadrške i bez maksimuma</td>
+<td>eksponencijalna zadrška + max 3 pokušaja (09d)</td>
+</tr>
+<tr>
+<td>Prolazna greška postane dvostruka akcija</td>
+<td>retry na nepovratnoj akciji</td>
+<td>idempotencija: provera pre akcije; rizično se ne ponavlja</td>
+</tr>
+<tr>
+<td>Račun iznenađujući na kraju meseca</td>
+<td>trošak se ne meri po zadatku</td>
+<td>usage → budžet (meki+tvrdi) → mesečna aritmetika (09d)</td>
+</tr>
+<tr>
+<td>Pad se „proguta&quot; i agent radi dalje</td>
+<td>izuzeci se guše da ne smetaju korisniku</td>
+<td>padati glasno: log + čista poruka + izlazni kod ≠ 0</td>
+</tr>
+<tr>
+<td>Agent spor što duže radi</td>
+<td>istorija raste sa svakim korakom</td>
+<td>sažimanje (modul 05), keš, jeftiniji model za lake korake</td>
+</tr>
+</tbody></table>
+<p>Redosled provere pri padu u produkciji: <strong>trag_id iz poruke korisnika → događaji traga → poslednja namera bez rezultata → izlaz tog koraka → tek onda prompt/model</strong>. Prva tri koraka su čitanje loga — i skoro uvek dovoljna.</p>
+<h2 id="8-pitanja-za-samoproveru">8. Pitanja za samoproveru</h2>
+<ol>
+<li>Nabrojite tri razlike između „agent na vašem računaru&quot; i „agent u produkciji&quot;, i za svaku jednu odbranu iz ovog modula koja je pokriva.</li>
+<li>Zašto <code>putanja.startswith(&quot;sandbox&quot;)</code> nije provera granice? Šta radi <code>resolve()</code> pre provere, i koje klase napada time zatvarate?</li>
+<li>Šta je suvi rad i zašto je najjeftinija odbrana? Za koje kategorije akcija se traži potvrda korisnika, a za koje ne?</li>
+<li>Zašto se loguje namera pre izvršenja? Šta sve NE ide u log i zašto (dva razloga)?</li>
+<li>Koja greška jeste kandidat za retry sa zadrškom, a koja nije? Zašto retry bez idempotencije može da napravi više štete nego sam pad?</li>
+<li>Objasnite razliku mekog i tvrdog limita budžeta. Šta se dešava sa zadatakom kad pukne tvrdi limit — i zašto je to bolje od beskonačne petlje?</li>
+<li>Izračunajte: agent prosečno troši 4.000 ulaznih i 500 izlaznih tokena po zadatku, cene su 0,6 €/M ulazno i 2,2 €/M izlazno, a dnevno bude 800 zadataka. Koliki je mesečni račun? (Računajte na papiru — aritmetika je deo posla.)</li>
+</ol>
+<h2 id="sta-sledi">Šta sledi</h2>
+<p>Agent je sada bezbedno ograničen, vidljiv u svakom koraku, otporan na prolazne greške i unutar budžeta — dakle: <strong>spreman za svet</strong>. <a href="../10-zavrsni-projekat/"><strong>Modul 10 — Završni projekat: portfolio agent</strong></a> spaja sve module u jednoj samostalnoj izgradnji: agent koji rešava stvaran problem vašeg okruženja, sa evaluacijom (modul 07), oklopom iz ovog modula i kratkim tekstom „šta i kako&quot; — jer portfolio agent dokazuje ono što ste naučili upravo time što radi i kad vas nema. 🚀</p>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/moduli/modul-09-u-produkciju.md" rel="noopener">moduli/modul-09-u-produkciju.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <a href="../08-multi-agent-sistemi/"><span class="dir">← Prethodni modul</span>Multi-agent sistemi</a>
+  <a class="pager-next" href="../10-zavrsni-projekat/"><span class="dir">Sledeći modul →</span>Završni projekat</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

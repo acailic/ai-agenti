@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modul 00 — Uvod u agente: šta je agent, zašto sad, kako se uči — AI i agenti na srpskom</title>
+<meta name="description" content="Dobro došli! Ovim modulom počinje put koji vodi od prvog poziva API-ju do sopstvenog agenta koji radi stvarne poslove. Pre nego što sledeći put napišete red koda, ovde ćemo odgovoriti na">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/modul/00-uvod-u-agente/">
+<meta property="og:title" content="Modul 00 — Uvod u agente: šta je agent, zašto sad, kako se uči — AI i agenti na srpskom">
+<meta property="og:description" content="Dobro došli! Ovim modulom počinje put koji vodi od prvog poziva API-ju do sopstvenog agenta koji radi stvarne poslove. Pre nego što sledeći put napišete red koda, ovde ćemo odgovoriti na">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/modul/00-uvod-u-agente/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="../../radionice/">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#1-sta-je-ai-agent">1. Šta je AI agent?</a></li><li><a href="#2-zasto-bas-sada">2. Zašto baš sada?</a></li><li><a href="#3-kako-se-ova-oblast-najbolje-uci">3. Kako se ova oblast najbolje uči</a></li><li><a href="#4-kratki-recnik-za-pocetak">4. Kratki rečnik za početak</a></li><li><a href="#5-pitanja-za-samoproveru">5. Pitanja za samoproveru</a></li><li><a href="#sledece">Sledeće</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Modul 00 — Uvod u agente: šta je agent, zašto sad, kako se uči</h1>
+    <div class="meta-chips"><span class="chip modnum">modul 00</span><span class="chip ">⏱ 2–3 časa</span></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Vreme:</strong> 2–3 časa · <strong>Preduslovi:</strong> nema (samo radoznalost) · <strong>Stanje:</strong> prva radna verzija</p>
+</blockquote>
+<p>Dobro došli! Ovim modulom počinje put koji vodi od prvog poziva API-ju do sopstvenog agenta koji radi stvarne poslove. Pre nego što sledeći put napišete red koda, ovde ćemo odgovoriti na tri pitanja: <strong>šta</strong> je agent, <strong>zašto</strong> je ova oblast upravo sada toliko bitna i <strong>kako</strong> ćete je najbrže naučiti. Pripremite kafu — krećemo.</p>
+<hr>
+<h2 id="1-sta-je-ai-agent">1. Šta je AI agent?</h2>
+<p>Započnimo sa radnom definicijom koju ćemo koristiti kroz ceo kurs:</p>
+<blockquote>
+<p><strong>AI agent je softverski sistem u kome veliki jezički model (eng. <em>large language model</em>, LLM) ne samo odgovara na pitanja, već odlučuje i deluje — koristi alate, pravi korake ka cilju i koriguje sebe na osnovu rezultata.</strong></p>
+</blockquote>
+<p>Rastavimo tu definiciju na delove:</p>
+<ol>
+<li><strong>Cilj.</strong> Agentu ne kažete „odgovori mi&quot;, nego „uradi ovo&quot;: pronađi, sredi, napiši, proveri, rezerviši.</li>
+<li><strong>Alati (eng. <em>tools</em>).</strong> Model sam ne može da otvori fajl, pozove API ili upiše u bazu. Zato mu date alate — funkcije koje vaš kod izvršava na zahtev modela.</li>
+<li><strong>Petlja (eng. <em>agent loop</em>).</strong> Agent radi u ciklusu: razmišlja šta je sledeći korak → zatraži izvršavanje alata → vidi rezultat → odluči šta dalje. Ponavlja dok zadatak nije gotov (ili dok ne zaključi da ne može).</li>
+<li><strong>Korekcija.</strong> Ako alat vrati grešku, agent ne staje — menja pristup i pokušava drugačije. Ta sposobnost oporavka je ono što ga izdvaja od obične skripte.</li>
+</ol>
+<h3 id="chatbot-ili-agent">Chatbot ili agent?</h3>
+<p>Najlakše je razumeti razliku kroz poređenje:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Chatbot</th>
+<th>Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Šta radi</td>
+<td>odgovara na poruke</td>
+<td>izvršava zadatke do cilja</td>
+</tr>
+<tr>
+<td>Inicijativa</td>
+<td>čeka pitanje</td>
+<td>sam bira sledeći korak</td>
+</tr>
+<tr>
+<td>Alati</td>
+<td>nema (ili veoma ograničeni)</td>
+<td>ima, i sam odlučuje kada ih koristi</td>
+</tr>
+<tr>
+<td>Trajanje</td>
+<td>jedan odgovor</td>
+<td>više koraka, čak i minuti rada</td>
+</tr>
+<tr>
+<td>Primer</td>
+<td>čet za podršku koji daje savete</td>
+<td>sistem koji sam pregleda tikete, nađe uzrok i pripremi odgovor</td>
+</tr>
+</tbody></table>
+<p>Granicu ne treba precrtavati nožem: mnogi proizvodi su negde između. Ali kada čujete „agent&quot;, u pozadini je gotovo uvek petlja odlučivanja sa alatima — a to je tačno ono što ćemo sami izgraditi u <a href="../03-agent-od-nule/">modulu 03</a>.</p>
+<h3 id="model-je-motor-ne-auto">Model je motor, ne auto</h3>
+<p>Česta zabluda: „agent = veliki model&quot;. Nije. Model je <strong>motor zaključivanja</strong> — odlično predviđa šta ima smisla reći ili urati sledeće. Auto je ceo sistem: motor, ali i točkovi (alati), putokazi (prompt i kontekst), instrument tabla (praćenje i evaluacija). Dobar auto sa slabim motorom ne ide daleko — ali ni najjači motor sam od sebe ne vozi. Zato ćemo jednaku pažnju posvetiti i jednom i drugom.</p>
+<hr>
+<h2 id="2-zasto-bas-sada">2. Zašto baš sada?</h2>
+<p>Oblast „agenata&quot; nije nova ideja — nova je kombinacija okolnosti koja je čini izvodljivom:</p>
+<ol>
+<li><strong>Modeli su postali dovoljno sposobni.</strong> Današnji veliki modeli umeju pouzdano da prate složena uputstva, koriste alate po definiciji (takozvana funkcionalnost <em>tool use</em> / <em>function calling</em>) i drže se formata. Pre nekoliko godina to je bio istraživački luksuz.</li>
+<li><strong>Cene su pale.</strong> Poziv koji je pre par godina kočio eksperimente danas koči koliko šoljica kafe. Agent sa nekoliko stotina poziva mesečno je budžet koji pokriva i pojedinac.</li>
+<li><strong>Standardizacija alata.</strong> Pojavili su se otvoreni protokoli (najpoznatiji je MCP — protokol konteksta modela, eng. <em>Model Context Protocol</em>, o njemu u <a href="../../mapa/">modulu 06</a>) zahvaljujući kojima jedan agent može da „utakne&quot; desetine alata bez posebnog programiranja za svaki.</li>
+<li><strong>Traži se znanje.</strong> Kompanije svuda (i u Srbiji i u regionu) eksperimentišu, a nedostaju ljudi koji razumeju i teoriju i praksu — od sigurnosnih implikacija do cene po zahtevu. Razmak između „znam da koristim ChatGPT&quot; i „mogu da napravim i odgovaram za agenta&quot; je upravo ono što tržište plaća.</li>
+</ol>
+<p>I još nešto, konkretno za nas: <strong>na srpskom jeziku gotovo da i ne postoji sistematski materijal o ovoj oblasti.</strong> Zato ovaj kurs postoji.</p>
+<hr>
+<h2 id="3-kako-se-ova-oblast-najbolje-uci">3. Kako se ova oblast najbolje uči</h2>
+<p>Iskreno: ovo nije oblast koja se uči čitanjem. Tri načela koja ćemo poštovati od prve nedelje:</p>
+<ol>
+<li><strong>Ruke na tastaturi.</strong> Svaki modalitet ima vežbe sa pravim API-jem. Neće biti „lažnih&quot; poziva ni simulacija — od prve vežbe pričate sa stvarnim modelom, sa stvarnim (malim!) računom.</li>
+<li><strong>Prompt je program.</strong> Prompt (eng. <em>prompt</em>) — tekst koji šaljete modelu — tretiraćemo kao izvorni kod: piše se pažljivo, verzionira u Git-u, testira i meri. Ko to usvoji, prestaje da „moli&quot; model i počinje da <em>gradi</em> sa modelom.</li>
+<li><strong>Razumevanje pre frameworka.</strong> Postoje biblioteke koje agenta sklope umesto vas. Mi prvo pišemo petlju sami (modul 03), pa tek onda koristimo gotove alate — jer kada nešto krene naopako (a hoće), morate znati šta je ispod haube.</li>
+</ol>
+<p><strong>Kako je kurs organizovan.</strong> <a href="../../mapa/">Mapa učenja</a> ima 11 modula (00–10). Svaki modul donosi: objašnjenje, vežbe i domaći. Pored modula postoje i <a href="../../radionice/">radionice</a> — uživo vođena prolaza kroz ključne module, po sat vremena. Predlažem tempo: jedan modul nedeljno, sa radionicom kao „teretanom sa trenerom&quot; usput.</p>
+<p><strong>Šta vam treba za početak:</strong></p>
+<ul>
+<li>osnovni Python (promenljive, funkcije, <code>pip install</code>, pokretanje skripte) — dovoljno za modul 01, a ponovićemo što zatreba;</li>
+<li>pristup jednom API-ju velikog modela (najjeftiniji plan je dovoljan; u vežbama koristimo z.ai/GLM, ali principi su isti za bilo kog provajdera sa OpenAI-kompatibilnim interfejsom, eng. <em>OpenAI-compatible interface</em>);</li>
+<li>Git nalog — od prvog dana ćete svoje vežbe slati u sopstveni repozitorijum. Na kraju puta to je vaš portfolio.</li>
+</ul>
+<hr>
+<h2 id="4-kratki-recnik-za-pocetak">4. Kratki rečnik za početak</h2>
+<p>Ovi termini vraćaće se stalno; evo ih na jednom mestu. Detaljno se obrađuju u svojim modulima, a kompletan rečnik celog kursa (preko pedeset pojmova) držimo u <a href="../../recnik/">REČNIK.md</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Značenje</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>LLM</strong> (veliki jezički model)</td>
+<td>Model obučen na ogromnom tekstu; iz konteksta predviđa sledeći token. „Motor&quot; agenta.</td>
+</tr>
+<tr>
+<td><strong>Token</strong></td>
+<td>Jedinica teksta koju model obrađuje (približno pola do tri četvrtine reči). Od njega zavise cena i ograničenja. → modul 01</td>
+</tr>
+<tr>
+<td><strong>Kontekst / kontekstni prozor</strong> (eng. <em>context window</em>)</td>
+<td>Sve što model „vidi&quot; u jednom pozivu: sistemski tekst, istorija razgovora, rezultati alata. Fizički je ograničen. → modul 01, 05</td>
+</tr>
+<tr>
+<td><strong>Prompt</strong></td>
+<td>Ulazni tekst za model. U ovom kursu: program, ne molba. → modul 01</td>
+</tr>
+<tr>
+<td><strong>Alat / tool use</strong></td>
+<td>Funkcija koju model može da zatraži, a vaš kod izvršava: pretraga, fajl sistem, API poziv… → modul 02</td>
+</tr>
+<tr>
+<td><strong>Petlja agenta</strong> (eng. <em>agent loop</em>)</td>
+<td>Ciklus razmišljanje → akcija → posmatranje rezultata → ponovo, do cilja. → modul 03</td>
+</tr>
+<tr>
+<td><strong>Ugnežđena reprezentacija</strong> (eng. <em>embedding</em>)</td>
+<td>Tekst preveden u niz brojeva koji čuva značenje; osnova pretrage po smislu. → modul 04</td>
+</tr>
+<tr>
+<td><strong>RAG</strong> (generisanje podržano pretragom)</td>
+<td>Obrazac: pronađi relevantne delove dokumenata, pa tek onda generiši odgovor. → modul 04</td>
+</tr>
+<tr>
+<td><strong>Halucinacija</strong> (eng. <em>hallucination</em>)</td>
+<td>Kada model samouvereno izmišlja. Glavni razlog zašto agent mora biti pod nadzorom i testiran. → svuda 🙂</td>
+</tr>
+<tr>
+<td><strong>Evaluacija</strong></td>
+<td>Sistematsko merenje koliko je agent dobar. Bez nje radite naslepo. → modul 07</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="5-pitanja-za-samoproveru">5. Pitanja za samoproveru</h2>
+<p>Ako možete odgovoriti svojim rečima — spremni ste za sledeći modul:</p>
+<ol>
+<li>Koja tri dela čine agenta po našoj radnoj definiciji, i šta svaki od njih doprinosi?</li>
+<li>U čemu je razlika između chatbota i agenta? Navedite primer koji <em>nije</em> agent, i objasnite zašto.</li>
+<li>Zašto kažemo da je model „motor, a ne auto&quot;? Šta bi u toj analogiji bilo „točkovi&quot;?</li>
+<li>Nabrojite dva razloga zašto je ova oblast eksplodirala u poslednje dve godine.</li>
+<li>Zašto prompt tretiramo kao program, a ne kao poruku prijatelju?</li>
+</ol>
+<p><em>Domaći (kratko):</em> napišite u tri do pet rečenica jedan zadatak iz vašeg posla ili studija koji bi agent mogao da radi umesto vas. Sačuvajte tekst — vratićemo mu se na kraju kursa, u modulu 10.</p>
+<hr>
+<h2 id="sledece">Sledeće</h2>
+<p>Naredni korak: <a href="../01-osnove-llm/"><strong>Modul 01 — Osnove rada sa LLM-ovima</strong></a>. Tu prvi put razgovaramo sa modelom kroz API, saznajemo šta su tokeni zaista, zašto kontekstni prozor jeste novčanik i kako se piše prompt koji se ponaša kao program.</p>
+<p>Ako ste ovde prvi put: dobro nam došli — krećemo polako, ali od prvog dana ozbiljno. 🚀</p>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/moduli/modul-00-uvod-u-agente.md" rel="noopener">moduli/modul-00-uvod-u-agente.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <span></span>
+  <a class="pager-next" href="../01-osnove-llm/"><span class="dir">Sledeći modul →</span>Osnove rada sa LLM-ovima</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

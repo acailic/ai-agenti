@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REČNIK — srpsko-engleski rečnik pojmova — AI i agenti na srpskom</title>
+<meta name="description" content="U ovom kursu važi dogovor: svaki termin pri prvoj upotrebi u tekstu dobija engleski original u zagradi — npr. alat (eng. tool ) — jer ćete u dokumentaciji, porukama o greškama i na poslu na">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/recnik/">
+<meta property="og:title" content="REČNIK — srpsko-engleski rečnik pojmova — AI i agenti na srpskom">
+<meta property="og:description" content="U ovom kursu važi dogovor: svaki termin pri prvoj upotrebi u tekstu dobija engleski original u zagradi — npr. alat (eng. tool ) — jer ćete u dokumentaciji, porukama o greškama i na poslu na">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/recnik/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../mapa/">Mapa kursa</a>
+  <a href="../radionice/">Radionice</a>
+  <a href="./">Rečnik</a>
+  <form class="nav-search" action="../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Sekcije rečnika</div><ol><li><a href="#1-osnove-model-i-razgovor">1. Osnove: model i razgovor</a></li><li><a href="#2-alati">2. Alati</a></li><li><a href="#3-agent-i-petlja">3. Agent i petlja</a></li><li><a href="#4-memorija-i-kontekst">4. Memorija i kontekst</a></li><li><a href="#5-protokoli-i-povezivanje">5. Protokoli i povezivanje</a></li><li><a href="#6-evaluacija">6. Evaluacija</a></li><li><a href="#7-produkcija-i-multi-agent-sistemi">7. Produkcija i multi-agent sistemi</a></li><li><a href="#8-zavrsni-projekat">8. Završni projekat</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>REČNIK — srpsko-engleski rečnik pojmova</h1>
+    <div class="meta-chips"><input type="search" id="recnik-filter" class="filter-input" placeholder="Filtriraj pojmove… (npr. token, RAG, agent)" aria-label="Filtriraj pojmove rečnika"></div>
+  </header>
+  <article class="searchable" data-searchable="1">
+<blockquote>
+<p>Kako kurs piše i govori o agentima: srpski termin, sa engleskim originalom u zagradi. Referenca za sve module.</p>
+</blockquote>
+<p>U ovom kursu važi dogovor: svaki termin pri prvoj upotrebi u tekstu dobija engleski original u zagradi — npr. alat (eng. <em>tool</em>) — jer ćete u dokumentaciji, porukama o greškama i na poslu na ta ista imena naići na engleskom. Ovaj rečnik ih skuplja na jednom mestu: <strong>srpsko ime, engleski original, kratko značenje i modul u kome se pojavljuje.</strong></p>
+<p>Dogovor o prevodima je pragmatičan: nekima je srpski termin potpuno ravnopravan (token, kontekst, temperatura), neki ostaju pretežno na engleskom jer su se u praksi udomaćili (tool use, RAG, LLM-as-a-judge). U nedoumici: pišemo srpski, engleski u zagradi — i nikad mešamo ćirilicu i latinicu (kurs je na latinici i ekavici).</p>
+<hr>
+<h2 id="1-osnove-model-i-razgovor">1. Osnove: model i razgovor</h2>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Na engleskom</th>
+<th>Značenje</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>veliki jezički model</td>
+<td><em>large language model</em> (LLM)</td>
+<td>Model obučen na ogromnom tekstu; iz konteksta predviđa sledeći token. „Motor&quot; agenta.</td>
+<td><a href="../modul/00-uvod-u-agente/">00</a></td>
+</tr>
+<tr>
+<td>token</td>
+<td><em>token</em></td>
+<td>Jedinica teksta koju model obrađuje (približno pola do tri četvrtine reči za engleski). Od tokena zavise cena, brzina i ograničenja.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>kontekst</td>
+<td><em>context</em></td>
+<td>Sve što model vidi u jednom pozivu: sistemski tekst, istorija, rezultati alata, dokumenti.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>kontekstni prozor</td>
+<td><em>context window</em></td>
+<td>Maksimalan broj tokena koji staje u jedan poziv; konačan je, meri se u desetinama ili stotinama hiljada.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>prompt</td>
+<td><em>prompt</em></td>
+<td>Ulazni tekst za model. U ovom kursu: program koji se verzionisa i meri, ne poruka prijatelju.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>sistemski prompt</td>
+<td><em>system prompt</em></td>
+<td>Poruka uloge <code>system</code>: identitet, pravila, format i ograničenja — „konfiguracioni fajl&quot; za model.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>temperatura</td>
+<td><em>temperature</em></td>
+<td>Parametar koji kontroliše raznovrsnost izlaza: niska → ponovljivo, visoka → kreativno. Za agente: niska.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>halucinacija</td>
+<td><em>hallucination</em></td>
+<td>Samouvereno izmišljanje kada model nema podatak; svojstvo načina rada, ne bug — zaobilazi se dizajnom (alati, izvori, testovi).</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>API</td>
+<td><em>API</em></td>
+<td>Programski interfejs preko koga kod razgovara sa modelom; poziv = lista poruka, odgovor = izlaz modela.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>API ključ</td>
+<td><em>API key</em></td>
+<td>Tajni niz koji potvrđuje vaš nalog; kao lozinka — živi u environment varijabli, nikad u kodu.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>environment varijabla</td>
+<td><em>environment variable</em></td>
+<td>Podešavanje procesa izvan koda (npr. <code>Z_AI_API_KEY</code>); standardno mesto za tajne.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+<tr>
+<td>OpenAI-kompatibilan interfejs</td>
+<td><em>OpenAI-compatible interface</em></td>
+<td>Dogovor o obliku poziva koji su prihvatili mnogi provajderi; promenom <code>base_url</code> isti kod radi sa drugim modelima.</td>
+<td><a href="../modul/01-osnove-llm/">01</a></td>
+</tr>
+</tbody></table>
+<h2 id="2-alati">2. Alati</h2>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Na engleskom</th>
+<th>Značenje</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>alat</td>
+<td><em>tool</em></td>
+<td>Funkcija u vašem kodu koju model može da zatraži; jedina veza modela sa svetom podataka i akcija.</td>
+<td><a href="../modul/02-alati-tool-use/">02</a></td>
+</tr>
+<tr>
+<td>korišćenje alata</td>
+<td><em>tool use</em>, <em>function calling</em></td>
+<td>Sposobnost modela da umesto teksta vrati zahtev za izvršenje funkcije sa argumentima.</td>
+<td><a href="../modul/02-alati-tool-use/">02</a></td>
+</tr>
+<tr>
+<td>definicija alata</td>
+<td><em>tool definition</em></td>
+<td>Ono što model vidi: ime, opis i šema parametara. Opis je interfejs ka modelu — piše se kao dokumentacija.</td>
+<td><a href="../modul/02-alati-tool-use/">02</a></td>
+</tr>
+<tr>
+<td>šema parametara</td>
+<td><em>JSON Schema</em></td>
+<td>Formalni opis koje parametre alat prima, kojeg tipa i koji su obavezni.</td>
+<td><a href="../modul/02-alati-tool-use/">02</a></td>
+</tr>
+<tr>
+<td>poziv alata</td>
+<td><em>tool call</em></td>
+<td>Zahtev modela: „izvrši funkciju X sa argumentima Y&quot;; argumenti stižu kao JSON tekst.</td>
+<td><a href="../modul/02-alati-tool-use/">02</a></td>
+</tr>
+<tr>
+<td>sandbox</td>
+<td><em>sandbox</em></td>
+<td>Ograđen prostor (npr. jedan direktorijum) unutar koga alat sme da radi; sve izvan — greška.</td>
+<td><a href="../modul/02-alati-tool-use/">02</a></td>
+</tr>
+<tr>
+<td>najmanja dozvola</td>
+<td><em>least privilege</em></td>
+<td>Alat ume samo ono što mu treba za zadatak: čitanje, ne brisanje; jedan folder, ne ceo disk.</td>
+<td><a href="../modul/02-alati-tool-use/">02</a></td>
+</tr>
+<tr>
+<td>čovek u petlji</td>
+<td><em>human in the loop</em></td>
+<td>Potvrda čoveka pre izvršenja osetljive ili nepovratne operacije.</td>
+<td><a href="../modul/03-agent-od-nule/">03</a></td>
+</tr>
+</tbody></table>
+<h2 id="3-agent-i-petlja">3. Agent i petlja</h2>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Na engleskom</th>
+<th>Značenje</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>agent</td>
+<td><em>AI agent</em></td>
+<td>Sistem u kome LLM odlučuje i deluje: koristi alate, pravi korake ka cilju, koriguje sebe.</td>
+<td><a href="../modul/00-uvod-u-agente/">00</a></td>
+</tr>
+<tr>
+<td>petlja agenta</td>
+<td><em>agent loop</em></td>
+<td>Ciklus: razmišlja → traži akciju → vidi rezultat → ponovo; dok ne završi ili ne stane.</td>
+<td><a href="../modul/03-agent-od-nule/">03</a></td>
+</tr>
+<tr>
+<td>opažaj–razmišljaj–deluj</td>
+<td><em>perceive–think–act</em></td>
+<td>Klasični ciklus agenta: prikupi stanje, odluči, izvrši — pa opet.</td>
+<td><a href="../modul/03-agent-od-nule/">03</a></td>
+</tr>
+<tr>
+<td>samo-korekcija</td>
+<td><em>self-correction</em></td>
+<td>Sposobnost agenta da grešku alata pretoči u novi, ispravljeni pokušaj umesto da stane.</td>
+<td><a href="../modul/03-agent-od-nule/">03</a></td>
+</tr>
+<tr>
+<td>trag</td>
+<td><em>trace</em></td>
+<td>Zapis koraka agenta (alati, argumenti, rezultati, troškovi); čita se i kada je sve prošlo dobro.</td>
+<td><a href="../modul/03-agent-od-nule/">03</a></td>
+</tr>
+<tr>
+<td>kočnice</td>
+<td><em>step limit, token budget</em></td>
+<td><code>max_koraka</code>, budžet tokena, allow-lista akcija; bez njih agent može da vrti do besvesti.</td>
+<td><a href="../modul/03-agent-od-nule/">03</a></td>
+</tr>
+<tr>
+<td>framework</td>
+<td><em>agent framework</em></td>
+<td>Biblioteka koja slaže petlju, alate i logovanje umesto vas; izbor, ne misterija — ispod je ista petlja.</td>
+<td><a href="../modul/03-agent-od-nule/">03</a></td>
+</tr>
+</tbody></table>
+<h2 id="4-memorija-i-kontekst">4. Memorija i kontekst</h2>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Na engleskom</th>
+<th>Značenje</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>memorija</td>
+<td><em>memory</em></td>
+<td>Sve što agent zna između koraka i između sesija: radna (istorija), sažeta, trajna (baza).</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>radna memorija</td>
+<td><em>short-term memory</em></td>
+<td>Istorija poruka u kontekstu — ono što agent „zna&quot; tokom tekućeg zadatka.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>sažeta memorija</td>
+<td><em>summarized memory</em></td>
+<td>Sažetak starije istorije umesto svih poruka; oslobađa prozor, gubi detalje.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>trajna memorija</td>
+<td><em>long-term memory</em></td>
+<td>Sve što agent pamti van kontekstnog prozora (fajlovi, baze, indeks); vraća se po potrebi.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>model bez stanja</td>
+<td><em>stateless</em></td>
+<td>Model ne pamti ništa između dva poziva; sve što zna mora biti u kontekstu poziva.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>povraćaj</td>
+<td><em>retrieval</em></td>
+<td>Izdvajanje upravo relevantnog sadržaja iz trajne memorije nazad u kontekst.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>sažimanje</td>
+<td><em>summarization</em></td>
+<td>Sabijanje starije istorije u kraći tekst da bi se oslobodio kontekstni prozor.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>ugnežđena reprezentacija</td>
+<td><em>embedding</em></td>
+<td>Tekst preveden u niz brojeva koji čuva značenje; tekstovi sličnog smisla su blizu jedni drugima.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>vektorska baza</td>
+<td><em>vector database</em></td>
+<td>Skladište ugnežđenih reprezentacija sa pretragom po sličnosti.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>RAG</td>
+<td><em>retrieval-augmented generation</em></td>
+<td>Obrazac: pronađi relevantne odlomke, ubaci ih u kontekst, pa tek onda generiši odgovor sa izvorom.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>deljenje na odlomke</td>
+<td><em>chunking</em></td>
+<td>Sečenje dokumenata na komade pogodne za ugnežđivanje i pretragu; veličina i preklapanje imaju značaja.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>preklapanje</td>
+<td><em>overlap</em></td>
+<td>Deo teksta koji se ponavlja između susednih odlomaka, da granica ne preseče činjenicu.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>pretraga po smislu</td>
+<td><em>semantic search</em></td>
+<td>Traženje odlomaka po značenju (blizina ugnežđenih reprezentacija), a ne po poklapanju reči.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>kosinusna sličnost</td>
+<td><em>cosine similarity</em></td>
+<td>Mera blizine dva vektora (1 = najbliže, 0 = bez veze); osnova pretrage po smislu.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>k najbližih suseda</td>
+<td><em>k-nearest neighbours</em> (k-NN)</td>
+<td>Povraćaj k vektora najbližih vektoru pitanja.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>navođenje izvora</td>
+<td><em>citation</em></td>
+<td>Odgovor uz oznaku odakle je tvrdnja (odlomak, dokument); čini odgovor proverljivim.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>metapodatak</td>
+<td><em>metadata</em></td>
+<td>Podaci o podatku: izvor fajla, broj odlomka, datum izmene.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>izgubljen usred konteksta</td>
+<td><em>lost in the middle</em></td>
+<td>Relevantan podatak usred dugačkog konteksta se lakše ignoriše.</td>
+<td><a href="../modul/04-memorija-i-rag/">04</a></td>
+</tr>
+<tr>
+<td>inženjering konteksta</td>
+<td><em>context engineering</em></td>
+<td>Dizajn onoga što model vidi u svakom koraku: šta ulazi, šta se sažima, šta se pamti van prozora.</td>
+<td><a href="../modul/05-inzenjering-konteksta/">05</a></td>
+</tr>
+<tr>
+<td>politika konteksta</td>
+<td><em>context policy</em></td>
+<td>Pisani dogovor šta ulazi u kontekst: uvek / aktivno / sažeto / van prozora.</td>
+<td><a href="../modul/05-inzenjering-konteksta/">05</a></td>
+</tr>
+<tr>
+<td>trovanje kontekstom</td>
+<td><em>context poisoning</em></td>
+<td>Sadržaj u kontekstu koji pogrešno usmerava modela: protivrečno, zastarelo, ubrizgano.</td>
+<td><a href="../modul/05-inzenjering-konteksta/">05</a></td>
+</tr>
+<tr>
+<td>ubrizgavanje uputstava</td>
+<td><em>prompt injection</em></td>
+<td>Tekst u dokumentu ili rezultatu alata koji glumi naredbu modelu.</td>
+<td><a href="../modul/05-inzenjering-konteksta/">05</a></td>
+</tr>
+</tbody></table>
+<h2 id="5-protokoli-i-povezivanje">5. Protokoli i povezivanje</h2>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Na engleskom</th>
+<th>Značenje</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>protokol</td>
+<td><em>protocol</em></td>
+<td>Pisani ugovor o obliku poruka između dve strane; N puta M integracija postaje N plus M.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>protokol konteksta modela</td>
+<td><em>Model Context Protocol</em> (MCP)</td>
+<td>Otvoren standard za povezivanje modela sa spoljnim alatima i izvorima podataka.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>host</td>
+<td><em>host</em></td>
+<td>Aplikacija koja pokreće model i odlučuje sa kojim serverima se povezuje.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>MCP klijent</td>
+<td><em>MCP client</em></td>
+<td>Deo hosta koji vodi jednu vezu ka jednom serveru; granica na kojoj se proverava i ograničava.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>MCP server</td>
+<td><em>MCP server</em></td>
+<td>Program koji nudi alate, resurse i promptove preko protokola — lokalni proces ili udaljeni servis.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>primitiv</td>
+<td><em>primitive</em></td>
+<td>Vrsta ponude servera; deli se po tome ko odlučuje: alat (model), resurs (aplikacija), prompt (korisnik).</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>resurs</td>
+<td><em>resource</em></td>
+<td>Podatak koji server izlaže za čitanje; u kontekst ga ubacuje vaš kod, ne model.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>JSON-RPC</td>
+<td><em>JSON-RPC</em></td>
+<td>Format zahteva i odgovora (method, params, id) na kome počiva MCP; notifikacija je poruka bez id i bez odgovora.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>rukovanje</td>
+<td><em>handshake</em></td>
+<td>Prvi razgovor veze (initialize): ko je ko, koje verzije i sposobnosti — pre bilo kog posla.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>otkrivanje alata</td>
+<td><em>tool discovery</em></td>
+<td>Klijent pita server šta nudi (tools/list) i dobija šeme; menja ručno održavanu listu u kodu.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>transport</td>
+<td><em>transport</em></td>
+<td>Kanal kojim putuju poruke: stdio (lokalni proces) ili HTTP (udaljeni servis).</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>imenski prostor</td>
+<td><em>namespace</em></td>
+<td>Prefiks imena alata imenom servera (recnik.trazi), da se alati dva servera ne sudare.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>trovanje alatom</td>
+<td><em>tool poisoning</em></td>
+<td>Opis alata koji glumi uputstvo modelu; tuđi tekst ulazi u kontekst kao vaš.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>agent-kartica</td>
+<td><em>agent card</em></td>
+<td>JSON opis agenta za A2A: šta ume (veštine), gde se nalazi, koje sposobnosti podržava.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+<tr>
+<td>A2A</td>
+<td><em>Agent2Agent</em></td>
+<td>Protokol za saradnju agenata kao ravnopravnih učesnika: dodeljivanje zadataka, poruke u toku, artefakti.</td>
+<td><a href="../modul/06-protokoli-mcp-a2a/">06</a></td>
+</tr>
+</tbody></table>
+<h2 id="6-evaluacija">6. Evaluacija</h2>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Na engleskom</th>
+<th>Značenje</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>evaluacija</td>
+<td><em>evaluation</em></td>
+<td>Sistematsko merenje koliko je agent dobar; bez nje se radi naslepo.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>evaluacioni skup</td>
+<td><em>evaluation set</em>, <em>test set</em></td>
+<td>Verzionisan spisak primera (ulaz → očekivano) na kome se agent meri, uključujući granične slučajeve.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>scenario</td>
+<td><em>scenario</em></td>
+<td>Najmanja jedinica evaluacije: id, ulaz, očekivano ponašanje i provere koje padaju glasno.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>granični slučaj</td>
+<td><em>edge case</em></td>
+<td>Primer na granici domena: van domena, pogrešna pretpostavka, višedelni zahtev; pola vrednosti skupa.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>provera</td>
+<td><em>check</em></td>
+<td>Mali program uz scenario (sadrži / ne sadrži / regex); determinističke provere idu pre sudije.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>metrika</td>
+<td><em>metric</em></td>
+<td>Broj koji nešto zaista meri (tačnost, potpunost, trošak po zadatku); bira se po slučaju upotrebe.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>stopa prolaznosti</td>
+<td><em>pass rate</em></td>
+<td>Procenat scenarija koji prolaze sve provere; glavni broj, ali nikad jedini.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>prag</td>
+<td><em>threshold</em></td>
+<td>Donja granica stope ispod koje je crveno; kao izlazni kod skripte postaje kapija u CI.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>dif pregled</td>
+<td><em>diff review</em></td>
+<td>Upareno poređenje ishoda dva pokretanja po scenariju; flipovi objašnjavaju, agregat odlučuje.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>ocenjivanje pomoću modela</td>
+<td><em>LLM-as-a-judge</em></td>
+<td>Drugi model ocenjuje odgovore prvog po rubrici; korisno, ali se kalibriše na primerima koje je čovek ocenio.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>rubrika</td>
+<td><em>rubric</em></td>
+<td>Pisani kriterijumi po kojima sudija-model sudi; bez nje sudija je izvor nasumičnosti.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>kalibracija</td>
+<td><em>calibration</em></td>
+<td>Slaganje sudije sa ljudskim ocenama na par primera, pre nego što mu se poveri skup.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>pokretač</td>
+<td><em>harness</em></td>
+<td>Skripta koja spaja skup, agenta i provere: tabela, zapis rezultata, izlazni kod po pragu.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>regresiona provera</td>
+<td><em>regression test</em></td>
+<td>Scenario koji je jednom pao i bio popravljen; ostaje zauvek, da greška ne vrati tiho.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+<tr>
+<td>latencija</td>
+<td><em>latency</em></td>
+<td>Vreme od zahteva do odgovora; u agentima se sabira iz više koraka.</td>
+<td><a href="../modul/07-evaluacija-agenata/">07</a></td>
+</tr>
+</tbody></table>
+<h2 id="7-produkcija-i-multi-agent-sistemi">7. Produkcija i multi-agent sistemi</h2>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Na engleskom</th>
+<th>Značenje</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>višeagentski sistem</td>
+<td><em>multi-agent system</em></td>
+<td>Više agenata sa podeljenim ulogama, komunikacijom i orkestracijom (ko radi šta i kojim redom); moćno, ali rešenje samo kada jedan agent zaista nije dovolj.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>orkestracija</td>
+<td><em>orchestration</em></td>
+<td>Koordinacija više agenata: ko radi šta, kojim redom, ko sudi kad je gotovo; ista petlja kao kod jednog agenta, samo je „alat&quot; sad drugi agent.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>orkestrator</td>
+<td><em>orchestrator</em></td>
+<td>Uloga (agent ili običan kod) koja dodeljuje zadatke, sabire rezultate i odlučuje o kraju; u malim sistemima spojena sa planerom.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>planer</td>
+<td><em>planner</em></td>
+<td>Uloga koja cilj razlaže na korake plana (potpitanja, podzadatke), obično u strogo definisanom JSON obliku.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>izvršilac</td>
+<td><em>worker</em>, <em>executor</em></td>
+<td>Uloga koja radi jedan dodeljeni korak do kraja; ne mora biti model — pretraga je odličan izvršilac.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>kriticar</td>
+<td><em>critic</em></td>
+<td>Uloga koja ocenjuje tuđi rezultat po rubrici; mora imati čvrstu granicu popravki, inače se agenti šalju u krug.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>ugovor (između agenata)</td>
+<td><em>contract</em></td>
+<td>Dogovoreni oblik poruka između uloga: šta agent prima (zadatak i kontekst), šta vraća (rezultat) i gde su granice.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>gluvi telefon</td>
+<td><em>context degradation</em></td>
+<td>Postepeno propadanje sadržaja kroz lanac prenošenja između agenata; lek: artefakt i samo potreban kontekst, ne istorija.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>razdeli i saberi</td>
+<td><em>fan-out/fan-in</em></td>
+<td>Orkestracija u kojoj se zadatak podeli na nezavisne delove, oni rade paralelno, pa se rezultati saberu.</td>
+<td><a href="../modul/08-multi-agent-sistemi/">08</a></td>
+</tr>
+<tr>
+<td>kvota</td>
+<td><em>quota</em>, <em>rate limit</em></td>
+<td>Ograničenje broja zahteva ili tokena u jedinici vremena; prekoračenje = greška koju kod mora da obradi.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>opservabilnost</td>
+<td><em>observability</em></td>
+<td>Moć da vidite šta agent radi u radu: logovi, tragovi, metrike; produkcija bez nje je crna kutija.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>potvrda korisnika</td>
+<td><em>human-in-the-loop</em></td>
+<td>Kapija pred skupim ili nepovratnim akcijama: čovek odobrava, a svaka odluka se upisuje u dnevnik.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>suvi rad</td>
+<td><em>dry run</em></td>
+<td>Izvršavanje na papiru: izveštaj „šta bih uradio&quot; bez ijedne promene; najjeftinija odbrana pre opasne akcije.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>dnevnik odluka</td>
+<td><em>audit log</em></td>
+<td>Zapis svake odluke o potvrdama (ko, šta, kada, zašto); odgovor na „a ko je to dozvolio?&quot; dolazi iz zapisa, ne iz sećanja.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>strukturisano beleženje</td>
+<td><em>structured logging</em></td>
+<td>Svaki događaj je jedna JSON linija sa poznatim poljima; čita ga program (filtriranje, brojanje), ne samo čovek.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>id traga</td>
+<td><em>trace ID</em></td>
+<td>Identifikator jednog zadatka koji nose svi njegovi događaji, kroz sve agente; jedan id — svi učesnici — jedan pregled.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>idempotencija</td>
+<td><em>idempotency</em></td>
+<td>Svojstvo akcije da izvršena dva puta daje ishod kao jednom; uslov za bezbedan ponovni pokušaj.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>eksponencijalna zadrška</td>
+<td><em>exponential backoff</em></td>
+<td>Ponovni pokušaji sa sve dužim čekanjem (1s, 2s, 4s); provajderu se daje vremena da odahne, umesto da ga zaturimo.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>budžet</td>
+<td><em>budget</em></td>
+<td>Granica troška po zadatku: meki deo upozorava, tvrdi prekida izuzetkom; budžet bez tvrdog limita je dekoracija.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>keširanje odgovora</td>
+<td><em>response caching</em></td>
+<td>Identičan poziv vraća spremljen odgovor bez novog poziva API-ja; štedi na ponovljenim pitanjima.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+<tr>
+<td>preusmeravanje modela</td>
+<td><em>model routing</em></td>
+<td>Lakši koraci idu jeftinijem modelu, teški glavnom; smanjuje trošak bez diranja najtežih delova.</td>
+<td><a href="../modul/09-u-produkciju/">09</a></td>
+</tr>
+</tbody></table>
+<h2 id="8-zavrsni-projekat">8. Završni projekat</h2>
+<table>
+<thead>
+<tr>
+<th>Termin</th>
+<th>Na engleskom</th>
+<th>Značenje</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>portfolio agent</td>
+<td><em>portfolio agent</em></td>
+<td>Agent napravljen da radi i posle kursa, kao javni dokaz veština: rešava stvaran problem, ima evaluaciju, ograničenja i dokumentaciju.</td>
+<td><a href="../modul/10-zavrsni-projekat/">10</a></td>
+</tr>
+<tr>
+<td>dosije projekta</td>
+<td><em>project brief</em></td>
+<td>Jedna strana pre koda: šta agent radi i za koga, podaci, mera uspeha, šta ne radi, rizici, arhitektura; mesto gde se obim zaustavlja dok je jeftin.</td>
+<td><a href="../modul/10-zavrsni-projekat/">10</a></td>
+</tr>
+<tr>
+<td>kontrolna tačka</td>
+<td><em>checkpoint</em></td>
+<td>Spisak tvrdnji koje moraju važiti pre prelaska na sledeći deo projekta; dogovor koji drži obim pod kontrolom.</td>
+<td><a href="../modul/10-zavrsni-projekat/">10</a></td>
+</tr>
+<tr>
+<td>isporuka</td>
+<td><em>deliverable</em></td>
+<td>Ono što projekat zaista predaje: javni repozitorijum sa agentom, skupom, dosijeom i README-om — ne osećaj da je „skoro gotovo&quot;.</td>
+<td><a href="../modul/10-zavrsni-projekat/">10</a></td>
+</tr>
+<tr>
+<td>minimalna održiva verzija</td>
+<td><em>minimum viable product</em> (MVP)</td>
+<td>Najmanja verzija koja korisniku daje vrednost: jedna vrsta zadatka, jedan korisnik, jedan izvor podataka; širina dolazi proširenjima.</td>
+<td><a href="../modul/10-zavrsni-projekat/">10</a></td>
+</tr>
+<tr>
+<td>rubrika</td>
+<td><em>rubric</em></td>
+<td>Ocena po opisima, ne po osećaju: dimenzije i nivoi (0–3) koji određuju i koliko je urađeno i šta je sledeći korak.</td>
+<td><a href="../modul/10-zavrsni-projekat/">10</a></td>
+</tr>
+<tr>
+<td>prezentacija u tri rečenice</td>
+<td><em>elevator pitch</em></td>
+<td>Šta agent radi i za koga · kako (arhitektura imenom) · zašto mu verovati (evaluacija, logovi, kočnice) — po redu kojim će i drugi gledati.</td>
+<td><a href="../modul/10-zavrsni-projekat/">10</a></td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>Nedostaje vam pojam?</strong> Ovo je živ dokument: ako ste na termin naišli u modulu, a nije ovde — to je greška kursa. Prijavite u <em>issue</em> ili pošaljite <em>pull request</em> (vidi <a href="https://github.com/acailic/ai-agenti-srb/blob/main/README.md">„Kako doprineti&quot;</a> u README-u).</p>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/REČNIK.md" rel="noopener">REČNIK.md na GitHubu ↗</a></p>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

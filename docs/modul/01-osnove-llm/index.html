@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modul 01 — Osnove rada sa LLM-ovima: tokeni, kontekst, prompt kao program — AI i agenti na srpskom</title>
+<meta name="description" content="Ovo je modul u kome prestajete da budete korisnik, a postajete programer velikih modela. Kraj njega: razumećete šta se doslovno dešava kada pošaljete poruku modelu, zašto kontekstni prozor">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/modul/01-osnove-llm/">
+<meta property="og:title" content="Modul 01 — Osnove rada sa LLM-ovima: tokeni, kontekst, prompt kao program — AI i agenti na srpskom">
+<meta property="og:description" content="Ovo je modul u kome prestajete da budete korisnik, a postajete programer velikih modela. Kraj njega: razumećete šta se doslovno dešava kada pošaljete poruku modelu, zašto kontekstni prozor">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/modul/01-osnove-llm/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="../../radionice/">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#1-kako-veliki-jezicki-model-zapravo-radi">1. Kako veliki jezički model zapravo radi</a></li><li><a href="#2-tokeni-jedinica-u-kojoj-se-sve-placa">2. Tokeni: jedinica u kojoj se sve plaća</a></li><li><a href="#3-kontekst-i-kontekstni-prozor-vas-novcanik">3. Kontekst i kontekstni prozor: vaš novčanik</a></li><li><a href="#4-prompt-kao-program">4. Prompt kao program</a></li><li><a href="#5-prva-vezba-sa-pravim-api-jem">5. Prva vežba sa pravim API-jem</a></li><li><a href="#6-sta-sme-a-sta-ne-sme-zdrav-odnos-prema-izlazu-modela">6. Šta sme, a šta ne sme: zdrav odnos prema izlazu modela</a></li><li><a href="#7-pitanja-za-samoproveru">7. Pitanja za samoproveru</a></li><li><a href="#sta-sledi">Šta sledi</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Modul 01 — Osnove rada sa LLM-ovima: tokeni, kontekst, prompt kao program</h1>
+    <div class="meta-chips"><span class="chip modnum">modul 01</span><span class="chip ">⏱ 5–7 časova</span></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Vreme:</strong> 5–7 časova rada · <strong>Preduslovi:</strong> <a href="../00-uvod-u-agente/">modul 00</a>, osnovni Python · <strong>Stanje:</strong> prva radna verzija</p>
+</blockquote>
+<p>Ovo je modul u kome prestajete da budete korisnik, a postajete programer velikih modela. Kraj njega: razumećete šta se doslovno dešava kada pošaljete poruku modelu, zašto kontekstni prozor jeste vaš budžet i vaše ograničenje, i kako se piše prompt koji se ponaša kao program. Najvažnije: <strong>uradićete svoj prvi pravi poziv API-ju</strong> — sa ključem koji nikada ne dolazi u kod.</p>
+<hr>
+<h2 id="1-kako-veliki-jezicki-model-zapravo-radi">1. Kako veliki jezički model zapravo radi</h2>
+<p>Ceo sistem počiva na jednoj naizgled banalnoj sposobnosti: <strong>na osnovu datog teksta, predvideti sledeći token.</strong> Token (eng. <em>token</em>) je komadić teksta — reč, deo reči ili znak interpunkcije. Model ne „razmišlja&quot; u rečenicama; on, token po token, bira šta je najverovatniji nastavak.</p>
+<p>Tri praktične posledice koje morate znati od prve vežbe:</p>
+<ol>
+<li><strong>Verovatnoća, ne sigurnost.</strong> Isto pitanje može dati različite odgovore. Parametar <em>temperatura</em> (eng. <em>temperature</em>) kontroliše koliko: niska temperatura → konzervativniji, ponovljiviji izlaz; visoka → raznovrsniji, kreativniji (i skloniji skretanju). Za agenta obično želimo nisku.</li>
+<li><strong>Model zna samo ono što mu date (plus ono što je naučio u treniranju).</strong> Nema pristup internetu, vašim fajlovima ni „sećanju&quot; između dva poziva. Sve što treba da zna — mora biti u poruci koju pošaljete. Zvuči ograničavajuće, a zapravo je osnova svega: zato se gradimo alate i memoriju (moduli 02–04).</li>
+<li><strong>Samouverenost ≠ tačnost.</strong> Kada model nema pojma, često izumi plauzibilno — to je halucinacija (eng. <em>hallucination</em>). Nije „bug&quot; koji će popraviti novija verzija; to je svojstvo načina rada koje inženjeri zaobilaze dizajnom (izvori informacija, ograničenja, testovi).</li>
+</ol>
+<h2 id="2-tokeni-jedinica-u-kojoj-se-sve-placa">2. Tokeni: jedinica u kojoj se sve plaća</h2>
+<p>Zašto se toliko priča o tokenima? Jer je token jedinica <strong>svake od tri ograničavajuće veličine</strong>:</p>
+<ul>
+<li><strong>Cena.</strong> API se naplaćuje po broju tokena ulaza (eng. <em>input</em>) i izlaza (eng. <em>output</em>). Dugačka istorija razgovora u kontekstu = plaćate je svaki poziv iznova.</li>
+<li><strong>Ograničenje.</strong> Kontekstni prozor (sekcija 3) meri se u tokenima. Kada se napuni — dodira se zid.</li>
+<li><strong>Brzina.</strong> Izlazni tokeni se generišu jedan po jedan; dužina izlaza direktno određuje koliko čekate.</li>
+</ul>
+<p>Koliki je token? Za engleski je približno 3–4 znaka po tokenu. Za srpski (latinica, ćirilica) odnos je nepovoljniji: naše nastavke („najverovatniji&quot;, „razumevanje&quot;) tokenizer često seče na više delova, pa računajte grubo <strong>1 token ≈ 2–3 znaka</strong>. Praktična aritmetika: stranica teksta A4 je za engleski oko 500 tokena, za srpski realno 700–900.</p>
+<p><strong>Vežba razmišljanja (bez koda):</strong> pogledajte ove dve poruke i procenite koja je „skuplja&quot;:</p>
+<ol>
+<li>„Objasni mi RAG.&quot; (ulaz ~7 tokena)</li>
+<li>Cela istorija razgovora od 20 poruka + „Objasni mi RAG.&quot; (ulaz ~4.000 tokena)</li>
+</ol>
+<p>Odgovor: druga je stotinama puta skuplja — a sadržaj pitanja je isti. U agentima se ovo dešava automatski, zato ćemo u modulu 05 učiti upravljanje kontekstom (eng. <em>context engineering</em>).</p>
+<h2 id="3-kontekst-i-kontekstni-prozor-vas-novcanik">3. Kontekst i kontekstni prozor: vaš novčanik</h2>
+<p>Kontekst (eng. <em>context</em>) je <strong>sve što model vidi u jednom pozivu</strong>: sistemski prompt, sva prethodna pitanja i odgovori, rezultati alata, dokumenti koje ste ubacili. Kontekstni prozor (eng. <em>context window</em>) je maksimalan broj tokena koji staje — danas to meri na desetine ili stotine hiljada tokena, ali uvek je konačan.</p>
+<p>Model kontekst tretira kao <strong>jednu ravnu listu tokena</strong>. On ne pravi razliku „bitno — nebitno&quot;: sve što je unutra utiče na izlaz, a kad se prozor napuni, najstarije stvari obično ispadaju. Pravila koja iz toga slede:</p>
+<ol>
+<li><strong>Relevantno u kontekst, šum napolje.</strong> Deset dobro izabranih odlomaka pobeđuje celu knjigu ubačenu „pa da vidimo&quot;.</li>
+<li><strong>Redosled i format imaju značaj.</strong> Važne instrukcije idu na početak ili kraj poruke, ne usred gomile.</li>
+<li><strong>Trošak se ponavlja.</strong> Kontekst plaćate na svakom pozivu — agent sa 50 koraka u petlji, i toliko puta plaća istu istoriju, osim ako je ne sažima (modul 05).</li>
+</ol>
+<p>Razmislimo analogijom iz modula 00: kontekstni prozor je <strong>radna memorija</strong> agenta. Kratkoročna, skupa, ograničena — i upravo zato najvredniji resurs koji optimizujemo.</p>
+<h2 id="4-prompt-kao-program">4. Prompt kao program</h2>
+<p>U svakodnevnoj upotrebi prompt je poruka prijatelju. U inženjeringu, prompt je <strong>izvorni kod</strong>: od njega zavisi ponašanje sistema, pa se piše pažljivo, verzionisa u Git-u, menja kontrolisano i meri rezultat.</p>
+<h3 id="4-1-anatomija-razgovora-sa-api-jem">4.1 Anatomija razgovora sa API-jem</h3>
+<p>Poziv API-ju je lista poruka sa ulogama:</p>
+<ul>
+<li><strong>system</strong> — uputstvo „kako se ponaša&quot;: identitet, pravila, format, ograničenja. Vaš „konfiguracioni fajl&quot; za model.</li>
+<li><strong>user</strong> — šta traži korisnik.</li>
+<li><strong>assistant</strong> — prethodni odgovori modela (u razgovoru ih vraćate nazad, da bi se održala nit).</li>
+<li>(u modulu 02 dodaćemo i <strong>tool</strong> — rezultate izvršenih alata.)</li>
+</ul>
+<h3 id="4-2-pet-delova-dobrog-prompta">4.2 Pet delova dobrog prompta</h3>
+<p>Radni šablon koji vam preporučujem (i koji ćemo koristiti u svim vežbama):</p>
+<pre><code class="language-text">1. ULOGA        — ko model „jeste&quot;: &quot;Ti si asistent za tehničku podršku...&quot;
+2. ZADATAK      — jedan, konkretno definisan: &quot;Pregledaj prijavljeni problem i predloži tri moguća uzroka.&quot;
+3. KONTEKST     — samo relevantne informacije, označene jasno.
+4. FORMAT       — kako treba da izgleda izlaz: lista, tabela, JSON, maksimalno N reči.
+5. OGRANIČENJA  — šta se ne sme: ne izmišljaj; ako nemaš podatak, reci &quot;nemam podatak&quot;.
+</code></pre>
+<p>Dve najčešće greške početnika: <strong>previše zadataka u jednom promptu</strong> (rasparsi ih u korake — to je već pola agenta) i <strong>nedefinisan format izlaza</strong> (pa se onda „čita&quot; odgovor rukom, umesto da ga kod parsira).</p>
+<h3 id="4-3-verzionisanje-prompta">4.3 Verzionisanje prompta</h3>
+<p>Od danas vaše promptove čuvajte kao fajlove u projektu (<code>prompts/</code> direktorijum), sa komentarom zašto svaka verzija postoji. Kada u modulu 07 dodamo evaluaciju, dobićete petlju: <em>izmena prompta → merenje → odluka</em> — umesto „čini mi se da je bolje&quot;.</p>
+<hr>
+<h2 id="5-prva-vezba-sa-pravim-api-jem">5. Prva vežba sa pravim API-jem</h2>
+<p>Vreme je. U ovom odeljku napravimo prvi pravi poziv velikom modelu kroz API. Koristimo <strong>z.ai/GLM</strong> API (pristupačan i dostupan našim čitaocima), kroz OpenAI-kompatibilan interfejs — ali sav kod radi sa bilo kojim provajderom koji podržava isti interfejs, uz promenu dve vrednosti.</p>
+<h3 id="5-1-zlatno-pravilo-kljuc-zivi-u-environment-varijabli">5.1 Zlatno pravilo: ključ živi u environment varijabli</h3>
+<p>API ključ (eng. <em>API key</em>) je kao lozinka. Kada jednom dospe u kod, u istoriju Git-a ili screenshot — kompromitovan je. Zato:</p>
+<ul>
+<li><strong>nikad ne pišemo ključ u kod;</strong></li>
+<li>čuvamo ga u <strong>environment varijabli</strong> (eng. <em>environment variable</em>), a kod čita odatle;</li>
+<li><code>os.environ[...]</code> umesto <code>os.environ.get(...)</code> kad <em>želimo</em> da program glasno pukne ako ključa nema — greška na startu bolja od tajnovite kasnije.</li>
+</ul>
+<h3 id="5-2-priprema">5.2 Priprema</h3>
+<pre><code class="language-bash"># 1. Virtuelno okruženje (uvek, i u vežbama)
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+# 2. Zvanična klijentska biblioteka (OpenAI-kompatibilna)
+pip install openai
+
+# 3. Ključ — u environment varijablu, ne u kod!
+export Z_AI_API_KEY=&quot;ovde-svoj-kljuc&quot;          # Linux/macOS
+# Windows PowerShell:  $env:Z_AI_API_KEY = &quot;ovde-svoj-kljuc&quot;
+</code></pre>
+<p>Ako radite projekat sa <code>.env</code> fajlom (preporučujem biblioteku <code>python-dotenv</code>), dodajte <code>.env</code> u <code>.gitignore</code> <strong>pre prvog</strong> <code>git add</code>. Redosled je bitan: <code>.gitignore</code> prvo, tajna drugo.</p>
+<blockquote>
+<p>Napomena: base URL i naziv modela zavise od vašeg naloga/plana. U kodu dole čitaju se iz environment varijabli sa razumnim podrazumevanim vrednostima — proverite u dokumentaciji svog provajdera koje vrednosti važe za vas.</p>
+</blockquote>
+<h3 id="5-3-prvi-poziv">5.3 Prvi poziv</h3>
+<p>Sačuvajte kao <code>01_prvi_poziv.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 1.1 — prvi poziv LLM API-ju (z.ai/GLM, OpenAI-kompatibilno).
+
+Ključ i konfiguracija dolaze isključivo iz environment varijabli:
+  Z_AI_API_KEY   — obavezno: vaš API ključ
+  Z_AI_BASE_URL  — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL     — opciono: naziv modela po vašem planu (proverite u dokumentaciji)
+&quot;&quot;&quot;
+
+import os
+import sys
+
+from openai import OpenAI
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo pokrenite.&quot;)
+
+    # Z.ai nudi OpenAI-kompatibilan endpoint — dovoljno je zameniti base_url.
+    client = OpenAI(
+        api_key=api_key,
+        base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;),
+    )
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+
+    odgovor = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                &quot;role&quot;: &quot;system&quot;,
+                &quot;content&quot;: &quot;Ti si sažet tehnički asistent. Odgovaraš na srpskom, najviše u tri rečenice.&quot;,
+            },
+            {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Šta je token u kontekstu velikih jezičkih modelova?&quot;},
+        ],
+        temperature=0.2,
+    )
+
+    print(odgovor.choices[0].message.content)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Pokrenite: <code>python 01_prvi_poziv.py</code>. Ako je sve u redu — čestitamo, upravo ste programski razgovarali sa velikim modelom. Ako je greška, pročitajte je pažljivo: poruke API-ja su pošteno jasne (najčešće: ključ nije postavljen, ključ nije važeći ili naziv modela ne postoji na vašem nalogu).</p>
+<h3 id="5-4-zadatak-2-temperatura-i-ponovljivost">5.4 Zadatak 2: temperatura i ponovljivost</h3>
+<p>Izmenite poziv tako da pokrenete <strong>isto pitanje pet puta</strong> sa <code>temperature=0.0</code>, pa pet puta sa <code>temperature=1.5</code>. Sačuvajte odgovore u listu i uporedite:</p>
+<ul>
+<li>Da li su odgovori pri niskoj temperaturi identični (ili gotovo)?</li>
+<li>Šta se dešava sa gramatikom i sadržajem na visokoj?</li>
+</ul>
+<p>Ova vežba gradi intuiciju za pravilo koje ćete stalno koristiti: <strong>za ekstrakciju podataka, kod i agente — niska temperatura; za ideje i varijante — viša.</strong></p>
+<h3 id="5-5-zadatak-3-format-izlaza-koji-kod-moze-da-parsira">5.5 Zadatak 3: format izlaza koji kod može da parsira</h3>
+<p>Napišite program koji od modela traži <strong>isključivo JSON</strong> — npr. tri ključa: <code>tema</code>, <code>tezina</code> (1–5) i <code>jedna_recenica</code> — za proizvoljno tehničko pitanje koje korisnik unese. Saveti:</p>
+<ul>
+<li>U system poruci definišite tačan šema izlaza i recite: „Odgovori samo validnim JSON-om, bez uvodnog teksta.&quot;</li>
+<li>U kodu parsirajte <code>json.loads(...)</code> i obradite slučaj kada model ipak ne poštuje format (to će se dešavati — iskusite to namerno).</li>
+<li>Bonus: pitajte model da sam označi koliko je siguran (<code>&quot;sigurnost&quot;: 0–1</code>) i ispišite upozorenje ako je nizak.</li>
+</ul>
+<p>Zaključak vežbe: kada želite da izlaz <strong>koristi program</strong>, format definisate vi — ne model.</p>
+<h3 id="5-6-zadatak-4-domaci-mini-program-od-prompta">5.6 Zadatak 4 (domaći): mini „program&quot; od prompta</h3>
+<p>Napravite skriptu <code>04_prompt_kao_program.py</code> koja za ulaz uzme ime običnog tekstualnog fajla (npr. vaših beleški), a sistemski prompt napiše po šablonu iz sekcije 4.2 (uloga, zadatak, kontekst, format, ograničenja). Program treba da:</p>
+<ol>
+<li>pročita fajl (sadržaj ide u <code>user</code> poruku kao „kontekst&quot;);</li>
+<li>zatraži od modela: „izvuči sve zadatke/obaveze iz teksta u obliku markdown liste&quot;;</li>
+<li>ispiše broj tokena ulaza iz odgovora (<code>odgovor.usage.prompt_tokens</code>) — proverite da se slaže sa vašom procenom iz sekcije 2.</li>
+</ol>
+<p>Zatim eksperimentišite: šta se desi sa rezultatom ako izbrišete deo „ograničenja&quot; iz sistemskog prompta? Zapišite zapažanje u komentar na kraju fajla — to je početak vaše lične dokumentacije o prompt inženjeringu (eng. <em>prompt engineering</em>).</p>
+<hr>
+<h2 id="6-sta-sme-a-sta-ne-sme-zdrav-odnos-prema-izlazu-modela">6. Šta sme, a šta ne sme: zdrav odnos prema izlazu modela</h2>
+<p>Tri navike koje vas čine inženjerom, a ne srećnim korisnikom:</p>
+<ol>
+<li><strong>Veruj, ali proveri.</strong> Za činjenice iz odgovora koje su vam bitne — proverite izvor. Model „glumi&quot; sigurnost i kada nema podataka.</li>
+<li><strong>Nešto u kontekst, nešto u kod.</strong> Pravila koja su nepromenljiva (formati, ograničenja) bolje su u kodu nego u promptu; sudbinske stvari ne ostavljajte modelu da „pogodi&quot;.</li>
+<li><strong>Greške su deo dizajna.</strong> Od prve skripte planirajte: šta ako je odgovor prazan, pregluv JSON, ili prekoračen kvota? API poziv bez obrade grešaka je pola zadatka.</li>
+</ol>
+<h2 id="7-pitanja-za-samoproveru">7. Pitanja za samoproveru</h2>
+<ol>
+<li>Šta model radi u suštini, token po token? Šta od toga sledi za ponovljivost?</li>
+<li>Zašto je druga poruka iz sekcije 2 „stotinama puta skuplja&quot; od prve? Koji parametar kontrole ima temperature=0, a koji 1.5 — i kada koristite koji?</li>
+<li>Nabrojite pet delova radnog šablona prompta i dajte primer zašto nedostatak dela „format izlaza&quot; pravi problem u kodu.</li>
+<li>Zašto se <code>Z_AI_API_KEY</code> čita iz environment varijable, a ne piše u kod? Šta je pravilan redosled kada koristite <code>.env</code> fajl u Git projektu?</li>
+<li>Šta sve ulazi u kontekst jednog poziva agenta? (Zamislite petlju iz modula 00 i nabrojite sve vrste sadržaja.)</li>
+</ol>
+<h2 id="sta-sledi">Šta sledi</h2>
+<p>Imate prvi poziv, osećaj za tokene i šablon za prompt. U <a href="../02-alati-tool-use/"><strong>modulu 02 — Alati</strong></a> dajemo modelu ruke: definišemo funkcije koje on može da zatraži, i prvi put puštamo da on bira — a naš kod izvršava. To je prvi korak ka pravom agentu.</p>
+<p>A u međuvremenu, ako želite da ovo pređete uživo: pogledajte <a href="../../radionice/01-prvi-koraci/">radionicu 01</a>. 🚀</p>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/moduli/modul-01-osnove-llm.md" rel="noopener">moduli/modul-01-osnove-llm.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <a href="../00-uvod-u-agente/"><span class="dir">← Prethodni modul</span>Uvod u agente</a>
+  <a class="pager-next" href="../02-alati-tool-use/"><span class="dir">Sledeći modul →</span>Alati</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radionica 01 — Prvi koraci: LLM API u praksi — AI i agenti na srpskom</title>
+<meta name="description" content="Cilj">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/radionice/01-prvi-koraci/">
+<meta property="og:title" content="Radionica 01 — Prvi koraci: LLM API u praksi — AI i agenti na srpskom">
+<meta property="og:description" content="Cilj">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/radionice/01-prvi-koraci/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="..//">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#cilj-radionice">Cilj radionice</a></li><li><a href="#agenda-po-satima">Agenda po satima</a></li><li><a href="#vezbe">Vežbe</a></li><li><a href="#domaci">Domaći</a></li><li><a href="#materijali-checklist-za-ucesnike">Materijali — checklist za učesnike</a></li><li><a href="#za-voditelja">Za voditelja</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Radionica 01 — Prvi koraci: LLM API u praksi</h1>
+    <div class="meta-chips"><span class="chip modnum">radionica 01</span><a class="chip modnum chip-link" href="../../modul/00-uvod-u-agente/">modul 00</a><a class="chip modnum chip-link" href="../../modul/01-osnove-llm/">modul 01</a></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Povezani moduli:</strong> <a href="../../modul/00-uvod-u-agente/">modul 00 — Uvod u agente</a> i <a href="../../modul/01-osnove-llm/">modul 01 — Osnove rada sa LLM-ovima</a>
+<strong>Trajanje:</strong> 4 časa · <strong>Format:</strong> predavanje 30% / vežbe 70% · <strong>Nivo: početni</strong></p>
+</blockquote>
+<h2 id="cilj-radionice">Cilj radionice</h2>
+<p>Učesnici samostalno izvršavaju pozive LLM API-ju iz Pythona: razumeju tokene i kontekstni prozor, pišu strukturiran prompt po šablonu (uloga–zadatak–kontekst–format–ograničenja) i — najvažnije — ključ API-ja drže isključivo u environment varijabli. Na odlasku svako ima repozitorijum sa tri radeće skripte.</p>
+<h2 id="agenda-po-satima">Agenda po satima</h2>
+<table>
+<thead>
+<tr>
+<th>Sat</th>
+<th>Sadržaj</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. sat</strong></td>
+<td>Dobro došli i razbijanje leda (10 min). Šta je agent, šta je chatbot — radna definicija i pitanja (25 min). Kako model radi: token, verovatnoća, temperatura — sa živim demonstracijama (25 min).</td>
+</tr>
+<tr>
+<td><strong>2. sat</strong></td>
+<td>Kontekstni prozor kao novčanik: cena po tokenu, ulaz/izlaz, zašto se istorija plaća svaki put (20 min). Zajednička vežba: priprema okruženja, <code>pip install openai</code>, postavljanje <code>Z_AI_API_KEY</code> (40 min). <strong>Zastavica:</strong> niko ne nastavlja dok svima ne radi <code>import openai</code>.</td>
+</tr>
+<tr>
+<td><strong>3. sat</strong></td>
+<td>Vežba 1: prvi poziv — <code>01_prvi_poziv.py</code> iz modula 01, uz objašnjenje svake linije (30 min). Vežba 2: temperatura 0.0 vs 1.5, pet ponavljanja, uporediti (30 min).</td>
+</tr>
+<tr>
+<td><strong>4. sat</strong></td>
+<td>Vežba 3: JSON izlaz koji kod parsira, uključujući obradu lošeg formata (35 min). Pregled šablona prompta i zajednička diskusija: gde je greška u promptu, a gde u kodu (15 min). Domaći, zatvaranje i gde dalje (10 min).</td>
+</tr>
+</tbody></table>
+<h2 id="vezbe">Vežbe</h2>
+<ol>
+<li><strong>Prvi poziv (30 min):</strong> skripta <code>01_prvi_poziv.py</code> iz <a href="../../modul/01-osnove-llm/#53-prvi-poziv">modula 01, sekcija 5.3</a>. Svako pokreće sam; voditelj obilazi i skida prve prepreke (najčešće: environment varijabla nije postavljena u istom terminalu).</li>
+<li><strong>Temperatura (25 min):</strong> isto pitanje, pet puta na 0.0, pet puta na 1.5 — uporediti ponovljivost, gramatiku, sadržaj. Zaključak zapisati u komentar koda.</li>
+<li><strong>JSON izlaz (40 min):</strong> tražiti strogo definisan JSON od modela; parsirati <code>json.loads</code>; namerno izazvati i obraditi loš format. Bonus polaznicima koji završe ranije: polje „sigurnost&quot; i upozorenje.</li>
+</ol>
+<h2 id="domaci">Domaći</h2>
+<ul>
+<li>Zadatak 4 iz modula 01: skripta <code>04_prompt_kao_program.py</code> — ekstrakcija zadataka iz tekstualnog fajla + brojanje tokena ulaza.</li>
+<li>Sve skripte poslati u sopstveni javni repozitorijum <code>vežbe-ai-agenti</code> (README sa jednim naslovom je dovoljan za sada).</li>
+<li>Za bonus ljubopitljive: registrujte se na jedan mrežni „tokenizer playground&quot; i izmerite koliko tokena ima jedan pasus na ćirilici vs. latinici.</li>
+</ul>
+<h2 id="materijali-checklist-za-ucesnike">Materijali — checklist za učesnike</h2>
+<ul>
+<li><input disabled="" type="checkbox"> laptop sa Python 3.10+ i pristupom internetu;</li>
+<li><input disabled="" type="checkbox"> aktivan API nalog (z.ai/GLM ili bilo koji OpenAI-kompatibilni provajder) <strong>sa kreiranim ključem pre radionice</strong> — najčešći blok prvog sata je baš ovaj;</li>
+<li><input disabled="" type="checkbox"> <code>git --version</code> radi u terminalu (instaliran i konfigurisan);</li>
+<li><input disabled="" type="checkbox"> pročitan <a href="../../modul/00-uvod-u-agente/">modul 00</a> (kraći je od šoljice kafa vremena);</li>
+<li><input disabled="" type="checkbox"> omiljeni editor sa Python podrškom (VS Code je sasvim dovoljan).</li>
+</ul>
+<h2 id="za-voditelja">Za voditelja</h2>
+<ul>
+<li>Pripremljen „rezervni&quot; ključ za hitne slučajeve demonstracija — ali <strong>ne</strong> projiciran na ekran; učesnici koriste svoje.</li>
+<li>Ako grupa zaostane na sat 2, skratiti vežbu 3 na zajedničko izvođenje — cilj je da prvi sat rada sa API-jem bude <em>uspeh</em>, ne <em>dubina</em>.</li>
+</ul>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/radionice/radionica-01-prvi-koraci.md" rel="noopener">radionice/radionica-01-prvi-koraci.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <span></span>
+  <a class="pager-next" href="../02-alati-i-tool-use/"><span class="dir">Sledeći →</span>undefined</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modul 10 — Završni projekat: portfolio agent — AI i agenti na srpskom</title>
+<meta name="description" content="Deset modula iza vas: tokeni i kontekst, alati, petlja agenta, memorija i RAG, inženjering konteksta, protokoli, evaluacija, multi-agent sistemi, produkcija. Svaki od njih vas je nečemu">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/modul/10-zavrsni-projekat/">
+<meta property="og:title" content="Modul 10 — Završni projekat: portfolio agent — AI i agenti na srpskom">
+<meta property="og:description" content="Deset modula iza vas: tokeni i kontekst, alati, petlja agenta, memorija i RAG, inženjering konteksta, protokoli, evaluacija, multi-agent sistemi, produkcija. Svaki od njih vas je nečemu">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/modul/10-zavrsni-projekat/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="../../radionice/">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#1-sta-zavrsni-projekat-dokazuje">1. Šta završni projekat dokazuje</a></li><li><a href="#2-izbor-ideje-dobar-projekat-na-jednom-listu">2. Izbor ideje: dobar projekat na jednom listu</a></li><li><a href="#3-vestine-iz-modula-00-09-koje-projekat-koristi">3. Veštine iz modula 00–09 koje projekat koristi</a></li><li><a href="#4-obim-projekta-sest-delova-sa-kontrolnim-tackama">4. Obim projekta: šest delova sa kontrolnim tačkama</a></li><li><a href="#5-zahtevi-za-isporuku">5. Zahtevi za isporuku</a></li><li><a href="#6-vezbe">6. Vežbe</a></li><li><a href="#7-rubrika-samovrednovanja">7. Rubrika samovrednovanja</a></li><li><a href="#8-primeri-portfolio-prezentacije">8. Primeri portfolio prezentacije</a></li><li><a href="#9-tipicne-greske-i-dijagnoza">9. Tipične greške — i dijagnoza</a></li><li><a href="#10-pitanja-za-samoproveru">10. Pitanja za samoproveru</a></li><li><a href="#sta-sledi">Šta sledi</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Modul 10 — Završni projekat: portfolio agent</h1>
+    <div class="meta-chips"><span class="chip modnum">modul 10</span><span class="chip ">⏱ 8–12 časova</span></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Vreme:</strong> 8–12 časova rada · <strong>Preduslovi:</strong> <a href="../../mapa/">svi moduli 00–09</a> · <strong>Stanje:</strong> prva radna verzija</p>
+</blockquote>
+<p>Deset modula iza vas: tokeni i kontekst, alati, petlja agenta, memorija i RAG, inženjering konteksta, protokoli, evaluacija, multi-agent sistemi, produkcija. Svaki od njih vas je nečemu naučio na malom primeru. Ovaj modul nema novu teoriju — ima jedan veliki zadatak: <strong>da sve to skupite u sopstvenog agenta, od ideje do objavljene isporuke</strong>. Portfolio agent (eng. <em>portfolio agent</em>) je agent koji rešava stvaran problem vašeg okruženja, ima evaluaciju koja pada glasno kad nešto ne valja, bezbednosne ograničene alate, logove iz kojih se vidi šta je radio — i dokumentaciju koju drugi razumeju bez vas. Nije demo koji se pokrene jednom pred publikom; to je oruđe koje radi i kad vas nema. Upravo zato, kad ga jednom takvog napravite, on govori o vašim veštinama umesto vas.</p>
+<p>Zašto struktura, a ne „slobodan projekat po želji&quot;? Zato što slobodan projekat bez oslonca luta: počne ambiciozno, nabuja od feature-a, pa se nikad ne završi. Ovde je projekat podeljen u <strong>šest delova sa kontrolnim tačkama</strong> (sekcija 4): svaki deo ima jasan cilj, poziva se na tačno određene module i završava se kontrolnom tačkom (eng. <em>checkpoint</em>) — spiskom tvrdnji koje moraju biti tačne pre nego što pređete na sledeći deo. Kontrolne tačke su vaš gazda u ovom modulu: drže obim pod kontrolom i projekte koji bi „za par dana&quot; trajali tri meseca vraćaju na zemlju.</p>
+<p>Kako raditi ovaj modul: čitavim redom, ali pišući kod od prvog dana. Rezultat na kraju nije samo agent — rezultat je <strong>javni repozitorijum</strong> koji sadrži agenta, evaluacioni skup, dosije projekta i README po kome se sve to čita. Taj repozitorijum je isporuka (eng. <em>deliverable</em>), i za njega važe zahtevi iz sekcije 5 i rubrika iz sekcije 7. Na kraju: sami se ocenite — iskreno, po rubrici — i popunite ono što je zakazalo. To je zadnja vežba kursa i, iskreno, ona koja najviše podseća na pravi posao.</p>
+<hr>
+<h2 id="1-sta-zavrsni-projekat-dokazuje">1. Šta završni projekat dokazuje</h2>
+<p>Počnimo od kraja: šta neko ko pogleda vaš repozitorijum treba da zaključi za pet minuta čitanja. Tri stvari, redom.</p>
+<p><strong>Prvo: da znate da od ideje dodete do isporuke.</strong> Put od „bilo bi korisno da agent radi X&quot; do „X radi, meri se, ograničen je i dokumentovan&quot; je dug, i pun je odluka koje nisu kod: šta ne praviti, koliko memorije dati, gde staviti prag. Projekat koji je prošao kroz sve delove pokazuje da taj put znate — a to je redak dokaz, jer većina eksperimenata umire na pola.</p>
+<p><strong>Drugo: da razlikujete agent koji radi od agenta koji deluje da radi.</strong> Jedan demo ubedi na deset minuta; isporučen agent mora da preživi nedelju dana rada, uključujući dane kad API šteka, kad korisnik pita glupe stvari i kad budžet pripreti da se potroši. Evaluacioni skup sa pragom, logovi sa tragom (eng. <em>trace</em>) i kočnice u kodu (moduli 03, 07, 09) su razlika između ta dva — i tačno su ono što će ispitivač na razgovoru, ili kolega na poslu, tražiti prvo.</p>
+<p><strong>Treće: da umejte da dokumentujete.</strong> Dosije projekta i README nisu naknadna dekoracija; oni su deo isporuke koji govori dok vas nema. Agent koga samo vi znate da pokrenete je hobi; agent koga i drugi pokreću je alat.</p>
+<p>Odatle i glavno pravilo ovog modula: <strong>sve što pišete, pišete kao da će to čitati neko ko vas ne poznaje</strong> — jer će, ako projekt uspe, baš to i da se desi.</p>
+<h2 id="2-izbor-ideje-dobar-projekat-na-jednom-listu">2. Izbor ideje: dobar projekat na jednom listu</h2>
+<p>Ideja određuje pola uspeha projekta — i to pre prvog reda koda. Dobra ideja za završni projekat prolazi pet provera; proverite svaku pre nego što se vežete:</p>
+<ol>
+<li><strong>Stvaran problem, stvarni podaci.</strong> Agent rešava nešto što bi vi (ili neko koga poznajete) inače radili ručno — nad podacima koji postoje: vaše beleške, dokumentacija tima, fascikla sa izveštajima. Ako podatke morate izmišljati, i vrednost agenta ćete izmišljati.</li>
+<li><strong>Uspeh se meri brojem ili listom.</strong> „Odgovara korisno&quot; je utisak; „na 15 pitanja iz dokumenta odgovara tačno sa izvorom, bar 12 puta&quot; je meri. Ako ne možete da smislite kako da izmerite da li agent radi dobro — ideja (ili njeno razumevanje) još nije zrela.</li>
+<li><strong>Uski obim (minimalna održiva verzija).</strong> Jedna vrsta zadatka, jedan korisnik, jedan izvor podataka. Širina dolazi kasnim proširenjima, ne prvom verzijom — sećate se „asistent za sve&quot; iz modula 00: to je najkraći put do agenta koji ništa ne radi dobro.</li>
+<li><strong>Alati koje već ume.</strong> Ispod projekta stoje stvari iz modula 02 i 03: čitanje fajlova, pretraga, pisanje izveštaja. Ako ideja traži nove, spoljne servise koje nikad niste dirali (neregistrovana API-ja, platni sistem) — rizik je u pogrešnom sloju.</li>
+<li><strong>Bezbedno kad pogreši.</strong> Agent će grešiti; izaberite oblast u kojoj greška košta ponovo urađen posao, a ne nepovratnu štetu. Organizacija beleški: da. Brisanje po tuđem disk: ne.</li>
+</ol>
+<p>Ako se neka ideja već roji u glavi — uporedite je s listom. Ako ne, evo šest polaznih tačaka, od najlakših ka najzahtevnijima; svaka kaže i koje module najviše vežbe:</p>
+<table>
+<thead>
+<tr>
+<th>Ideja (radni naziv)</th>
+<th>Šta radi</th>
+<th>Najviše vežba</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Bibliotekar</strong></td>
+<td>Sređuje fasciklu sa beleškama: predlaže imena i strukturu, piše indeks — uz potvrdu čoveka za svaku promenu.</td>
+<td>02, 03, 09</td>
+</tr>
+<tr>
+<td><strong>Pomoćnik za sastanke</strong></td>
+<td>Iz transkripta/beleški sastanka vadi odluke, rokove i vlasnike; piše kratak zapisnik u utvrđenom formatu.</td>
+<td>01, 02, 07</td>
+</tr>
+<tr>
+<td><strong>Knjižničar dokumentacije</strong></td>
+<td>RAG nad dokumentima vašeg tima (pravilnici, uputstva): odgovara sa navođenjem odlomka, odbija kad pokrivenosti nema.</td>
+<td>04, 05, 07</td>
+</tr>
+<tr>
+<td><strong>Putnik</strong></td>
+<td>Za dati raspored i ograničenja (budžet, datumi) pravi nacrt plana puta iz javnih, besplatnih izvora — uvek sa izvorom navoda.</td>
+<td>02, 03, 05</td>
+</tr>
+<tr>
+<td><strong>Registrator tiketa</strong></td>
+<td>Čita novi mejl/tiket, klasifikuje ga, predlaže odgovor po pravilniku — odgovor šalje samo čovek.</td>
+<td>06, 07, 09</td>
+</tr>
+<tr>
+<td><strong>Čuvar promena</strong></td>
+<td>Prati izmene dokumenata u fascikli i piše pregled „šta se promenilo od prošlog puta&quot;, sa difom u izlazu.</td>
+<td>03, 05, 07</td>
+</tr>
+</tbody></table>
+<p>Ništa od ovoga ne impresionira naslovom — i baš zato valja: to su poslovi koji stvarno stoje pred ljudima, i na njima se lepo vide svi delovi gradiva. Kad izaberete (ili smislite svoju), zapišite je u dve rečenice i pokažite je nekome: ako vam sagovornik može ponoviti šta agent radi — ideja je dovoljno jasna. Ako ne — još je samo osećaj, i treba je oštriti.</p>
+<h2 id="3-vestine-iz-modula-00-09-koje-projekat-koristi">3. Veštine iz modula 00–09 koje projekat koristi</h2>
+<p>Završni projekat je namerno spoj svega; evo kroz šta sve prolazite, sa pokazivačem gde je u projektu svaka veština vidljiva:</p>
+<table>
+<thead>
+<tr>
+<th>Modul</th>
+<th>Veština koju projekat pokazuje</th>
+<th>Gde se vidi</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="../00-uvod-u-agente/">00</a></td>
+<td>radna definicija agenta; svesno korišćenje alata umesto ćaskanja</td>
+<td>dosije: zašto je ovo posao za agenta, a ne skripta ili čovek</td>
+</tr>
+<tr>
+<td><a href="../01-osnove-llm/">01</a></td>
+<td>strukturiran, verzionisan sistemski prompt; ključ u environment varijabli</td>
+<td><code>agent.py</code> od prvog reda; <code>.env</code> van Gita</td>
+</tr>
+<tr>
+<td><a href="../02-alati-tool-use/">02</a></td>
+<td>šeme alata sa opisima koji rade; provera argumenata na granici; sandbox</td>
+<td>svaki alat u <code>alati.py</code>, sa opisom i proverom</td>
+</tr>
+<tr>
+<td><a href="../03-agent-od-nule/">03</a></td>
+<td>petlja agenta sa kočnicama; čitanje traga</td>
+<td><code>agent.py</code>: petlja, <code>max_koraka</code>, ispis koraka</td>
+</tr>
+<tr>
+<td><a href="../04-memorija-i-rag/">04</a></td>
+<td>izbor znanja: RAG, sažimanje, ili ništa od toga — svesno</td>
+<td>deo „znanje&quot; projekta + obrazloženje u dosijeu</td>
+</tr>
+<tr>
+<td><a href="../05-inzenjering-konteksta/">05</a></td>
+<td>kontrola onoga što ulazi u prozor: kompaktni formati, prioritet</td>
+<td>format poruka, dužine isečaka, redosled u kontekstu</td>
+</tr>
+<tr>
+<td><a href="../06-protokoli-mcp-a2a/">06</a></td>
+<td>razumevanje interfejsa ka spoljnom svetu; bezbednost povezivanja</td>
+<td>svaka granica prema spoljnom servisu ili fajl sistemu</td>
+</tr>
+<tr>
+<td><a href="../07-evaluacija-agenata/">07</a></td>
+<td>scenario-skup, provere, prag kao kapija; dif razmišljanje</td>
+<td><code>eval-skup.json</code> + pokretač sa izlaznim kodom</td>
+</tr>
+<tr>
+<td><a href="../08-multi-agent-sistemi/">08</a></td>
+<td>odluka <em>jedan agent ili više</em> — obično jedan, uz obrazloženje</td>
+<td>dosije: odeljak o arhitekturi (i zašto ne više agenata)</td>
+</tr>
+<tr>
+<td><a href="../09-u-produkciju/">09</a></td>
+<td>ograničenja umesto poverenja; logovi sa id traga; budžet; otpornost</td>
+<td><code>logovi.jsonl</code>, klasa budžeta, ponovni pokušaji</td>
+</tr>
+</tbody></table>
+<p>Čitajte tabelu unapred kao spisak za potvrdu, a unazad — kad završite — kao kontrolnu listu: ima li u vašoj isporuci po jedna vidljiva stavka iz svakog reda? Ne mora svaki red da bude veliki; mora da se vidi. (Modul 08 je namerno skromno zastupljen: mali projekat treba da argumentuje zašto <em>nije</em> multi-agent — a to je, pošteno, najčešće ispravno.)</p>
+<h2 id="4-obim-projekta-sest-delova-sa-kontrolnim-tackama">4. Obim projekta: šest delova sa kontrolnim tačkama</h2>
+<p>Evo cele putanje, od prazne fascikle do objavljenog repozitorijuma. Svaki deo: cilj, šta se gradi (sa pozivom na module), procena vremena — i <strong>kontrolna tačka</strong>: spisak tvrdnji koje moraju važiti pre nego što krenete dalje. Kontrolne tačke nisu savet; one su dogovor s vama samima. Ako neka ne može da se zaokruži, to je znak da je deo ispod nje još sirov — i da se vraća, ne preskače.</p>
+<h3 id="deo-1-dosije-projekta-60-90-min">Deo 1 — Dosije projekta (60–90 min)</h3>
+<p>Pre koda, tekst — jer tekst plaši obim bolje od koda. Dosije projekta (eng. <em>project brief</em>) je kratak dokument (jedna strana, šest odeljaka, šablon u vežbi 1) koji fiksira: šta agent radi i za koga; kakvi podaci ulaze; po čemu ćete znati da radi dobro (mera uspeha); šta agent <strong>ne</strong> radi (granice); koji su rizici i ko im je vlasnik; i rok. Zašto prvo dosije, a ne kod? Zato što je jeftinije izmeniti rečenicu nego arhitekturu: dosije je mesto gde se „a možda da još i...&quot; zaustavlja pre nego što postane nedelja dana posla.</p>
+<blockquote>
+<p><strong>Kontrolna tačka 1</strong> ☐ Dosije ima svih šest odeljaka. ☐ Mera uspeha je proverljiva (broj ili lista). ☐ Odeljak „ne radi&quot; ima bar tri stavke. ☐ Osoba koja vas nije slušala dok ste pisali, posle čitanja ume da kaže šta agent radi — i šta ne.</p>
+</blockquote>
+<h3 id="deo-2-alati-i-seme-ruke-agenta-2-3-casa">Deo 2 — Alati i šeme: ruke agenta (2–3 časa)</h3>
+<p>Sada konačno kod — ali ne petlja, već alati. Po najmanjoj dozvoli (moduli 02 i 09): napišite sve funkcije koje agent treba da ume, svaku sa šemom (ime, opis, parametri), proverom argumenata na granici i sandbox-om ako dira fajl sistem. Opisi se pišu kao dokumentacija za model (modul 02); provera se piše kao da model pokušava da pogreši — jer ponekad i hoće. Ovde spada i izvor znanja ako ga ima: pretraga nad vašim dokumentima, u najjednostavnijem obliku koji radi (modul 04). A za sad — samo alati, bez odlučivanja: pozovite svaki ručno iz malog <code>main</code> dela i proverite izlaze.</p>
+<blockquote>
+<p><strong>Kontrolna tačka 2</strong> ☐ Svaki alat ima šemu i proveru argumenata. ☐ Putanje van sandbox-a vraćaju grešku, ne izuzetak. ☐ Svaki alat je pokrenut ručno bar jednom, na stvarnom (ne izmišljenom) unosu. ☐ Spisak alata je kraći od spiska onoga što bi agent „mogao&quot; — i ume se reći zašto je svaki tu.</p>
+</blockquote>
+<h3 id="deo-3-petlja-agenta-srce-2-3-casa">Deo 3 — Petlja agenta: srce (2–3 časa)</h3>
+<p>Spajate: sistemski prompt (uloga, postupak, format izlaza, pravila odbijanja — modul 01), alate iz dela 2 i petlju iz modula 03, sa kočnicama od početka: <code>max_koraka</code>, ispis svakog koraka (mini-trag), i pravilo da greška alata ide modelu kao <code>tool</code> poruka, a ne čoveku. Prvo pokretanje gledajte kao autopsiju u živo: čitajte trag korak po korak (modul 03, sekcija 4) i popravljajte najpre opise alata i uputstva, ne kod. Ako vaša ideja traži sažimanje istorije ili stroži izbor konteksta — ovde je taj deo (modul 05), u najkraćem obliku koji rešava stvarni problem prozora koji se puni, ne unapred.</p>
+<blockquote>
+<p><strong>Kontrolna tačka 3</strong> ☐ Agent završava zadatak iz dosijea bez vaše pomoći u toku rada. ☐ Isti zadatak pokrenut drugi put daje upotrebljiv (ne nužno identičan) rezultat. ☐ Trag se čita: za svaki korak vidljivo je koji alat, sa kojim argumentima, i šta je vratio. ☐ Kad se prekine kočnicom, poruka kaže koja kočnica i zašto.</p>
+</blockquote>
+<h3 id="deo-4-evaluacija-kapija-pre-svake-izmene-2-3-casa">Deo 4 — Evaluacija: kapija pre svake izmene (2–3 časa)</h3>
+<p>Agent koji radi jednom, pred vama, još ništa ne dokazuje. Pišite scenario-skup (modul 07): 10–15 primera po anatomiji — direktni, parafraza, van domena, pogrešna pretpostavka, granični — svaki sa <code>ulaz</code>, <code>očekivano</code> i <code>provere</code> koje padaju glasno (porukom koja kaže šta je falilo). Uz njih pokretač: prolaz/pad po scenariju, stopa, prag i izlazni kod 0/1 — kapija kroz koju od sad mora da prođe svaka izmena. Prvi prolaz skupa će verovatno pasti; to je dobro: pale provere su vam redosled posla. Sloj sudije-modela dodajte samo za scenario koje pravila ne hvataju (modul 07, sekcija 5) — i kalibrišite ga na primerima koje ste sami ocenili.</p>
+<blockquote>
+<p><strong>Kontrolna tačka 4</strong> ☐ Skup ima bar 10 scenarija, sa bar 3 kategorije ponašanja (direktno / parafraza / granica). ☐ Svaka provera, kad padne, kaže šta je falilo — bez otvaranja koda. ☐ Pokretač vraća izlazni kod 1 ispod praga. ☐ Jedna namerna izmena (npr. izbačeno pravilo prompta) pokazuje se u dif pregledu — i vraćanjem pravila, dif se vrati na čisto.</p>
+</blockquote>
+<h3 id="deo-5-oklop-bezbednost-logovi-budzet-2-3-casa">Deo 5 — Oklop: bezbednost, logovi, budžet (2–3 časa)</h3>
+<p>Delove 1–4 ste radili na svom računaru; ovaj deo uvodi red produkcije u malom (modul 09), jer će vaš agent raditi i kad vas nema: strukturisani logovi (JSON linije sa id traga kroz ceo zadatak), budžet sa mekim upozorenjem i tvrdim limitom, ponovni pokušaji sa zadrškom za prolazne greške mreže, i pregled spiska alata najmanje dozvole — uz potvrdu čoveka za sve nepovratno (ili bar suvi rad: „evo šta bih uradio&quot;). Ne morate imati server: dovoljno je da agent preživi pokretanje iz <code>cron</code>-a ili zakazanog zadatka, nedelju dana, bez vaše intervencije — i da posle tog perioda, iz logova, umejte da odgovorite na pitanje „šta je radio i koliko je koštalo&quot;.</p>
+<blockquote>
+<p><strong>Kontrolna tačka 5</strong> ☐ Log jedne sesije sadrži id traga, svaki poziv alata i konačan ishod. ☐ Tvrdi limit budžeta prekida zadatak čistom porukom (a meki upozorava pre toga). ☐ Nepovratne akcije traže potvrdu ili rade u suvom režimu. ☐ Jedan „pad mreže&quot; (isključite VPN na 10 sekundi) ne ruši zadatak bez traga.</p>
+</blockquote>
+<h3 id="deo-6-isporuka-i-objava-60-90-min">Deo 6 — Isporuka i objava (60–90 min)</h3>
+<p>Poslednji deo je pisanje — i on je deo isporuke, ne epilog. README (šta je, za koga, kako se pokreće, kako se testira, ograničenja, procena troška), dosije u repozitorijumu, <code>requirements.txt</code>, <code>.env.example</code> sa imenima varijabli (bez vrednosti!), i struktura fascikli koja se čita. Zatim objava: javni repozitorijum (GitHub i sl.), poželjno istorija komitova koja prati delove 1–5 — istorija je i dokumentacija. Na kraju provera sa strane: neka osoba koja nije vi pokrene agenta samo po README-u, bez pitanja. Svako pitanje koje postave je propust dokumentacije; zapišite ga i popravite.</p>
+<blockquote>
+<p><strong>Kontrolna tačka 6</strong> ☐ Repozitorijum se klonira i pokreće po README-u, bez pitanja autoru. ☐ Evaluacioni pokretač prolazi kapiju na svežem klonu. ☐ U istoriji komitova vide se faze (ne jedan gigantski komit). ☐ <code>.env.example</code> postoji, <code>.env</code> je u <code>.gitignore</code>-u i u repozitorijumu ga nema.</p>
+</blockquote>
+<p>Šest delova, šest kontrolnih tačaka — i 8–12 časova realnog rada (iskustveno: deo 3 najčešće najduži, deo 4 onaj koji najviše vrati nazad — i to je njegova namena). Redosled je svestan: dosije pre koda, alati pre petlje, evaluacija pre oklopa, objava na kraju. Ako vas mrzi neki deo — to je obično onaj koji vas najviše štiti.</p>
+<h2 id="5-zahtevi-za-isporuku">5. Zahtevi za isporuku</h2>
+<p>Šta tačno znači „isporučeno&quot;? Ovaj spisak je ugovor: dok svaka stavka nije zadovoljena, projekat je u radu, ne u isporuci. (I da — on je i tuđi: po njemu će vas drugi meriti, zato je kratak i tvrd.)</p>
+<p><strong>Repozitorijum (javni, na servisu po izboru):</strong></p>
+<pre><code class="language-text">vas-agent/
+├── README.md          # vrata: šta, za koga, kako se pokreće i testira
+├── dosije.md          # dosije projekta iz dela 1 (šablon u vežbi 1)
+├── agent.py           # petlja agenta sa kočnicama i tragom
+├── alati.py           # sve funkcije alata: šeme, provere, sandbox
+├── eval-skup.json     # scenario-skup (bar 10 scenarija, 3 kategorije)
+├── eval.py            # pokretač: stopa, prag, izlazni kod 0/1
+├── logovi.jsonl       # izlaz logovanja (primer u repozitorijumu, ne prazan)
+├── requirements.txt   # zavisnosti (openai, numpy — ono što zaista koristite)
+├── .env.example       # imena varijabli, BEZ vrednosti
+└── .gitignore         # obavezno sadrži .env
+</code></pre>
+<p>(Imena fajlova su predlog: struktura je važna, ne boja imena. Ako je projekat veći — npr. RAG indeks — dodajte fasciklu i ažurirajte README; ako je manji, ne prepričavajte strukturu veću od projekta.)</p>
+<p><strong>Kod:</strong></p>
+<ul>
+<li>ključ i konfiguracija isključivo iz environment varijabli (<code>Z_AI_API_KEY</code>, opciono <code>Z_AI_BASE_URL</code>, <code>Z_AI_MODEL</code> — pravilo iz modula 01, važi zauvek);</li>
+<li>Python 3.10+, standardna biblioteka + najviše dve spoljne zavisnosti, svaka opravdana u README-u;</li>
+<li>svaki alat sa proverom argumenata na granici; sandbox za sve što dira fajl sistem;</li>
+<li>kočnice ugrađene u petlju: <code>max_koraka</code>, budžet tokena (meki upozorava, tvrdi prekida);</li>
+<li>bez hardkodovanih putanja van projekta, bez izvršavanja proizvoljnog koda (<code>eval</code> je reč koju ne koristimo — modul 02);</li>
+<li>framework dozvoljen samo uz obrazloženje u dosijeu zašto je (najčešće nije — i to je potpuno valjan zaključak).</li>
+</ul>
+<p><strong>Evaluacija:</strong></p>
+<ul>
+<li>scenario-skup u Git-u (verzionisan), bar 10 scenarija, uključuje granične slučajeve: van domena, pogrešna pretpostavka, nemoguć zahtev;</li>
+<li>provere determinističke gde god je moguće; sudija-model samo gde pravila ne stignu, sa kalibracijom;</li>
+<li>pokretač vraća izlazni kod 1 ispod praga i piše rezultate u fajl (dif pregled moguć).</li>
+</ul>
+<p><strong>Dokumentacija:</strong></p>
+<ul>
+<li>README odgovara na šest pitanja: šta je · za koga · kako se pokreće · kako se testira · šta ne radi (ograničenja) · koliko košta (procena po zadatku);</li>
+<li>dosije u repozitorijumu, ažuriran ako se projekat tokom rada promenio (dosije koji laže je gori od dosijea koji ga nema);</li>
+<li>istorija komitova prati faze iz sekcije 4 — po jedan značajan komit po delu je sasvim dovoljno;</li>
+<li>licenca: vaša (MIT, CC BY... — izbor je vaš, ali mora biti svesno napisan).</li>
+</ul>
+<p>Ugovor deluje dugačko — a svaka rečenica gore je neki deo gradiva koji ste već radili. To je i tajna završnog projekta: on nije nov ispit, nego zbirka već položenih.</p>
+<h2 id="6-vezbe">6. Vežbe</h2>
+<p>Dve vežbe, obe su alatke koje koristite tokom celog projekta (a ne jednom na kraju): šablon dosijea i program kojim se isporuka proverava. Pravu gradnju vodi sekcija 4 — ove dve su njene ručice.</p>
+<h3 id="6-1-dosije-projekta-sablon">6.1 Dosije projekta: šablon</h3>
+<p>Napravite u korenu projekta <code>dosije.md</code> i popunite ga — šest odeljaka, svaki po par rečenica. Šablon (kopirajte i zamenite napomene u uglastim zagradama):</p>
+<pre><code class="language-markdown"># Dosije projekta: [ime agenta]
+
+## Šta agent radi, za koga
+[1–2 rečenice: zadatak + korisnik. Ako ne može u dve rečenice, obim još nije sužen.]
+
+## Podaci i alati
+[Šta je ulaz (fascikle, dokumenti, API), koji alati postoje (čitanje, pretraga, pisanje) i gde je sandbox.]
+
+## Mera uspeha
+[Proverljiva: „na N primera iz X bar Y tačno sa izvorom&quot;; ili lista stvari koje moraju važiti na kraju pokretanja.]
+
+## Šta agent NE radi
+[Bar tri stavke. Ovde se piše obim — sve što svesno ne pravite.]
+
+## Rizici i ograničenja
+[Šta može da pođe po zlu (troškovi, privatnost podataka, greške modela) i šta vas čuva od toga: kočnice, potvrde, prag.]
+
+## Arhitektura u kratko
+[Jedan agent ili više — i zašto; odakle znanje (RAG/prompt); koji model i zašto. Jedan pasus.]
+</code></pre>
+<p>Dosije nije književnost — to je radni dokument: tokom projekta ćete ga menjati (i smete), ali svaku promenu obavezno komitujte sa porukom zašto. Na kraju, dosije koji se razlikuje od projekta samo po verzijama — a ne po sadržaju — znak je da ste gradili planski.</p>
+<h3 id="6-2-provera-isporuke-kao-kod">6.2 Provera isporuke kao kod</h3>
+<p>Ako je isporuka ugovor (sekcija 5), neka se ugovor proverava programom — najiskrenije oruđe ovog kursa: ono što se ne proverava automatski, pre ili kasno prestane da se proverava. <code>10a_provera_isporuke.py</code> je mala kapija za vaš repozitorijum: struktura, dokumentacija, evaluacioni skup, higijena tajni i kompajliranje — sve iz jednog pokretanja, bez mreže. Sačuvajte ga u korenu projekta (ili gde god držite alatke) i pokrećite pred svaki komit:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 10.2 — provera isporuke: struktura, dokumentacija, skup, tajne, kompajliranje.
+
+Radi bez mreže i bez ključa: sve provere su na fajlovima i tekstu.
+Upotreba: python 10a_provera_isporuke.py [direktorijum projekta]
+&quot;&quot;&quot;
+
+import ast
+import json
+import re
+import sys
+from pathlib import Path
+
+OBAVEZNI_FAJLOVI = [&quot;README.md&quot;, &quot;dosije.md&quot;, &quot;eval-skup.json&quot;,
+                    &quot;requirements.txt&quot;, &quot;.env.example&quot;, &quot;.gitignore&quot;]
+README_ODLOCI = [&quot;šta&quot;, &quot;pokre&quot;, &quot;testira&quot;]          # gruba provera: README o njima mora pisati
+DOSIJE_ODLOCI = [&quot;podaci&quot;, &quot;mera&quot;, &quot;rizi&quot;, &quot;arhitektur&quot;]
+PRAG_SCENARIJA = 10
+MUSTRA_KLJUCA = re.compile(r&quot;(sk-[A-Za-z0-9_-]{10,}|api[_-]?key\s*=\s*[\&quot;&#39;][^\&quot;&#39;]{12,})&quot;,
+                            re.IGNORECASE)
+
+def proveri(koren: Path) -&gt; list[str]:
+    &quot;&quot;&quot;Vraća spisak problema; prazan spisak = isporuka prolazi.&quot;&quot;&quot;
+    problemi: list[str] = []
+    for ime in OBAVEZNI_FAJLOVI:
+        if not (koren / ime).exists():
+            problemi.append(f&quot;nedostaje fajl: {ime}&quot;)
+    readme = koren / &quot;README.md&quot;
+    if readme.exists():
+        tekst = readme.read_text(encoding=&quot;utf-8&quot;).lower()
+        for rec in README_ODLOCI:
+            if rec.lower() not in tekst:
+                problemi.append(f&quot;README ne pominje: {rec}&quot;)
+    dosije = koren / &quot;dosije.md&quot;
+    if dosije.exists():
+        tekst = dosije.read_text(encoding=&quot;utf-8&quot;).lower()
+        for rec in DOSIJE_ODLOCI:
+            if rec.lower() not in tekst:
+                problemi.append(f&quot;dosije ne pominje: {rec}&quot;)
+    skup_fajl = koren / &quot;eval-skup.json&quot;
+    if skup_fajl.exists():
+        try:
+            scenariji = json.loads(skup_fajl.read_text(encoding=&quot;utf-8&quot;))
+        except json.JSONDecodeError as g:
+            problemi.append(f&quot;eval-skup.json nije ispravan JSON: {g}&quot;)
+            scenariji = []
+        if scenariji and len(scenariji) &lt; PRAG_SCENARIJA:
+            problemi.append(f&quot;skup ima {len(scenariji)} scenarija, a treba bar {PRAG_SCENARIJA}&quot;)
+        id_jevi = [sc.get(&quot;id&quot;) for sc in scenariji if isinstance(sc, dict)]
+        if len(id_jevi) != len(set(id_jevi)):
+            problemi.append(&quot;id-jevi scenarija nisu jedinstveni&quot;)
+        if any(not sc.get(&quot;provere&quot;) for sc in scenariji if isinstance(sc, dict)):
+            problemi.append(&quot;postoje scenariji bez ijedne provere&quot;)
+    gitignore = koren / &quot;.gitignore&quot;
+    if gitignore.exists() and &quot;.env&quot; not in gitignore.read_text(encoding=&quot;utf-8&quot;):
+        problemi.append(&quot;.gitignore ne sadrži .env&quot;)
+    return problemi
+
+def proveri_tajne_i_kod(koren: Path) -&gt; list[str]:
+    &quot;&quot;&quot;Skenira .py fajlove: curenje ključeva i sintaksa (bez izvršavanja).&quot;&quot;&quot;
+    problemi: list[str] = []
+    for fajl in sorted(koren.rglob(&quot;*.py&quot;)):
+        if any(deo.startswith(&quot;.&quot;) for deo in fajl.relative_to(koren).parts[:-1]):
+            continue
+        tekst = fajl.read_text(encoding=&quot;utf-8&quot;, errors=&quot;replace&quot;)
+        if MUSTRA_KLJUCA.search(tekst):
+            problemi.append(f&quot;moguće curenje ključa u: {fajl.name}&quot;)
+        try:
+            ast.parse(tekst)
+        except SyntaxError as g:
+            problemi.append(f&quot;{fajl.name} se ne kompajlira: {g.msg} (red {g.lineno})&quot;)
+    return problemi
+
+def main() -&gt; None:
+    koren = Path(sys.argv[1]).resolve() if len(sys.argv) &gt; 1 else Path.cwd()
+    if not koren.is_dir():
+        sys.exit(f&quot;Nije direktorijum: {koren}&quot;)
+    print(f&quot;provera isporuke: {koren}\n&quot;)
+    problemi = proveri(koren) + proveri_tajne_i_kod(koren)
+    if (koren / &quot;.env&quot;).exists():
+        print(&quot;info: .env postoji na disku — u redu dok je pokriven u &quot;
+              &quot;.gitignore-u (provera iznad)&quot;)
+    for problem in problemi:
+        print(f&quot;✘ {problem}&quot;)
+    if not problemi:
+        print(&quot;✓ sve provere isporuke prolaze&quot;)
+    print(f&quot;\n{&#39;PALO&#39; if problemi else &#39;PROŠLO&#39;}: {len(problemi)} problema&quot;)
+    sys.exit(1 if problemi else 0)          # kapija: izlazni kod kao u modulu 07
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Pokrenite ga na projektu u toku izrade — pasti će (to je poenta), a svaki pad je sledeći zadatak. Pokrenite ga i na fascikli sa vežbama modula 07 (gde već imate <code>eval-skup.json</code>): videćete šta treba dopuniti da bi i mala vežbica bila „isporuka&quot;. Napomena o namernoj prostoti: mustra ključeva hvata najčešće slučajeve (<code>sk-...</code>, <code>api_key = &quot;...&quot;</code>), ne sve; pravi skeneri rade isto, temeljitije. Obrazac — ugovor se proverava kodom — vredi i kad skener naraste.</p>
+<h2 id="7-rubrika-samovrednovanja">7. Rubrika samovrednovanja</h2>
+<p>Kad kontrolna tačka 6 zaokruži, došlo je vreme za poslednju ocenu — vašu. Rubrika (eng. <em>rubric</em>) ispod ima šest dimenzija; svaku ocenite od 0 do 3, iskreno, na osnovu repozitorijuma kakav zaista jeste (ne kakav bi bio „samo da još…&quot;). Ocena po opisima, ne po osećaju: uzmite prvi opis koji stoji u potpunosti.</p>
+<table>
+<thead>
+<tr>
+<th>Dimenzija</th>
+<th>0 — nema</th>
+<th>1 — počelo</th>
+<th>2 — radi</th>
+<th>3 — radi i brani se</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Problem i dosije</strong></td>
+<td>nema dosijea</td>
+<td>dosije postoji, ali se projekat od njega udaljio</td>
+<td>dosije i projekat se slažu; mera uspeha proverena</td>
+<td>dosije čita stranac: on zna šta agent radi i šta ne</td>
+</tr>
+<tr>
+<td><strong>Ispravnost i petlja</strong></td>
+<td>agent ne završava zadatak</td>
+<td>završava uz pomoć autora</td>
+<td>završava sam, sa kočnicama i tragom</td>
+<td>ponovna pokretanja daju upotrebljive rezultate; trag objašnjava i padove</td>
+</tr>
+<tr>
+<td><strong>Evaluacija</strong></td>
+<td>nema skupa</td>
+<td>skup postoji, ocenjivanje ručno</td>
+<td>kapija sa pragom pada glasno; rezultati se čuvaju</td>
+<td>dif pregled korišćen u stvarnoj izmeni, obrazložen u istoriji</td>
+</tr>
+<tr>
+<td><strong>Bezbednost i obim alata</strong></td>
+<td>alati neograničeni</td>
+<td>sandbox postoji, provere delimično</td>
+<td>svaki alat proverava argumente; nepovratno traži potvrdu</td>
+<td>spisak alata obrazložen u dosijeu, uključujući šta je namerno izostavljeno</td>
+</tr>
+<tr>
+<td><strong>Logovi i troškovi</strong></td>
+<td>samo <code>print</code></td>
+<td>logovi postoje, ali bez traga</td>
+<td>strukturisani logovi sa id traga; budžet sa tvrdim limitom</td>
+<td>iz logova se odgovara „šta je radio i koliko je koštalo&quot; i za prošlu nedelju dana</td>
+</tr>
+<tr>
+<td><strong>Dokumentacija i objava</strong></td>
+<td>bez README-a</td>
+<td>README postoji, ali ga strani čitalac ne prati do pokretanja</td>
+<td>potpuni README; strani čitalac pokreće agenta bez pitanja</td>
+<td>istorija komitova prati faze; README odgovara i na ograničenja i na trošak</td>
+</tr>
+</tbody></table>
+<p>Sabirajte (0–18) i pročitajte opseg:</p>
+<ul>
+<li><strong>15–18 — isporučeno.</strong> Ovo je portfolio agent: javno ga pokazujte, i u razgovoru za posao vodite kroz njega redom — trag, skup, kapija, logovi.</li>
+<li><strong>10–14 — radi, ali se ne brani.</strong> Vratite se dimenzijama sa ocenom 1 i 2: to su obično evaluacija i logovi — delovi koji se najlakše odlože „za kad bude vremena&quot;, a bez kojih projekat ne može da dokaže ni sebi, ni drugima.</li>
+<li><strong>5–9 — u izradi.</strong> Srce (deo 3) verovatno radi; okolo ne. Nastavite po kontrolnim tačkama od dela 4.</li>
+<li><strong>0–4 — početak.</strong> I to je legitimno stanje — samo ne kraj. Vratite se na deo 1.</li>
+</ul>
+<p>I još nešto, važnije od broja: rubrika je i plan poboljšanja. Kolona „3&quot; je spisak sledećih koraka, dimenzija po dimenziju — i svaki korak tamo je mali, konkretan posao („dodaj id traga u logove&quot;), a ne „popraviti kvalitet&quot;.</p>
+<h2 id="8-primeri-portfolio-prezentacije">8. Primeri portfolio prezentacije</h2>
+<p>Agent je isporučen — sad ga treba i pokazati. Portfolio prezentacija nije slajdovi; to su <strong>tri teksta koja žive uz repozitorijum</strong> i rade za vas kad vas nema: prezentacija u tri rečenice (na vrhu README-a), demo kroz trag (deo istorije ili izlaza), i „odbrana&quot; — odgovori na pitanja koja će sigurno doći. Evo kako to izgleda za tri primer-projekta iz sekcije 2; vaš tekst pišete po istom kalupu.</p>
+<p><strong>Primer 1 — „Bibliotekar&quot; (agent za red u fascikli beleški):</strong></p>
+<blockquote>
+<p>Bibliotekar sređuje fasciklu sa beleškama: pročita svaku, predloži jasno ime i mesto u strukturi, i piše indeks fascikle — a svaku promenu izvrši tek posle moje potvrde. Petlja agenta, tri alata sa proverom argumenata i sandbox-om; scenario-skup od 12 primera sa pragom od 80% kao kapija pri svakoj izmeni. Bez frameworka, ~200 linija Pythona: baš zato što sam petlju pisao sam, znam šta bi framework doneo — i šta bi uzeo.</p>
+</blockquote>
+<p><strong>Primer 2 — „Knjižničar dokumentacije&quot; (RAG nad pravilnicima tima):</strong></p>
+<blockquote>
+<p>Knjižničar odgovara na pitanja iz dokumenata našeg tima (pravilnici, uputstva) — uvek sa navođenjem odlomka i izvora, i sa otvorenim odbijanjem kad pokrivenosti nema. RAG cevovod: deljenje na odlomke, ugnežđene reprezentacije, lokalni vektorski indeks, pretraga po sličnosti. Evaluacija: 15 pitanja (10 sa pokrivenošću, 5 bez) — mera je „tačno sa izvorom&quot;, a „nagađa umesto da odbije&quot; se broji kao pad, ne kao blizina.</p>
+</blockquote>
+<p><strong>Primer 3 — „Čuvar promena&quot; (nedeljni pregled izmena):</strong></p>
+<blockquote>
+<p>Čuvar jednom nedeljno pregleda izmene u fascikli sa dokumentima i piše kratak pregled „šta se promenilo, šta to znači za nas&quot; — pokreće se zakazano, radi bez mene, i o sebi piše strukturisane logove sa id traga. Zato mu verujem: kad nešto pogreši, iz logova vidim koji korak, koji alat, i koliko je koštalo; budžet sa tvrdim limitom čini da najgore što može da se desi bude — jasan izveštaj o prekidu.</p>
+</blockquote>
+<p>Primetite šta sva tri rade: <strong>prva rečenica — šta radi i za koga; druga — kako (arhitektura imenom); treća — zašto mu verovati (evaluacija, logovi, kočnice).</strong> To je struktura koja se pamti i prepričava — i tačno redosledom kojim će i ispitivač gledati vaš repozitorijum. Uz to, dva kratka dodatka:</p>
+<ul>
+<li><strong>Demo kroz trag:</strong> u README ubacite isečak stvarnog traga jednog pokretanja (izlaz korak po korak, ili par linija iz <code>logovi.jsonl</code>) — čitaocu to govori više od screenshot-a, jer pokazuje da je proces vidljiv, ne samo rezultat.</li>
+<li><strong>Pripremljena odbrana:</strong> tri pitanja koja sigurno padnu — „šta desi kad padne mreža?&quot;, „kako znate da odgovori nisu izmišljeni?&quot;, „koliko košta po nedelji?&quot; — i tri kratka odgovora iz vaših logova i evaluacije. Ko je na njih spreman, na sve ostalo će biti.</li>
+</ul>
+<h2 id="9-tipicne-greske-i-dijagnoza">9. Tipične greške — i dijagnoza</h2>
+<table>
+<thead>
+<tr>
+<th>Simptom</th>
+<th>Uzrok</th>
+<th>Lek</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Projekat „skoro gotov&quot; tri nedelje</td>
+<td>preskočena kontrolna tačka; obim bez vlasnika</td>
+<td>vratiti se na prvu nezaokruženu KT; sve „još samo&quot; stavke preći u dosije, odeljak „ne radi&quot;</td>
+</tr>
+<tr>
+<td>Agent radi na vašim, pada na tuđim podacima</td>
+<td>alati testirani na izmišljenim primerima</td>
+<td>KT2 doslovno: bar jedan pokret na stvarnom unosu, pre petlje</td>
+</tr>
+<tr>
+<td>Stopa prolaznosti visoka, a agent loš</td>
+<td>provere prate format, ne sadržaj; scenariji samo „dobri&quot;</td>
+<td>dodati van domena i pogrešne pretpostavke; sudija za ono što pravila ne hvataju</td>
+</tr>
+<tr>
+<td>README lepo piše, ali niko ne pokreće</td>
+<td>dokumentacija pisana iz sećanja, ne iz pokušaja</td>
+<td>KT6 doslovno: svež klon, strane ruke, nula pitanja — pa onda pišite</td>
+</tr>
+<tr>
+<td>Logovi postoje, a „šta se desilo juče&quot; se ne zna</td>
+<td>događaji bez id traga; vreme nije u liniji</td>
+<td>jedan id po zadatku, vremenska oznaka u svakoj liniji (modul 09)</td>
+</tr>
+<tr>
+<td>Portfolio izgleda kao zbirka domaćih</td>
+<td>šest malih skripti bez veze, umesto jednog prošlog puta</td>
+<td>ovaj modul: jedan projekat kroz šest delova — dubina, ne širina</td>
+</tr>
+</tbody></table>
+<h2 id="10-pitanja-za-samoproveru">10. Pitanja za samoproveru</h2>
+<ol>
+<li>Zašto se dosije projekta piše pre koda, i šta u njemu čuva obim? Šta znači stavka „šta agent NE radi&quot; sa bar tri stavke?</li>
+<li>Navesti tri od pet provera dobre ideje iz sekcije 2 — i za svaku objasniti u kojem delu sekcije 4 će kasnije puknuti projekat koji tu proveru nije prošao.</li>
+<li>Kontrolne tačke su „dogovor s vama samima&quot;. Šta je alternativa — i zašto je lošija? Šta kontrolna tačka radi kad padne, a šta ne sme da radi?</li>
+<li>Zašto se u delu 2 alati prave i testiraju pre petlje? Šta bi se desilo kad biste petlju gradili prvu — i gde bi se to prvo videlo?</li>
+<li>Rubrika kaže: „ponovna pokretanja daju upotrebljive rezultate&quot;. Zašto „upotrebljive&quot;, a ne „identične&quot;? Kakav deo isporuke to čini mogućim (a) da se vidi i (b) da se meri?</li>
+<li>Predstavite svoj projekat u tri rečenice po kalupu iz sekcije 8 — sad, bez gledanja u repozitorijum. Koja rečenica je pukla? To je sledeći zadatak dokumentacije.</li>
+</ol>
+<h2 id="sta-sledi">Šta sledi</h2>
+<p>Ovim modulom kurs se zatvara krug: od „šta je uopšte agent&quot; (modul 00) do agenta koji je isporučen, izmeren, ograničen i objavljen — vašeg. Šta posle? Tri prakse koje drže znanje živim. <strong>Prvo, održavajte agenta:</strong> svaka izmena kroz kapiju evaluacije, svaki pad kroz logove — mesec dana takvog rada vredi više od novog kursa. <strong>Drugo, čitajte izvore:</strong> dokumentaciju provajdera koje koristite, specifikacije poput MCP, i changelog-e alata — oblast se menja brzo, ali vama je sada jezik domaći. <strong>Treće, vratite kursu:</strong> prijavite grešku, predložite vežbu, vodite radionicu — najbolji način da utvrdite gradivo je da ga predate dalje. Ako vam je ovaj kurs pomogao, <a href="../../recnik/">REČNIK</a>, <a href="../../mapa/">MAPA</a> i <a href="../../radionice/">radionice</a> čekaju sledećeg čitaoca — i doprinos dobrodošao u <a href="https://github.com/acailic/ai-agenti-srb/blob/main/CONTRIBUTING.md">CONTRIBUTING</a>. Srećno — i neka vam agenti rade i kad vas nema. ⚓</p>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/moduli/modul-10-zavrsni-projekat.md" rel="noopener">moduli/modul-10-zavrsni-projekat.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <a href="../09-u-produkciju/"><span class="dir">← Prethodni modul</span>U produkciju</a>
+  <span></span>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>
