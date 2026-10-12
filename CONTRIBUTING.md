@@ -37,6 +37,7 @@ Vežbe su „komad kursa koji se pokreće", pa važe pravila:
 3. **Jezik:** bez ćirilice i ijekavica (brza pretraga: `vrijeme|mjesto|čovjek|gdje|...`); termini usklađeni sa REČNIK-om.
 4. **Bez tajni:** pretražite dif po obrascima ključeva (`sk-...`); `.env` nikad ne ide u commit.
 5. **Originalnost:** ništa se ne kopira, ne prevodi niti prilagođava iz kurseva sa nekompatibilnom licencom (hard pravilo: datawhalechina/hello-agents je CC BY-NC-SA — ne diramo njegov tekst; samo redosled tema je inspiracija).
+6. **Sajt:** ako izmena dira bilo šta što se renderuje (module, radionice, radionicu, MAPA-UCENJA, REČNIK, O-AUTORU, README), pokrenite `npm run build` i uključite novi `docs/` u isti *pull request* — `npm run check` prolazi samo kad je `docs/` svež.
 
 Ako nešto od ovoga ne umejte da proverite — pošaljite *pull request* kakav jeste i pitajte; rado pomažemo, a to je i prilika da vodič učinimo boljim.
 
