@@ -2,6 +2,8 @@
 
 > Kompletan, praktičan kurs o izgradnji AI agenata — na srpskom jeziku, za developere u Srbiji i regionu. Od prvog poziva API-ju do sopstvenog agenta u produkciji, sa vežbama na svakom koraku.
 
+**Sajt kursa:** ceo materijal je objavljen i kao [veb sajt](https://acailic.github.io/ai-agenti-srb/) — sa pretragom po celom kursu i stranicom radionice „AI agenti za dev timove".
+
 ## Zašto ovaj repozitorijum postoji
 
 Oblast AI agenata (eng. *AI agents*) raste brzinom koja je teška za praćenje — ali gotovo sav sistematski materijal je na engleskom. Za developere koji najbrže uče na maternjem jeziku, to je realna barijera. Ovde se gradi kompletan kurs na srpskom: od toga šta je token i šta je kontekst, preko alata i petlje agenta, do memorije, evaluacije i produkcije — sa vežbama, domaćim, radionicama i rečnikom pojmova. Bez kopiranja, bez prevoda tuđeg gradiva: originalan materijal na srpskom, licenciran tako da se slobodno koristi (CC BY 4.0).

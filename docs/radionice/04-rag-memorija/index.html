@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radionica 04 — Memorija i RAG: agent koji zna vaše dokumente — AI i agenti na srpskom</title>
+<meta name="description" content="Učesnici grade mini pretraživač nad sopstvenim dokumentima — kompletan RAG cevovod, komad po komad: deljenje teksta na odlomke (eng. chunking), ugnežđene reprezentacije (eng. embeddings),">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/radionice/04-rag-memorija/">
+<meta property="og:title" content="Radionica 04 — Memorija i RAG: agent koji zna vaše dokumente — AI i agenti na srpskom">
+<meta property="og:description" content="Učesnici grade mini pretraživač nad sopstvenim dokumentima — kompletan RAG cevovod, komad po komad: deljenje teksta na odlomke (eng. chunking), ugnežđene reprezentacije (eng. embeddings),">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/radionice/04-rag-memorija/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="..//">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#cilj-radionice">Cilj radionice</a></li><li><a href="#agenda-po-satima">Agenda po satima</a></li><li><a href="#priprema-pre-radionice-ucesnici">Priprema pre radionice (učesnici)</a></li><li><a href="#vezba-1-deljenje-teksta-na-odlomke-30-min">Vežba 1 — Deljenje teksta na odlomke (30 min)</a></li><li><a href="#vezba-2-indeks-ugnezdjivanje-i-lokalna-vektorska-baza-40-min">Vežba 2 — Indeks: ugnežđivanje i lokalna vektorska baza (40 min)</a></li><li><a href="#vezba-3-upit-pretraga-po-slicnosti-i-odgovor-sa-izvorom-50-min">Vežba 3 — Upit: pretraga po sličnosti i odgovor sa izvorom (50 min)</a></li><li><a href="#vezba-4-granice-bez-pokrica-i-protivrecnosti-30-min">Vežba 4 — Granice: bez pokrića i protivrečnosti (30 min)</a></li><li><a href="#domaci">Domaći</a></li><li><a href="#materijali-checklist-za-ucesnike">Materijali — checklist za učesnike</a></li><li><a href="#za-voditelja">Za voditelja</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Radionica 04 — Memorija i RAG: agent koji zna vaše dokumente</h1>
+    <div class="meta-chips"><span class="chip modnum">radionica 04</span><a class="chip modnum chip-link" href="../../modul/04-memorija-i-rag/">modul 04</a></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Povezani modul:</strong> <a href="../../modul/04-memorija-i-rag/">modul 04 — Memorija i RAG</a> (preporučeno pročitati sekcije 1–6 pre radionice)
+<strong>Trajanje:</strong> 4 časa · <strong>Format:</strong> predavanje 25% / vežbe 75% · <strong>Nivo: srednji</strong></p>
+</blockquote>
+<h2 id="cilj-radionice">Cilj radionice</h2>
+<p>Učesnici grade mini pretraživač nad sopstvenim dokumentima — kompletan RAG cevovod, komad po komad: deljenje teksta na odlomke (eng. <em>chunking</em>), ugnežđene reprezentacije (eng. <em>embeddings</em>), lokalna vektorska baza (eng. <em>vector database</em>), pretraga po sličnosti i odgovor sa navođenjem izvora. Pa onda i granice: šta se desi kada dokumenti nemaju odgovor — i kada se dva dokumenta protivre. Poruka radionice koju ponavljamo do kraja: <strong>RAG nije čarobnjaštvo, cevovod je</strong> — i svaki deo cevovoda se može pogledati, izmeriti i pokvariti (u vežbi 4, namerno).</p>
+<h2 id="agenda-po-satima">Agenda po satima</h2>
+<table>
+<thead>
+<tr>
+<th>Sat</th>
+<th>Sadržaj</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. sat</strong></td>
+<td>Zašto „model ne zna&quot; naše stvari: stateless model, kontekst kao novčanik (15 min). Ugnežđene reprezentacije — intuicija: slično značenje = blizu u prostoru brojeva; demo sličnosti na parovima rečenica (30 min). Arhitektura RAG na crtežu: indeksiranje (jednom) vs. upit (svaki put) — zašto se faze ne smeju pomešati (15 min).</td>
+</tr>
+<tr>
+<td><strong>2. sat</strong></td>
+<td>Vežba 1: deljenje teksta na odlomke — veličina, preklapanje, granice rečenice; eksperiment sa parametrima (30 min). Vežba 2: ugnežđivanje odlomaka i čuvanje u lokalnu vektorsku bazu (indeks.json); sanity provera sličnosti (30 min).</td>
+</tr>
+<tr>
+<td><strong>3. sat</strong></td>
+<td>Vežba 3: pretraga po sličnosti za pitanje korisnika + slaganje prompta sa nađenim odlomcima + odgovor sa izvorom (50 min). Kratko: zašto je izvor obavezan — provera, poverenje, evaluacija (10 min).</td>
+</tr>
+<tr>
+<td><strong>4. sat</strong></td>
+<td>Vežba 4: granice — pitanja bez pokrića; pokvareni dokument sa protivrečnim stavkama (30 min). Diskusija: RAG nije rešenje za sve — memorija, sažimanje, klasična baza; najava modula 05 (20 min). Zatvaranje i domaći (10 min).</td>
+</tr>
+</tbody></table>
+<h2 id="priprema-pre-radionice-ucesnici">Priprema pre radionice (učesnici)</h2>
+<p>Odrađene <a href="../01-prvi-koraci/">radionice 01</a> i <a href="../02-alati-i-tool-use/">02</a> (ili barem moduli 01–02), ključ i dalje samo u environment varijabli <code>Z_AI_API_KEY</code>. Zatim:</p>
+<pre><code class="language-bash">pip install openai numpy
+
+# Tri mala dokumenta za indeksiranje (isti set kao u modulu 04)
+mkdir -p sandbox
+cat &gt; sandbox/pravilnik-godisnji.md &lt;&lt;&#39;EOF&#39;
+# Pravilnik o godišnjim odmorima
+
+Zaposleni stiče pravo na godišnji odmor posle mesec dana rada. Osnovni godišnji
+odmor traje najmanje 20 radnih dana. Za svaku punu godinu staža preko deset
+godina dodaje se jedan dan, najviše do osam dana ukupno.
+
+Zahtev za godišnji odmor podnosi se najmanje 30 dana unapred, preko portala
+zahtevi. Zahtev mora da sadrži: ime zaposlenog, deo godišnjeg (prvi ili drugi),
+broj dana i ime kolege koji preuzima obaveze za vreme odsustva.
+
+Prvi deo godišnjeg odmora koristi se do 30. juna tekuće godine, osim uz pisanu
+saglasnost rukovodioca. Neiskorišćeni dani se prenose samo na prvi kvartal
+naredne godine.
+EOF
+cat &gt; sandbox/pravilnik-rad-na-daljinu.md &lt;&lt;&#39;EOF&#39;
+# Pravilnik o radu na daljinu
+
+Zaposleni može da radi od kuće najviše dva dana nedeljno, uz prethodno
+odobrenje neposrednog rukovodioca. Odobrenje se traži mejlom najmanje tri dana
+unapred i važi jednu nedelju.
+
+Za vreme rada na daljinu zaposleni je obavezan da odgovara na poruke u radnom
+vremenu i da bude dostupan za sastanke najkasnije sat vremena po pozivu. Opremu
+(laptop i monitor) obezbeđuje kompanija i vraća se po prestanku radnog odnosa.
+
+Rad na daljinu se ne odobrava u prva tri meseca radnog odnosa i tokom
+kvalifikacionog ispita.
+EOF
+cat &gt; sandbox/beleske-sastanaka.md &lt;&lt;&#39;EOF&#39;
+# Beleške sa sastanaka
+
+Sastanak 14.02: dogovorena migracija baze u aprilu; novi endpoint /izvestaji
+izlazi do kraja marta; Ivana vodi dokumentaciju. Rok za prvi nacrt plana
+migracije je 28. februar.
+
+Sastanak 21.02: prihvaćen predlog da se kancelarije presele u novi objekat od
+juna. Budžet za obuku tima: 2000 evra po osobi za prvo polugodište. Odlučeno je
+da se uvodi programerski dan — četvrtak bez sastanaka.
+
+Sastanak 28.02: nacrt plana migracije odobren uz primedbu da nedostaje procena
+rizika po korisnike. Sledeći korak: Ivana piše procenu do 7. marta.
+EOF
+</code></pre>
+<p><strong>Važna napomena o planu:</strong> za ovu radionicu treba i pristup modelu za ugnežđivanje (embedding endpoint) — kod z.ai/GLM to je <code>embedding-3</code>; ako vaš plan ili provajder koristi drugi naziv, postavite environment varijablu <code>Z_AI_EMBED_MODEL</code> (kod čita odatle). Ceo indeks ove radionice košta manje od šoljice kafe — nema razloga za uštedu.</p>
+<hr>
+<h2 id="vezba-1-deljenje-teksta-na-odlomke-30-min">Vežba 1 — Deljenje teksta na odlomke (30 min)</h2>
+<p><strong>Zadatak:</strong> napišite funkciju <code>podeli_na_odlomke(tekst, max_znakova, preklapanje)</code> koja seče tekst po rečenicama i slaže odlomke do zadate dužine, sa preklapanjem na spoju. Zatim pogledajte šta je dobila na sva tri dokumenta.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r04_v1_odlomci.py</code> (bez mreže — čist Python):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 04, vežba 1 — deljenje dokumenata na odlomke (bez mreže).&quot;&quot;&quot;
+
+import re
+from pathlib import Path
+
+def podeli_na_recenice(tekst: str) -&gt; list[str]:
+    delovi = re.split(r&quot;(?&lt;=[.!?])\s+&quot;, tekst.strip())
+    return [d.strip() for d in delovi if d.strip()]
+
+def podeli_na_odlomke(tekst: str, max_znakova: int = 900,
+                      preklapanje: int = 150) -&gt; list[str]:
+    odlomci: list[str] = []
+    tekuci = &quot;&quot;
+    for recenica in podeli_na_recenice(tekst):
+        if tekuci and len(tekuci) + len(recenica) + 1 &gt; max_znakova:
+            odlomci.append(tekuci.strip())
+            tekuci = tekuci[-preklapanje:] + &quot; &quot;     # preklapanje na spoju
+        tekuci += recenica + &quot; &quot;
+    if tekuci.strip():
+        odlomci.append(tekuci.strip())
+    return odlomci
+
+def main() -&gt; None:
+    for fajl in sorted(Path(&quot;sandbox&quot;).glob(&quot;*.md&quot;)):
+        tekst = fajl.read_text(encoding=&quot;utf-8&quot;)
+        print(f&quot;== {fajl.name} ==&quot;)
+        for max_znakova in (300, 900, 1500):
+            n = len(podeli_na_odlomke(tekst, max_znakova))
+            print(f&quot;   max {max_znakova:4d} znakova → {n} odlomaka&quot;)
+        for i, odlomak in enumerate(podeli_na_odlomke(tekst), 1):
+            print(f&quot;   odlomak {i} · {len(odlomak)} znakova · početak: {odlomak[:60]}…&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Tri tačke koje na ovoj vežbi moraju da „sednu&quot;:</strong> (1) manji odlomci = više ih je, i pretraga kasnije gađa uži met, ali se činjenice lakše preseku; (2) preklapanje spašava rečenicu koja padne na spoj — nađite u izlazu odlomak čiji početak ponavlja kraj prethodnog; (3) granice seku po rečenici, jer struktura dokumenta već jeste podela na teme koje je napisao čovek.</p>
+<h2 id="vezba-2-indeks-ugnezdjivanje-i-lokalna-vektorska-baza-40-min">Vežba 2 — Indeks: ugnežđivanje i lokalna vektorska baza (40 min)</h2>
+<p><strong>Zadatak:</strong> za svaki odlomak izračunajte ugnežđenu reprezentaciju pozivom API-ja, pa sve (broj, izvor, tekst, vektor) sačuvajte u <code>indeks.json</code> — to je vaša vektorska baza. Na kraju, sanity provera: dva srodna teksta moraju imati veću kosinusnu sličnost nego srodan i stran.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r04_v2_indeks.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 04, vežba 2 — indeks: odlomci → vektori → indeks.json.
+
+  Z_AI_API_KEY      — obavezno: vaš API ključ
+  Z_AI_BASE_URL     — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_EMBED_MODEL  — opciono: model za ugnežđivanje (podrazumevano embedding-3)
+&quot;&quot;&quot;
+
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+import numpy as np
+from openai import OpenAI
+
+SANDBOX = Path(__file__).parent / &quot;sandbox&quot;
+INDEKS = Path(__file__).parent / &quot;indeks.json&quot;
+
+def podeli_na_odlomke(tekst: str, max_znakova: int = 900,
+                      preklapanje: int = 150) -&gt; list[str]:
+    delovi = re.split(r&quot;(?&lt;=[.!?])\s+&quot;, tekst.strip())
+    recenice = [d.strip() for d in delovi if d.strip()]
+    odlomci, tekuci = [], &quot;&quot;
+    for recenica in recenice:
+        if tekuci and len(tekuci) + len(recenica) + 1 &gt; max_znakova:
+            odlomci.append(tekuci.strip())
+            tekuci = tekuci[-preklapanje:] + &quot; &quot;
+        tekuci += recenica + &quot; &quot;
+    if tekuci.strip():
+        odlomci.append(tekuci.strip())
+    return odlomci
+
+def ugnezdi(client, tekstovi: list[str]) -&gt; list[np.ndarray]:
+    &quot;&quot;&quot;Tekstove prevodi u vektore — jedini poziv ka mreži u ovoj vežbi.&quot;&quot;&quot;
+    odgovor = client.embeddings.create(
+        model=os.environ.get(&quot;Z_AI_EMBED_MODEL&quot;, &quot;embedding-3&quot;),
+        input=tekstovi,
+    )
+    return [np.asarray(stavka.embedding, dtype=float) for stavka in odgovor.data]
+
+def kosinuska_slicnost(a: np.ndarray, b: np.ndarray) -&gt; float:
+    return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo pokrenite.&quot;)
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;))
+
+    fajlovi = sorted(SANDBOX.glob(&quot;*.md&quot;))
+    if not fajlovi:
+        sys.exit(&quot;Nema .md fajlova u sandbox-u — pokrenite pripremu iz radionice.&quot;)
+    zapisi = []
+    for fajl in fajlovi:
+        for tekst_odlomka in podeli_na_odlomke(fajl.read_text(encoding=&quot;utf-8&quot;)):
+            zapisi.append({&quot;broj&quot;: len(zapisi) + 1, &quot;izvor&quot;: fajl.name,
+                           &quot;tekst&quot;: tekst_odlomka})
+    for zapis, vektor in zip(zapisi, ugnezdi(client, [z[&quot;tekst&quot;] for z in zapisi])):
+        zapis[&quot;vektor&quot;] = vektor.tolist()
+    INDEKS.write_text(json.dumps(zapisi, ensure_ascii=False), encoding=&quot;utf-8&quot;)
+    print(f&quot;Indeks: {len(zapisi)} odlomaka iz {len(fajlovi)} fajlova → indeks.json&quot;)
+
+    # sanity provera: srodni par vs. strani par
+    [a, b, c] = ugnezdi(client, [&quot;zaposleni radi od kuće&quot;,
+                                 &quot;rad na daljinu je odobren&quot;,
+                                 &quot;godišnji odmor traje 20 dana&quot;])
+    print(f&quot;sličnost (srodan par):    {kosinuska_slicnost(a, b):.3f}&quot;)
+    print(f&quot;sličnost (strani par):    {kosinuska_slicnost(a, c):.3f}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Provere za voditelja (i učesnike):</strong> otvoriti <code>indeks.json</code> i naći jedan zapis — broj, izvor, tekst, i dugačka lista brojeva: <em>to</em> je vektorska baza, nema misterije. Sanity provera treba da pokaže srodni par iznad stranog — ali apsolutne vrednosti zavise od modela, pa se „granica pokrivenosti&quot; ne traži na brojevima (odbranu radimo ponašanjem modela, u vežbi 4).</p>
+<p>Najčešći kvar na ovom koraku: poruka API-ja „model not found&quot; za embedding — proveriti naziv modela u <code>Z_AI_EMBED_MODEL</code>; drugi kvar: pojedinačni pozivi ugnežđivanja u petlji (radi, ali je sporije i skuplje — <code>input=</code> prima ceo spisak odjednom).</p>
+<h2 id="vezba-3-upit-pretraga-po-slicnosti-i-odgovor-sa-izvorom-50-min">Vežba 3 — Upit: pretraga po sličnosti i odgovor sa izvorom (50 min)</h2>
+<p><strong>Zadatak:</strong> za pitanje korisnika: ugnjezdite pitanje, nađite tri najbliža odlomka kosinusnom sličnošću, slažite ih u kontekst sa brojevima i izvorima, pa tražite odgovor sa obaveznim navođenjem izvora. Ispišite trag pretrage pre odgovora.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r04_v3_rag.py</code>. Skripta koristi indeks i funkcije iz vežbe 2 (datoteka <code>r04_v2_indeks.py</code> mora postojati pored nje — prva prilika da se vidi zašto se cevovod gradi u slojevima):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 04, vežba 3 — upit: pitanje → pretraga → kontekst → odgovor.
+
+  Z_AI_API_KEY      — obavezno: vaš API ključ
+  Z_AI_BASE_URL     — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL        — opciono: model za razgovor (podrazumevano glm-4.6)
+  Z_AI_EMBED_MODEL  — opciono: model za ugnežđivanje (podrazumevano embedding-3)
+
+Koristi indeks i funkcije iz vežbe 2 (r04_v2_indeks.py).
+&quot;&quot;&quot;
+
+import json
+import os
+import sys
+
+import numpy as np
+
+from r04_v2_indeks import INDEKS, OpenAI, ugnezdi, kosinuska_slicnost
+
+K = 3   # koliko najbližih odlomaka ide u kontekst
+
+SYSTEM_PROMPT = (
+    &quot;Ti si asistent koji odgovara ISKLJUČIVO iz priloženih odlomaka dokumenata. &quot;
+    &quot;Pravila: (1) svaku tvrdnju potkrepljuješ izvorom u zagradi, npr. &quot;
+    &quot;(odlomak 3, pravilnik-rad-na-daljinu.md); (2) ako odlomci ne sadrže &quot;
+    &quot;odgovor, odgovoriš tačno: &#39;U dokumentima nema odgovora na to pitanje.&#39; &quot;
+    &quot;i ništa ne nagađaš; (3) ne spajaš svoje znanje sa odlomcima.&quot;
+)
+
+def ucitaj_indeks() -&gt; list[dict]:
+    if not INDEKS.exists():
+        sys.exit(&quot;Nema indeks.json — prvo pokrenite r04_v2_indeks.py&quot;)
+    zapisi = json.loads(INDEKS.read_text(encoding=&quot;utf-8&quot;))
+    for zapis in zapisi:
+        zapis[&quot;vektor&quot;] = np.asarray(zapis[&quot;vektor&quot;], dtype=float)
+    return zapisi
+
+def trazi(client, pitanje: str, zapisi: list[dict], k: int = K) -&gt; list[tuple]:
+    &quot;&quot;&quot;Vraća k najbližih odlomaka kao spisak (zapis, sličnost), opadajuće.&quot;&quot;&quot;
+    [vektor_pitanja] = ugnezdi(client, [pitanje])
+    ocenjeni = [(zapis, kosinuska_slicnost(vektor_pitanja, zapis[&quot;vektor&quot;]))
+                for zapis in zapisi]
+    ocenjeni.sort(key=lambda par: par[1], reverse=True)
+    return ocenjeni[:k]
+
+def odgovori(client, pitanje: str) -&gt; None:
+    zapisi = ucitaj_indeks()
+    nadjeni = trazi(client, pitanje, zapisi)
+    for zapis, s in nadjeni:                       # trag pretrage — čita se prvi
+        print(f&quot;[pretraga] {s:.3f} · odlomak {zapis[&#39;broj&#39;]} ({zapis[&#39;izvor&#39;]})&quot;)
+    kontekst = &quot;\n\n&quot;.join(f&quot;[odlomak {z[&#39;broj&#39;]}] ({z[&#39;izvor&#39;]})\n{z[&#39;tekst&#39;]}&quot;
+                           for z, _ in nadjeni)
+    poruke = [
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_PROMPT},
+        {&quot;role&quot;: &quot;user&quot;,
+         &quot;content&quot;: f&quot;Odlomci dokumenata:\n\n{kontekst}\n\nPitanje: {pitanje}&quot;},
+    ]
+    odgovor = client.chat.completions.create(
+        model=os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;),
+        messages=poruke, temperature=0.1,
+    )
+    print(&quot;\n&quot; + (odgovor.choices[0].message.content or &quot;&quot;))
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo pokrenite.&quot;)
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;))
+    pitanje = &quot; &quot;.join(sys.argv[1:]) or &quot;Gde sve zaposleni sme da radi umesto u kancelariji?&quot;
+    odgovori(client, pitanje)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Provere:</strong></p>
+<pre><code class="language-bash">python r04_v3_rag.py                                # pitanje BEZ zajedničkih reči sa dokumentima
+python r04_v3_rag.py &quot;Koliko dana unapred se podnosi zahtev za godišnji odmor?&quot;
+python r04_v3_rag.py &quot;Koliki je budžet za obuku tima?&quot;
+python r04_v3_rag.py &quot;Ko sve mora da potpiše zahtev za godišnji?&quot;   # nema u dokumentima
+</code></pre>
+<p>Prvo pitanje je srce vežbe: nijedna reč se ne poklapa sa pravilnikom („kancelarija&quot;, „sme&quot; naspram „rad na daljinu&quot;), a pretraga po smislu ga nalazi. Poslednje pitanje je prva granica — o tome vežba 4. Za svaki odgovor: proveriti izvor ručno, u <code>indeks.json</code> — jedan odgovor proveren rukom vredi više od deset pročitanih.</p>
+<h2 id="vezba-4-granice-bez-pokrica-i-protivrecnosti-30-min">Vežba 4 — Granice: bez pokrića i protivrečnosti (30 min)</h2>
+<p><strong>Zadatak A — pitanja bez pokrića.</strong> Pokrenite rešenje vežbe 3 na pitanjima kojih u dokumentima nema:</p>
+<pre><code class="language-bash">python r04_v3_rag.py &quot;Koja je satnica kantine u objektu?&quot;
+python r04_v3_rag.py &quot;Kolika je cena pretplate na teretanu?&quot;
+</code></pre>
+<p>Pretraga uvek vraća tri odlomka — nikad ne zna za „nema&quot;. Ishod zavisi od pravila u sistemskom promptu: dobar je otvoreno „U dokumentima nema odgovora na to pitanje.&quot;, loš je samouvereno nagađanje iz najbližeg odlomka. Ako se desi loše: ojačati pravilo (2), spustiti temperaturu, i pogledati <code>[pretraga]</code> redove — da li su sličnosti bile niske?</p>
+<p><strong>Zadatak B — pokvareni dokument (protivrečnosti).</strong> Dodajte u sandbox fajl koji protivreči pravilniku:</p>
+<pre><code class="language-bash">cat &gt; sandbox/dodatak-ispravka.md &lt;&lt;&#39;EOF&#39;
+# Ispravka pravilnika (interno, radna verzija)
+
+Odobrenje za rad na daljinu traži se dan unapred, a ne tri dana. Rad na daljinu
+se odobrava do tri dana nedeljno, po diskreciji rukovodioca.
+EOF
+python r04_v2_indeks.py        # ponovna izgradnja indeksa — promena dokumenata!
+python r04_v3_rag.py &quot;Koliko dana unapred se traži odobrenje za rad na daljinu?&quot;
+</code></pre>
+<p>Posmatrajte šta model radi sa <strong>dve istinite po formi, a protivrečne informacije</strong>: da li je uopšte primetio protivrečnost, koja „pobedjuje&quot;, da li navodi oba izvora? Ovo je najvažniji trenutak radionice: RAG ne razrešava protivrečnosti — on ih samo prenosi. Rešenje nije u modelu nego u podacima: verzije, datumi izmena, jasno vlasništvo nad izvorom (a o „kojem dokumentu se sme živeti u kontekstu&quot; — modul 05, trovanje kontekstom).</p>
+<p><strong>Tabela dijagnoze (rešenje za tablu):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Simptom</th>
+<th>Prvo proveriti</th>
+<th>Tipičan lek</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Odgovor bez izvora</td>
+<td>sistemski prompt (pravilo 1)</td>
+<td>zahtevati „(odlomak N)&quot; uz svaku tvrdnju</td>
+</tr>
+<tr>
+<td>Izmišlja iako pokrivenost postoji</td>
+<td><code>[pretraga]</code> redove</td>
+<td>k = 3–5, parafraza pitanja</td>
+</tr>
+<tr>
+<td>Nađen srodan ali pogrešan odlomak</td>
+<td>preklapanje tema u korpusu</td>
+<td>manji odlomci, razdvojiti dokumente</td>
+</tr>
+<tr>
+<td>„Nema odgovora&quot; a odgovor postoji</td>
+<td>reči pitanja vs. reči dokumenta</td>
+<td>sinonimi, pretraga po ključnim rečima uz RAG</td>
+</tr>
+<tr>
+<td>Dva izvora se protivre</td>
+<td>sadržaj indeksa</td>
+<td>verzije/datumi; čistoća korpusa (modul 05)</td>
+</tr>
+</tbody></table>
+<h2 id="domaci">Domaći</h2>
+<ul>
+<li>Ugraditi RAG u agenta iz radionice 03 kao alat <code>trazi_u_dokumentima(pitanje)</code> — agent sam odlučuje kada da pretražuje; pratiti trag: da li je njegovo interno pitanje pretrage dobro kao korisničko?</li>
+<li>Napraviti <code>eval.md</code> sa 10 pitanja (7 sa odgovorom, 3 bez) i upisati ishode: tačan sa izvorom / tačan bez izvora / izmišljen / pogrešno odbijen — prvi evaluacioni skup (najava modula 07).</li>
+<li>Za napredne: ponovo izgraditi indeks sa odlomcima od 300 i 1.200 znakova, proći istih 10 pitanja, uporediti promašaje pretrage; zapisati zaključak u dnevnik vežbi.</li>
+<li>Pripremiti jedno pitanje o granicama RAG-a za početak <a href="../05-evaluacija/">radionice 05</a>.</li>
+</ul>
+<h2 id="materijali-checklist-za-ucesnike">Materijali — checklist za učesnike</h2>
+<ul>
+<li><input disabled="" type="checkbox"> odrađene radionice 01–02 (ili moduli 01–02: poziv API-ju iz Pythona, environment varijable);</li>
+<li><input disabled="" type="checkbox"> pročitan <a href="../../modul/04-memorija-i-rag/">modul 04</a>, barem sekcije 1–6 (radionica ide istim redom);</li>
+<li><input disabled="" type="checkbox"> Python 3.10+, <code>openai</code> i <code>numpy</code> instalirani, <code>Z_AI_API_KEY</code> postavljen;</li>
+<li><input disabled="" type="checkbox"> API plan koji podržava ugnežđivanje (embedding endpoint; kod z.ai/GLM podrazumevamo <code>embedding-3</code>, drugačiji naziv → <code>Z_AI_EMBED_MODEL</code>);</li>
+<li><input disabled="" type="checkbox"> tri dokumenta iz sekcije „Priprema&quot; u <code>sandbox/</code> (može i sopstveni dokument od 5+ strana ko umesto toga — pravilnik, uputstvo, diplomski 🙂);</li>
+<li><input disabled="" type="checkbox"> slobodnih ~200 MB i, kao i uvek, živaca za eksperimentisanje. 🙂</li>
+</ul>
+<h2 id="za-voditelja">Za voditelja</h2>
+<ul>
+<li>Cilj radionice je <em>razumevanje cevovoda</em>, ne brzina: namerno koristimo „glupu&quot; lokalnu bazu (jedan JSON) umesto gotovog servisa, da se svaki korak vidi. Ubrzanje: SQLite/npz za hiljade odlomaka — pomenuti, ne graditi.</li>
+<li>Isplanirati 2. sat pažljivo: prvi poziv ugnežđivanja je trenutak kada svi gledaju poruke o greškama. Najčešći kvarovi: naziv embedding modela ne važi za plan („model not found&quot;) i environment varijabla postavljena u drugom terminalu.</li>
+<li>Za vežbu 4B pripremiti „pokvareni&quot; dokument unapred (protivrečne stavke) — granice se najbolje uče na primeru koji pukne načas. Diskusija posle: šta je izvor istine u firmi, i zašto RAG to nije.</li>
+<li>Ako grupa zaostaje: vežbu 1 skratiti na pokretanje i čitanje izlaza (podela je data), vežbu 4 svesti na zadatak A. Ne skraćivati vežbu 3 — ona je srce radionice.</li>
+<li>Poruka koju ponoviti na kraju: <strong>pretraga po smislu menja reči, ne istinu</strong> — izvor ostaje obavezan, i kad je sistem savršen.</li>
+</ul>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/radionice/radionica-04-rag-memorija.md" rel="noopener">radionice/radionica-04-rag-memorija.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <a href="../03-agent-od-nule/"><span class="dir">← Prethodni</span>undefined</a>
+  <a class="pager-next" href="../05-evaluacija/"><span class="dir">Sledeći →</span>undefined</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

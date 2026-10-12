@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modul 08 — Multi-agent sistemi: kada (i kako) jednog agenta podeliti na više — AI i agenti na srpskom</title>
+<meta name="description" content="Dosad je svaki agent u ovom kursu bio jedan: jedna petlja (modul 03), jedan sistemski prompt, jedan skup alata. Sada prvi put dodajemo drugog. Ali ovaj modul počinje suprotno od onoga što">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/modul/08-multi-agent-sistemi/">
+<meta property="og:title" content="Modul 08 — Multi-agent sistemi: kada (i kako) jednog agenta podeliti na više — AI i agenti na srpskom">
+<meta property="og:description" content="Dosad je svaki agent u ovom kursu bio jedan: jedna petlja (modul 03), jedan sistemski prompt, jedan skup alata. Sada prvi put dodajemo drugog. Ali ovaj modul počinje suprotno od onoga što">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/modul/08-multi-agent-sistemi/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="../../radionice/">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#1-kada-jedan-agent-zaista-nije-dovoljan">1. Kada jedan agent zaista nije dovoljan</a></li><li><a href="#2-podela-uloga-agent-je-uloga-ne-osoba">2. Podela uloga: agent je uloga, ne osoba</a></li><li><a href="#3-komunikacija-sta-putuje-izmedju-agenata">3. Komunikacija: šta putuje između agenata</a></li><li><a href="#4-orkestracija-planer-izvrsilac">4. Orkestracija: planer + izvršilac</a></li><li><a href="#5-kada-multi-agent-nije-resenje">5. Kada multi-agent NIJE rešenje</a></li><li><a href="#6-vezbe-sistem-jutarnji-pregled">6. Vežbe: sistem „Jutarnji pregled"</a></li><li><a href="#7-tipicne-greske-i-dijagnoza">7. Tipične greške — i dijagnoza</a></li><li><a href="#8-pitanja-za-samoproveru">8. Pitanja za samoproveru</a></li><li><a href="#sta-sledi">Šta sledi</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Modul 08 — Multi-agent sistemi: kada (i kako) jednog agenta podeliti na više</h1>
+    <div class="meta-chips"><span class="chip modnum">modul 08</span><span class="chip ">⏱ 4–6 časa</span></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Vreme:</strong> 4–6 časova rada · <strong>Preduslovi:</strong> <a href="../03-agent-od-nule/">moduli 03</a> i <a href="../07-evaluacija-agenata/">07</a> · <strong>Stanje:</strong> prva radna verzija</p>
+</blockquote>
+<p>Dosad je svaki agent u ovom kursu bio <strong>jedan</strong>: jedna petlja (modul 03), jedan sistemski prompt, jedan skup alata. Sada prvi put dodajemo drugog. Ali ovaj modul počinje suprotno od onoga što biste očekivali: ne od „kako se pravi multi-agent sistem&quot;, nego od „kada jedan agent <strong>zaista</strong> nije dovoljan&quot;. Jer sistem od više agenata (eng. <em>multi-agent system</em>) nije nadogradnja koja automatski znači bolje — to je tim. A svaki tim, ljudski ili veštački, plaća cenu koordinacije: više poziva, duže čekanje, teže traženje grešaka. Radno pravilo modula: <strong>drugi agent se dodaje kada je dokazano potreban, ne kada je uzbudljiv.</strong> A kada se već dodaje — radimo to kako treba: jasne uloge, jasan ugovor između njih, i orkestracija (ko radi šta i kojim redom) kao deo koda koji se — naravno — evaluira kao i sve ostalo (modul 07). Kraj modula: sopstveni sistem planer + izvršilac, izmeren naspram jednog agenta na istom zadatku, sa argumentom za i protiv koji stoji na brojevima.</p>
+<hr>
+<h2 id="1-kada-jedan-agent-zaista-nije-dovoljan">1. Kada jedan agent zaista nije dovoljan</h2>
+<p>Počnimo od poštenog pitanja: zašto uopšte dodavati drugog agenta? Postoje tačno <strong>pet dijagnoza</strong> — pet konkretnih problema koje jedan agent ima, a koje podela na više agenata leči. Ako ne možete da imenujte koja od njih pet je vaša — nemate simptom, i ovaj modul vam verovatno ne treba (a to je sasvim u redu).</p>
+<p><strong>1. Kontekstni prozor kao zid.</strong> Neki zadaci stvarno traže više teksta nego što staje u prozor (modul 01): recimo, pročitati četrdeset dokumenata i napisati izveštaj. Jedan agent onda bira između dva zla — ili ne staje, ili mora tako agresivno da sažima (modul 05) da gubi detalje. Više agenata znači više <strong>odvojenih</strong> prozora: svako čita svoj deo, a dalje putuje samo sažetak. Ovo je najčvršća dijagnoza od svih pet, jer je merljiva: kad je korpus veći od prozora, matematika odlučuje umesto vas.</p>
+<p><strong>2. Specijalizacija.</strong> Različiti delovi posla traže različito ponašanje: agent za pretragu treba da bude kratak, činjeničan i sumnjičav; agent za pisanje — tečan i čitljiv. Jedan sistemski prompt koji pokuša da bude i jedno i drugo postane konfuzan: model dobija protivrečna uputstva („budi sažet&quot; + „budi detaljan&quot;) i radi oba posla osrednje. Dva prompta = dve čiste uloge.</p>
+<p><strong>3. Paralelizam.</strong> Tri međusobno nezavisna pretraživanja mogu da se rade istovremeno; jedan agent radi uzastopno, korak po korak. Ako vaš zadatak prirodno ima oblik „uradi pet nezavisnih stvari, pa saberi&quot; (eng. <em>fan-out/fan-in</em>), podela donosi brzinu, ne pamet.</p>
+<p><strong>4. Nezavisna perspektiva.</strong> Onaj koji piše ne vidi sopstvene greške — to zna svako ko je ikad predao tekst bez tuđeg čitanja. Pisac i kriticar (eng. <em>critic</em>) su dve uloge upravo zato: kada su razdvojeni, kriticar ne nasleđuje pisčeve pretpostavke, jer mu u kontekst ne ulazi „kako je pisac mislio&quot;, nego samo tekst.</p>
+<p><strong>5. Granice prava.</strong> Agent koji pretražuje javne izvore ne treba da ima pristup produkcijskoj bazi ni alat za brisanje fajlova. Podela po pravima pristupa znači da greška jednog agenta (ili napad kroz njega — modul 06) ima malu „blast radius&quot; zonu: može da se desi samo ono što taj agent sme.</p>
+<p>Primetite šta ovih pet ima zajedničko: svaka je <strong>dijagnoza</strong> — konkretan, imenljiv problem — a „dodaj agenta&quot; je terapija za nju. To je ceo duh modula u jednoj rečenici: multi-agent sistem se <strong>propisuje</strong>, ne usvaja iz mode. Kad neko kaže „napravimo to multi-agent&quot;, prvo pitanje je uvek isto: <em>koja od pet dijagnoza?</em> Ako odgovor glasi „pa, deluje moćnije&quot; — to nije dijagnoza, to je marketing.</p>
+<h2 id="2-podela-uloga-agent-je-uloga-ne-osoba">2. Podela uloga: agent je uloga, ne osoba</h2>
+<p>Šta u ovom kursu znači „jedan agent&quot;? Ne proces, ne instanca, ne antropomorfni lik sa imenom. Agent je <strong>uloga</strong>: sistemski prompt + alati + podaci do kojih sme. Iz toga sledi i pravilo kada je novi agent zaista nov: <strong>tek kada se bar jedno od ta tri promeni.</strong> Agent koji ima isti prompt, iste alate i isti pristup, samo „drugarskiji ton&quot; — nije novi agent, to je isti agent sa drugim šeširom. (Ista logika važi obrnuto: ponekad su tri „agenta&quot; u nekom sistemu zapravo jedan agent pozvan tri puta — i to je često dobar dizajn, samo ne treba da se zove tim.)</p>
+<p>Klasične uloge u sistemu od više agenata — imenujte ih po <strong>odgovornosti</strong>, ne po ličnosti:</p>
+<table>
+<thead>
+<tr>
+<th>Uloga</th>
+<th>Odgovornost</th>
+<th>Tipičan sistemski prompt počinje sa…</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>planer (eng. <em>planner</em>)</td>
+<td>razlaže cilj na korake</td>
+<td>„Ti razlažeš zadatak na najmanje dovoljan broj koraka…&quot;</td>
+</tr>
+<tr>
+<td>orkestrator (eng. <em>orchestrator</em>)</td>
+<td>dodeljuje, sabere, odlučuje o kraju</td>
+<td>„Ti dodeljuješ korake i sudiš kad je posao gotov…&quot;</td>
+</tr>
+<tr>
+<td>izvršilac (eng. <em>worker</em>, <em>executor</em>)</td>
+<td>radi jedan korak do kraja</td>
+<td>„Ti odgovaraš samo na dodeljeno pitanje, sa izvorima…&quot;</td>
+</tr>
+<tr>
+<td>kriticar (eng. <em>critic</em>)</td>
+<td>ocenjuje tuđi rezultat po rubrici</td>
+<td>„Ti nalaziš greške u tekstu prema spisku kriterijuma…&quot;</td>
+</tr>
+<tr>
+<td>sastavljač (eng. <em>composer</em>)</td>
+<td>spaja delove u konačan oblik</td>
+<td>„Ti sastavljaš konačni tekst iz datih delova, bez novih tvrdnji…&quot;</td>
+</tr>
+</tbody></table>
+<p>Uočite dva detalja. Prvo, planer i orkestrator se u malim sistemima <strong>spajaju u jednu ulogu</strong> — onaj koji pravi plan obično i dodeljuje korake; razdvajaju se tek kad sistem poraste. Drugo, izvršilac ne mora biti model <strong>u svakom mestu</strong>: ključna pretraga po korpusu je odličan izvršilac, brz i besplatan — u vežbama ćemo videti oba sveta.</p>
+<p>Drugi stub podela uloga je <strong>ugovor</strong> (eng. <em>contract</em>) između njih. Kao što dva modula u kodu imaju jasan interfejs — šta funkcija prima, šta vraća — tako i dva agenta imaju: <strong>ulaz</strong> koji agent prima (oblik zadatka i konteksta), <strong>izlaz</strong> koji daje (oblik rezultata), i <strong>granice</strong> — šta sme, a šta ne. Ugovor se piše <strong>pre</strong> koda, jednom rečenicom po strani: „tražilac prima pitanje, vraća izvode sa brojevima izvora ili NEMA; ne piše stilski.&quot; Ako ne možete da napišete ugovor u jednoj rečenici — uloga je previše široka, podelite je ili je suzite. Ugaoni kamen dizajna je star koliko i programiranje: <strong>jedna uloga, jedna odgovornost</strong> (eng. <em>single responsibility</em>), ista ona po kojoj pišete male funkcije — samo su ovde „funkcije&quot; agenti.</p>
+<h2 id="3-komunikacija-sta-putuje-izmedju-agenata">3. Komunikacija: šta putuje između agenata</h2>
+<p>Agenti ne dele mozak. Jedino što dele je <strong>ono što pošalju jedan drugom</strong> — i tu se multi-agent sistemi najčešće pokvare. Klasična bolest zove se <strong>gluvi telefon</strong> (degradacija konteksta, eng. <em>context degradation</em>): kao u igri u kojoj se poruka šapuće niz red, svaki prenos je prilika da nešto padne, doda se izmišljotina, ili se izgubi bitno. Što više agenata u nizu, to više „šapata&quot; između cilja i rezultata.</p>
+<p>Zato je pravilo komunikacije jedno i strogo: između agenata putuju <strong>tri stvari, ništa više</strong>:</p>
+<ol>
+<li><strong>zadatak</strong> (eng. <em>task</em>) — šta treba uraditi, rečeno precizno: jedno pitanje, jedna promena, jedan korak plana;</li>
+<li><strong>kontekst</strong> — samo ono što je primaocu <strong>potrebno</strong> da razume zadatak (modul 05: kontekst je najskuplji resurs; prepisivanje cele istorije plaćate na svakom koraku i svakom agentu);</li>
+<li><strong>rezultat</strong> (artefakt, eng. <em>artifact</em>) — ono što je urađeno, u obliku koji sledeći agent može da koristi bez prepričavanja.</li>
+</ol>
+<p>Primetite šta <strong>ne</strong> putuje: cela istorija razgovora prvog agenta, njegova „razmišljanja&quot;, međukoraci. Ako sastavljač treba izvode, tražilac mu šalje izvode — ne dnevnik svog rada. Ovo je ugovor iz sekcije 2 u pokretu.</p>
+<p>Druga odluka: u kom <strong>obliku</strong> putuje poruka. Model priča u slobodnom tekstu, ali orkestrator je <strong>kod</strong> — a kod ne sme da <em>nagađa</em> gde u odgovoru stoji rezultat. Zato između agenata idu <strong>strukturisani</strong> odgovori (JSON: <code>{&quot;status&quot;: &quot;ok&quot;, &quot;tekst&quot;: ..., &quot;izvori&quot;: [...]}</code>), a slobodan tekst ostaje <em>unutar</em> jednog agenta. Ovo je ista lekcija kao sa alatima u modulu 02 (šema umesto molbe) i planom u modulu 03 (koraci sa imenima, ne „uradi nešto&quot;) — samo jedan nivo više.</p>
+<p>I na kraju, veza sa modulom 06: A2A protokol je upravo ovo — agent–agent komunikacija sa agent-karticom (ko sam, šta umem), zadatkom i artefaktima. U vežbama ćemo sve raditi unutar jednog Python procesa (pozivi funkcija umesto mreže), ali oblik poruka biće isti: <strong>zadatak + kontekst → rezultat</strong>. Kad jednog dana takav sistem razdvojite na dva računara, poruke ne menjaju oblik — menjaju samo transport.</p>
+<h2 id="4-orkestracija-planer-izvrsilac">4. Orkestracija: planer + izvršilac</h2>
+<p>Najpoznatiji i najkorisniji obrazac višeagentskog sistema ima samo dve uloge: <strong>planer + izvršilac</strong>. Planer primi cilj, razloži ga na korake, dodeljuje ih jednom (ili više) izvršilaca, sabire rezultate i sudi kada je gotovo. Petlja orkestratora izgleda ovako:</p>
+<pre><code class="language-text">(1) primi cilj
+(2) napravi plan — spisak koraka, svaki sa imenom i očekivanim ishodom
+(3) dodeli korak izvršiocu: zadatak + kontekst (samo potreban!)
+(4) primi rezultat i proveri: je li korak stvarno gotov?
+(5) nije → replaniraj (novi plan, ne ponavljanje u prazno); jeste → sledeći korak
+(6) nema više koraka → sastavi konačan odgovor iz rezultata
+</code></pre>
+<p>Pogledajte korake pažljivo — negde ste to već videli. Cilj, plan, akcija, posmatranje, korekcija: to je <strong>petlja agenta iz modula 03</strong>, samo jedan nivo više. Agent iz modula 03 u svom koraku zove <strong>alat</strong>; orkestrator u svom koraku zove <strong>agenta</strong>. To je najdublja rečenica ovog modula: <strong>multi-agent sistem je petlja agenta čiji je alat drugi agent.</strong> Sve što ste dosad naučili o petlji — granica koraka, čuvanje traga, ne ponavljati istu akciju beskonačno — važi i ovde, samo sa „alatom&quot; koji priča.</p>
+<p>Iz te sličnosti odmah proizlaze i varijante orkestracije, jer su to u stvari varijante petlje:</p>
+<ul>
+<li><strong>sekvencijalna</strong> (eng. <em>pipeline</em>): korak 1 → 2 → 3, svaki čeka prethodnog; najjednostavnija, dovoljna za većinu zadataka;</li>
+<li><strong>paralelna</strong> (eng. <em>fan-out/fan-in</em>): jedan zadatak podeljen na N nezavisnih delova, svi rade istovremeno, orkestrator sabire (dijagnoza 3 iz sekcije 1);</li>
+<li><strong>hijerarhijska</strong>: orkestrator dodeljuje cele podzadatke pod-orkestratorima, koji imaju svoje izvršioce — svaka grana je opet isti obrazac; uvodi se tek kad broj koraka preraste jedan pregledan plan;</li>
+<li><strong>sa kriticarom</strong>: posle izvršioca dolazi kriticar, a orkestrator odlučuje da li se ide na ponovni rad — uz <strong>čvrstu granicu</strong> (npr. najviše jedna popravka), inače pisac i kriticar mogu da se do besvesti šalju tekst jedan drugom.</li>
+</ul>
+<p>Jedno upozorenje ugrađeno u korak (5): kada korak padne, orkestrator <strong>replanira</strong> — menja plan saznanjem da je korak pao — umesto da bezumno ponavlja isti korak. Isti princip kao u petlji iz modula 03: posmatranje koje ne promeni sledeću akciju nije posmatranje nego dekoracija.</p>
+<h2 id="5-kada-multi-agent-nije-resenje">5. Kada multi-agent NIJE rešenje</h2>
+<p>Ovo je najvažnija sekcija modula, pa je pišimo kao takvu: ravnodučno, bez ustezanja.</p>
+<p><strong>Više agenata ne pravi pamet.</strong> Grupa agenata koja ne zna nešto — ne zna to i grupno; razmena poruka ne dodaje znanje nijednom učesniku. „Emergentna inteligencija&quot; koja se navodno pojavi kad se agenata dovoljno napili — po našem znanju se ne pojavljuje; pojavljuju se računi. Ono što se stvarno dešava u dobro projektovanom višeagentskom sistemu je skromnije i korisnije: <strong>podela posla radi bolje nego jedan preopterećen kontekst</strong> — kad (i samo kad) stoji neka od pet dijagnoza iz sekcije 1.</p>
+<p><strong>Cena se množi.</strong> Svaki agent je poziv API-ju (ili više njih). Tri agenta koji svaki nose isti kontekst = taj kontekst plaćate tri puta; pet koraka u nizu = kašnjenje se sabira; a paralelna varijanta čeka najsporijeg izvršioca. Uz to, debugging postaje arheologija: kada izlaz ne valja, ko je pogrešio — planer koji je los plan napravio, izvršilac koji je pogrešno potražio, sastavljač koji je izgubio deo, ili komunikacija između njih? Jedan agent ima jedan trag (modul 03); sistem od pet ima pet tragova i četiri „šapata&quot; gluvenog telefona između njih. I najzad, evaluacija (modul 07) se komplikuje: scenario-skup se mora pokrenuti protiv <strong>svakog agenta ponaosob</strong> (jer svaki ima svoj posao) i protiv <strong>sistema u celini</strong> (jer celina ima svoje načine da padne koje nijedan pojedinačni agent nema).</p>
+<p>Sažmite to u tabelu — ista odluka, dva dizajna:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>jedan agent</th>
+<th>sistem od više agenata</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>trošak</td>
+<td>kontekst plaćen jednom</td>
+<td>isti kontekst često plaćen više puta</td>
+</tr>
+<tr>
+<td>kašnjenje</td>
+<td>svi koraci uzastopno</td>
+<td>sabira se u nizu; paralelno čeka najsporijeg</td>
+</tr>
+<tr>
+<td>traženje grešaka</td>
+<td>jedan trag</td>
+<td>više tragova + granice između agenata</td>
+</tr>
+<tr>
+<td>evaluacija</td>
+<td>jedan scenario-skup</td>
+<td>skup po agentu + skup za celinu</td>
+</tr>
+<tr>
+<td>gornja granica kvaliteta</td>
+<td>kontekstni prozor i jedan prompt</td>
+<td>više prozora, specijalizovani promptovi, paralelnost</td>
+</tr>
+</tbody></table>
+<p>Poslednji red je jedini gde više agenata strogo pobeđuje — i zato dijagnoze iz sekcije 1 sve idu u njega: kontekst, specijalizacija, paralelizam, perspektiva, prava.</p>
+<p><strong>Pet pitanja pre nego što dodate drugog agenta</strong> — odgovorite redom, u pisanoj formi (to je vaš „dokaz potrebe&quot; iz uvoda):</p>
+<ol>
+<li><strong>Da li jedan agent, sa boljim alatom ili boljim promptom, već rešava zadatak?</strong> — prvo izmerite (A/B na scenario-skupu, modul 07); ako jeste, gotovo je, uštedeli ste nedelju dana i tri kvote;</li>
+<li><strong>Koja od pet dijagnoza je u pitanju?</strong> — imenujte je; ako ne možete, vratite se na pitanje 1;</li>
+<li><strong>Koji je ugovor između uloga?</strong> — ulaz, izlaz i granice svakog agenta, po jedna rečenica;</li>
+<li><strong>Kako ću znati da je <strong>sistem</strong> (ne pojedinačni agent) uspeo?</strong> — provere na scenariju, na nivou celine;</li>
+<li><strong>Kako ću naći grešku kad sistem padne?</strong> — trag kroz sve agente, vidljiv u jednom pregledu.</li>
+</ol>
+<blockquote>
+<p><strong>Primer iz stvarne prakse: istraživački asistent koji se ugojio.</strong> Jedan mali tim je pravio interni „istraživački asistent&quot;: agent koji za zadatu temu pretraži internu biblioteku i napiše kratak pregled. Prva verzija bio je <strong>jedan</strong> agent, sa RAG-om iz modula 04 — i radio je solidno dok je biblioteka bila mala. Kad je narasla, pojavila se dijagnoza 1: kontekst više nije stajao. Podelili su ga na <strong>tražioca</strong> (kratki izvodi sa izvorima) i <strong>pisca</strong> (dosta mu izvodi, ne celi dokumenti) — i stvar se stvarno popravila: pregledi su postali precizniji, a računi niži, jer pisac više nije nosio šum. Onda je krenuo rast broja uloga: „urednik stila&quot;, pa „čuvar činjenica&quot;, pa „arhivar izvora&quot;. Svaka uloga zvučala je razumno ponaosob — ali na prvom merenju (ista pet pitanja odozgo, kasno ali ipak) ispostavilo se da kvalitet nije porastao od treće uloge nadalje, a troškovi i kašnjenje jesu. Tim se vratio na <strong>dve</strong> uloge i tamo stao. Naučena lekcija tima, skoro naša rečenica iz uvoda: drugi agent je bio terapija za dijagnozu; četvrti je bio moda.</p>
+</blockquote>
+<p>Poslednja misao sekcije, i citirajte je sebi svaki put kad sistem postane „zgodan za demonstraciju&quot;: <strong>složenost koja se ne plaća u tokenima, plaća se u otklanjanju grešaka.</strong></p>
+<h2 id="6-vezbe-sistem-jutarnji-pregled">6. Vežbe: sistem „Jutarnji pregled&quot;</h2>
+<p>Gradimo kompletan mali sistem, komad po komad, po obrascu iz modula 07: prvo orkestracija sa mok agentima (testira se <strong>bez</strong> API ključa, kao u modulu 06), pa pravi planer, pa ceo sistem, pa A/B merenje jednog agenta naspram sistema — koje je odgovor na pitanje „za i protiv&quot; iz ishoda modula. Domen je izmišljeni tehnički blog <strong>„Zrnast&quot;</strong> sa šest kratkih članaka u korpusu (u kodu): sistem za zadatu temu pravi kratak pregled — planer postavlja potpitanja, tražilac pronalazi izvode sa izvorima, sastavljač piše konačan tekst. Kao i uvek: z.ai/GLM kroz OpenAI-kompatibilan interfejs, ključ samo u <code>Z_AI_API_KEY</code> (opciono <code>Z_AI_BASE_URL</code>, <code>Z_AI_MODEL</code>).</p>
+<h3 id="6-1-zadatak-1-ugovor-i-orkestracija-bez-ijednog-poziva-api-ju">6.1 Zadatak 1: ugovor i orkestracija, bez ijednog poziva API-ju</h3>
+<p>Prvo pravilo višeagentskog sistema ne tiče se modela nego <strong>ugovora</strong>: oblik poruka između agenata. Zato prvi zadatak počinje bez modela — planer i sastavljač su mok (fiksirani), tražilac je obična pretraga po korpusu — a ipak se cela orkestracija već vrti i <strong>testira offline</strong>. Sačuvajte kao <code>08a_orkestrator.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 8.1 — ugovor i orkestracija sa mok agentima (bez API ključa).
+
+Sistem „Jutarnji pregled&quot; nad korpusom bloga „Zrnast&quot;: planer postavlja
+potpitanja, tražilac pronalazi izvode, sastavljač spaja. Planer i sastavljač
+su ovde mok — cilj je da se orkestracija (petlja!) testira bez mreže.
+
+Upotreba: python 08a_orkestrator.py [&quot;tema pregleda&quot;]
+&quot;&quot;&quot;
+
+import re
+import sys
+
+# --- korpus: šest kratkih članaka fiktivnog bloga „Zrnast&quot; -------------------
+# (isti korpus se ponavlja u 08b, 08c i 08d — Python ne uvozi fajlove čija
+# imena počinju cifrom, pa se deli po obrascu iz modula 04: duplirati)
+CORPUS = [
+    {&quot;id&quot;: 1, &quot;naslov&quot;: &quot;Šta je token&quot;, &quot;tekst&quot;:
+     &quot;Token je komadić teksta koji model obrađuje. Od broja tokena zavise cena &quot;
+     &quot;poziva, brzina i koliko staje u kontekstni prozor.&quot;},
+    {&quot;id&quot;: 2, &quot;naslov&quot;: &quot;Kako rade alati&quot;, &quot;tekst&quot;:
+     &quot;Alat je funkcija koju model može da pozove. Model traži poziv, kod ga &quot;
+     &quot;izvršava i vraća rezultat u razgovor — petlja ide dok model ne odgovori.&quot;},
+    {&quot;id&quot;: 3, &quot;naslov&quot;: &quot;Petlja agenta&quot;, &quot;tekst&quot;:
+     &quot;Agent je petlja: cilj, plan, akcija, posmatranje. Posmatranje menja &quot;
+     &quot;sledeću akciju; bez posmatranja agent je samo generisanje teksta.&quot;},
+    {&quot;id&quot;: 4, &quot;naslov&quot;: &quot;Zašto kontekst košta&quot;, &quot;tekst&quot;:
+     &quot;Kontekst je najskuplji resurs agenta. Svaki poziv nosi celu istoriju, pa &quot;
+     &quot;nebitan kontekst plaćate na svakom koraku.&quot;},
+    {&quot;id&quot;: 5, &quot;naslov&quot;: &quot;Evaluacija umesto utiska&quot;, &quot;tekst&quot;:
+     &quot;Agent se meri na scenario-skupu: provere po scenariju, stopa prolaznosti &quot;
+     &quot;i dif pregled dva pokretanja. Utisak nije mera.&quot;},
+    {&quot;id&quot;: 6, &quot;naslov&quot;: &quot;Kad dodati drugog agenta&quot;, &quot;tekst&quot;:
+     &quot;Drugi agent se dodaje kada jedan ima konkretan problem: kontekstni &quot;
+     &quot;prozor, specijalizacija, paralelizam ili nezavisna perspektiva.&quot;},
+]
+
+# --- ugovor: šta putuje između agenata ---------------------------------------
+# ZADATAK  = {&quot;id&quot;: str, &quot;opis&quot;: str}          — jedno pitanje, jedan korak
+# REZULTAT = {&quot;id&quot;: str, &quot;status&quot;: &quot;ok&quot;|&quot;nema&quot;, &quot;tekst&quot;: str}
+# Dva mala tipa, dve velike odluke: agent dobija zadatak, vraća rezultat;
+# ništa između nije slobodna forma koju orkestrator pogađa.
+
+def mok_planer(cilj: str) -&gt; list[dict]:
+    &quot;&quot;&quot;Planer u moku: fiksirana dva koraka — dovoljni za probu orkestracije.&quot;&quot;&quot;
+    return [
+        {&quot;redni&quot;: 1, &quot;pitanje&quot;: f&quot;Šta je osnovna ideja: {cilj}?&quot;},
+        {&quot;redni&quot;: 2, &quot;pitanje&quot;: f&quot;Koje su posledice i primena: {cilj}?&quot;},
+    ]
+
+# reči koje ne nose pojam — glupe za pretragu („je&quot;, „kako&quot;, „šta&quot;…)
+STOP_RECI = {&quot;šta&quot;, &quot;je&quot;, &quot;kako&quot;, &quot;koje&quot;, &quot;su&quot;, &quot;se&quot;, &quot;to&quot;, &quot;i&quot;, &quot;ili&quot;,
+             &quot;za&quot;, &quot;iz&quot;, &quot;ovo&quot;, &quot;ono&quot;, &quot;sta&quot;}
+
+def reci_teksta(tekst: str) -&gt; set[str]:
+    &quot;&quot;&quot;Sadržajne reči teksta: mala slova, bez interpunkcije, bez stop-reči.&quot;&quot;&quot;
+    return {r for r in re.findall(r&quot;[a-ž]+&quot;, tekst.lower())
+            if len(r) &gt;= 4 and r not in STOP_RECI}
+
+def trazilac(zadatak: dict) -&gt; dict:
+    &quot;&quot;&quot;Tražilac u moku pameti, ali pravi radi: pretraga po korpusu.
+
+    Ovo je važna poenta iz sekcije 2: izvršilac ne mora biti model.
+    Pretraga je odličan izvršilac — brz, besplatan, odrediv.
+    &quot;&quot;&quot;
+    reci = reci_teksta(zadatak[&quot;opis&quot;])
+    nadjeni = [c for c in CORPUS if reci &amp; reci_teksta(c[&quot;naslov&quot;] + &quot; &quot; + c[&quot;tekst&quot;])]
+    if not nadjeni:
+        return {&quot;id&quot;: zadatak[&quot;id&quot;], &quot;status&quot;: &quot;nema&quot;,
+                &quot;tekst&quot;: &quot;NEMA: u korpusu nema ničega o tome.&quot;}
+    tekst = &quot;\n&quot;.join(f&#39;[izvor {c[&quot;id&quot;]}] {c[&quot;naslov&quot;]}: {c[&quot;tekst&quot;]}&#39;
+                      for c in nadjeni)
+    return {&quot;id&quot;: zadatak[&quot;id&quot;], &quot;status&quot;: &quot;ok&quot;, &quot;tekst&quot;: tekst}
+
+def mok_sastavljac(cilj: str, rezultati: list[dict]) -&gt; str:
+    &quot;&quot;&quot;Sastavljač u moku: čisto spajanje izvoda, bez ikakvog modela.&quot;&quot;&quot;
+    delovi = [r[&quot;tekst&quot;] for r in rezultati if r[&quot;status&quot;] == &quot;ok&quot;]
+    if not delovi:
+        return f&quot;NEMA: o temi {cilj!r} u korpusu nema ničega.&quot;
+    return f&quot;## Jutarnji pregled: {cilj}\n\n&quot; + &quot;\n\n&quot;.join(delovi)
+
+def orkestruj(cilj: str) -&gt; str:
+    &quot;&quot;&quot;Petlja orkestratora iz sekcije 4 — uz mok uloge.
+
+    Prva prilika da vidite čitavu ideju modula u 15 linija: ovo JE petlja
+    iz modula 03, samo je „alat&quot; sad drugi agent (ovde: funkcija trazilac).
+    &quot;&quot;&quot;
+    plan = mok_planer(cilj)                              # (1)(2) cilj → plan
+    print(f&quot;[planer] {len(plan)} koraka&quot;)
+    rezultati = []
+    for korak in plan:                                   # (3) dodela
+        zadatak = {&quot;id&quot;: f&quot;k{korak[&#39;redni&#39;]}&quot;, &quot;opis&quot;: korak[&quot;pitanje&quot;]}
+        r = trazilac(zadatak)                            # (4) izvršenje
+        print(f&quot;  [tražilac {zadatak[&#39;id&#39;]}] {r[&#39;status&#39;]}&quot;)
+        rezultati.append(r)
+    return mok_sastavljac(cilj, rezultati)               # (6) sastavljanje
+
+if __name__ == &quot;__main__&quot;:
+    tema = &quot; &quot;.join(sys.argv[1:]) or &quot;petlja agenta&quot;
+    print(orkestruj(tema))
+</code></pre>
+<p>Pokrenite bez ijednog ključa:</p>
+<pre><code class="language-bash">python 08a_orkestrator.py            # tema „petlja agenta&quot;
+python 08a_orkestrator.py &quot;token&quot;    # druga tema
+</code></pre>
+<p>U izlazu pratite redosled: plan, pa dva dodeljena koraka, pa sastavljanje. Zatim probajte temu za koju nema ničega (npr. „kvantno računarstvo&quot;): vidite kako se poruka <code>NEMA</code> vraća kroz ugovor do vrha, umesto da se izgubi. I jedno malo domaće pravilo za kraj zadatka: ubacite na kraju <code>08a_orkestrator.py</code> proveru ugovora — <code>assert</code> da svaki <code>REZULTAT</code> ima sva tri ključa (<code>id</code>, <code>status</code>, <code>tekst</code>) — pa namerno izbacite jedan ključ iz <code>trazilac</code> i pogledajte kako ugovor <strong>pada glasno</strong> umesto da tiho proizvede polomljen pregled. Ugovor koji se ne proverava je dogovor na reč, a mi se dogovaramo kodom (modul 07).</p>
+<h3 id="6-2-zadatak-2-pravi-planer-model-pravi-plan-kod-ga-proverava">6.2 Zadatak 2: pravi planer — model pravi plan, kod ga proverava</h3>
+<p>Sada jednu ulogu menjamo pravom: planer postaje model. Ključna lekcija zadatka nije kako se traži plan (to je jedan običan poziv) nego šta se radi sa <strong>izlazom</strong> modela kad je taj izlaz ulaz za kod: proverava se oblik, seče na maksimum koraka, i <strong>ponavlja jednom</strong> sa objašnjenjem greške ako format ne valja. Isti obrazac kao sa šemama alata u modulu 02 — samo sad na nivou plana. Sačuvajte kao <code>08b_planer.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 8.2 — pravi planer: model pravi plan u JSON-u, kod ga proverava.
+
+Orkestracija je ista kao u 08a (duplirana — imena sa cifrom se ne uvoze,
+vidi modul 04), ali je planer sada model: z.ai/GLM preko OpenAI-kompatibilnog
+klijenta. Tražilac ostaje mok — cilj je da se planer izoluje.
+
+  Z_AI_API_KEY   — obavezno: vaš API ključ
+  Z_AI_BASE_URL  — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL     — opciono: model za razgovor (podrazumevano glm-4.6)
+
+Upotreba: python 08b_planer.py &quot;tema pregleda&quot;
+&quot;&quot;&quot;
+
+import json
+import os
+import sys
+
+from openai import OpenAI
+
+# --- korpus i mok tražilac: isti kao u 08a (duplirani) -----------------------
+CORPUS = []  # ovde nalepite CORPUS i trazilac iz 08a_orkestrator.py
+
+# --- planer: model sa strogo definisanim poslom ------------------------------
+
+SYSTEM_PLANER = (
+    &quot;Ti si planer sistema za kratke preglede nad malim korpusom članaka. &quot;
+    &quot;Zadatak: za datu temu predloži 2 do 4 potpitanja koje pokrivaju ključne &quot;
+    &quot;delove teme (pojam, kako radi, kako se meri/evaluira). Odgovori SAMO &quot;
+    &quot;JSON-om tačno ovog oblika, bez uvoda i objašnjenja: &quot;
+    &#39;{&quot;koraci&quot;: [{&quot;redni&quot;: 1, &quot;pitanje&quot;: &quot;...&quot;}, ...]}&#39;
+)
+
+def izvuci_json(tekst: str) -&gt; dict:
+    &quot;&quot;&quot;Parsira JSON iz odgovora modela; podnosi uvodne reči oko bloka.&quot;&quot;&quot;
+    try:
+        return json.loads(tekst)
+    except json.JSONDecodeError:
+        poc, kraj = tekst.find(&quot;{&quot;), tekst.rfind(&quot;}&quot;) + 1
+        if poc &lt; 0 or kraj &lt;= poc:
+            raise ValueError(f&quot;nema JSON bloka u odgovoru: {tekst[:80]!r}&quot;)
+        return json.loads(tekst[poc:kraj])
+
+def proveri_plan(odgovor: dict) -&gt; list[dict]:
+    &quot;&quot;&quot;Ugovor za plan: lista koraka sa redni i pitanje; max 4 koraka.&quot;&quot;&quot;
+    koraci = odgovor.get(&quot;koraci&quot;)
+    if not isinstance(koraci, list) or not koraci:
+        raise ValueError(&quot;plan mora biti lista &#39;koraci&#39; sa bar jednim korakom&quot;)
+    cist = []
+    for i, k in enumerate(koraci[:4], start=1):        # sečemo na max 4
+        pitanje = str(k.get(&quot;pitanje&quot;, &quot;&quot;)).strip()
+        if not pitanje:
+            raise ValueError(f&quot;korak {i} nema &#39;pitanje&#39;&quot;)
+        cist.append({&quot;redni&quot;: i, &quot;pitanje&quot;: pitanje})
+    return cist
+
+def planer(client, model, cilj: str) -&gt; list[dict]:
+    &quot;&quot;&quot;Poziva model i proverava plan; jedan pokušaj popravke formata.&quot;&quot;&quot;
+    poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_PLANER},
+              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: f&quot;Tema pregleda: {cilj}&quot;}]
+    for pokusaj in range(2):                            # max jedan retry
+        odg = client.chat.completions.create(
+            model=model, messages=poruke, temperature=0.2)
+        tekst = odg.choices[0].message.content or &quot;&quot;
+        try:
+            return proveri_plan(izvuci_json(tekst))
+        except (ValueError, json.JSONDecodeError) as g:
+            print(f&quot;[planer] pokušaj {pokusaj + 1}: loš format ({g})&quot;)
+            poruke.append({&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: tekst})
+            poruke.append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;:
+                           &quot;Prethodni odgovor nije prošao proveru oblika. &quot;
+                           &quot;Vrati SAMO JSON oblika &quot;
+                           &#39;{&quot;koraci&quot;: [{&quot;redni&quot;: 1, &quot;pitanje&quot;: &quot;...&quot;}]} &#39;
+                           f&quot;— greška je bila: {g}&quot;})
+    raise SystemExit(&quot;planer nije dao ispravan plan ni iz drugog pokušaja&quot;)
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo &quot;
+                 &quot;pokrenite.&quot;)
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;,
+                                            &quot;https://api.z.ai/api/paas/v4&quot;))
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+    cilj = &quot; &quot;.join(sys.argv[1:]) or &quot;petlja agenta&quot;
+
+    plan = planer(client, model, cilj)
+    print(f&quot;[planer] plan od {len(plan)} koraka:&quot;)
+    for k in plan:
+        print(f&quot;  {k[&#39;redni&#39;]}. {k[&#39;pitanje&#39;]}&quot;)
+    for k in plan:                                      # tražilac iz 08a
+        r = trazilac({&quot;id&quot;: f&quot;k{k[&#39;redni&#39;]}&quot;, &quot;opis&quot;: k[&quot;pitanje&quot;]})
+        print(f&quot;  [tražilac {r[&#39;id&#39;]}] {r[&#39;status&#39;]}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>(<code>CORPUS = []</code> je namerno: nalepite ga iz <code>08a_orkestrator.py</code> — podsetnik da se ovde sve deli dupliranjem, po obrascu iz modula 04.)</p>
+<p>Pokrenite nekoliko puta, sa različitim temama:</p>
+<pre><code class="language-bash">python 08b_planer.py &quot;token i kontekst&quot;
+python 08b_planer.py &quot;kako se agenti evaluiraju&quot;
+python 08b_planer.py &quot;tema o kojoj korpus ćuti&quot;
+</code></pre>
+<p>Dve stvari da primetite. Prvo: temperatura 0.2 i JSON format — plan je <strong>podatak za kod</strong>, pa ga i tretiramo kao takav (sečenje na 4 koraka u <code>proveri_plan</code> nije dekoracija: neograničen plan za korpus od šest članaka je besmislica, a ograničenje je deo ugovora). Drugo: retry petlja sa objašnjenjem greške — kad model pogreši format, kaže mu se <strong>šta</strong> je pogrešno, i data mu se druga šansa; ako ni tada ne valja, pada glasno (izlazni kod ≠ 0), tiho ne prolazi. To je ponašanje koje želite od svakog agenta u sistemu, uključujući i orkestrator.</p>
+<h3 id="6-3-zadatak-3-ceo-sistem-tri-prave-uloge-i-njihovi-troskovi">6.3 Zadatak 3: ceo sistem — tri prave uloge i njihovi troškovi</h3>
+<p>Sada sve tri uloge postaju model, i to tri <strong>različita</strong> posla (sekcija 2: uloga = prompt + alati + podaci): planer pravi plan (isti plan kao u 08b, ali čitan golim <code>json.loads</code> — bez retry petlje i <code>proveri_plan</code> provere iz 08b: format je ovde tražen u zahtevu, a ne proveravan), tražilac je mali agent sa jednim alatom — pretragom po korpusu — i petljom iz modula 03/07, a sastavljač dobija <strong>samo izvode</strong> kao kontekst i piše pregled. Uz to brojimo tokene po ulozi: prvi put vidimo trošak svakog agenta ponaosob. Sačuvajte kao <code>08c_sistem.py</code> (korpus i <code>trazi_u_korpusu</code> su isti kao u 08a — duplirajte ih ispod, po obrascu iz modula 04):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 8.3 — sistem „Jutarnji pregled&quot;: planer + tražilac + sastavljač.
+
+Tri prave uloge (svaka svoj sistemski prompt, tražilac ima i alat),
+orkestracija spaja, a trag pamti koliko je ko koštao po tokenima.
+
+  Z_AI_API_KEY   — obavezno: vaš API ključ
+  Z_AI_BASE_URL  — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL     — opciono: model za razgovor (podrazumevano glm-4.6)
+
+Upotreba: python 08c_sistem.py &quot;tema pregleda&quot;
+&quot;&quot;&quot;
+
+import json
+import os
+import sys
+
+from openai import OpenAI
+
+# --- korpus i pretraga: isti kao u 08a (duplirani) ---------------------------
+CORPUS = []  # nalepite CORPUS iz 08a
+
+def trazi_u_korpusu(pojam: str) -&gt; str:
+    &quot;&quot;&quot;Alat tražioca: pretraga po korpusu, sa brojevima izvora.&quot;&quot;&quot;
+    # nalepite telo pretrage iz 08a (mok tražilac) — alat je isti,
+    # samo ga sada zove model, ne orkestrator
+    ...
+
+SH_ALAT = {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+    &quot;name&quot;: &quot;trazi_u_korpusu&quot;,
+    &quot;description&quot;: &quot;Pretražuje članke bloga Zrnast (tokeni, alati, petlja, &quot;
+                   &quot;kontekst, evaluacija, multi-agent). Vraća izvode sa &quot;
+                   &quot;[izvor N] ili NEMA. Za svako potpitanje — prvo ovaj alat.&quot;,
+    &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+        &quot;pojam&quot;: {&quot;type&quot;: &quot;string&quot;,
+                  &quot;description&quot;: &quot;Pojam ili potpitanje, npr. &#39;petlja agenta&#39;.&quot;},
+    }, &quot;required&quot;: [&quot;pojam&quot;]},
+}}
+
+SYSTEM_PLANER = (  # isti kao u 08b — nalepite ga
+    &quot;...&quot;)
+SYSTEM_TRAZILAC = (
+    &quot;Ti si tražilac u sistemu za preglede. Dobijaš JEDNO potpitanje i &quot;
+    &quot;odgovaraš samo iz alata trazi_u_korpusu: izvodi članaka sa [izvor N], &quot;
+    &quot;ništa iz glave. Ako alat vrati NEMA, odgovoriš samo: NEMA. Ne pišeš &quot;
+    &quot;stilski, ne objašnjavaš, ne komentarišeš — samo izvodi ili NEMA.&quot;
+)
+SYSTEM_SASTAVLJAC = (
+    &quot;Ti si sastavljač kratkih pregleda. Dobijaš temu i izvode sa [izvor N] &quot;
+    &quot;iz korpusa. Pišeš kratak pregled (najviše 5 rečenica) koji citira &quot;
+    &quot;izvore u uglastim zagradama, npr. [izvor 3]. Ne izmišljaš ništa što u &quot;
+    &quot;izvodima ne postoji; ako izvoda nema, odgovoriš samo: NEMA.&quot;
+)
+
+def pozovi(client, model, poruke, tools=None, temperatura=0.2):
+    &quot;&quot;&quot;Jedan poziv modela + vraća (poruka, potrošeni tokeni) — radi traga.&quot;&quot;&quot;
+    odg = client.chat.completions.create(
+        model=model, messages=poruke, tools=tools, temperature=temperatura)
+    poruka = odg.choices[0].message
+    potroseno = odg.usage.total_tokens if odg.usage else 0
+    return poruka, potroseno
+
+def planer(client, model, cilj, trag):
+    &quot;&quot;&quot;Isti plan kao u 08b, ali golim json.loads — bez retry petlje i provere iz 08b.&quot;&quot;&quot;
+    poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_PLANER},
+              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: f&quot;Tema pregleda: {cilj}&quot;}]
+    poruka, t = pozovi(client, model, poruke)
+    trag[&quot;planer&quot;] += t
+    odgovor = json.loads(poruka.content or &quot;{}&quot;)
+    koraci = odgovor.get(&quot;koraci&quot;, [])[:4]
+    return [{&quot;redni&quot;: i, &quot;pitanje&quot;: str(k.get(&quot;pitanje&quot;, &quot;&quot;)).strip()}
+            for i, k in enumerate(koraci, start=1) if k.get(&quot;pitanje&quot;)]
+
+def trazilac(client, model, pitanje, trag, max_koraka: int = 3) -&gt; str:
+    &quot;&quot;&quot;Izvršilac: mini-petlja iz modula 07 — alat, pa odgovor.&quot;&quot;&quot;
+    poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_TRAZILAC},
+              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: pitanje}]
+    for _ in range(max_koraka):
+        poruka, t = pozovi(client, model, poruke, tools=[SH_ALAT])
+        trag[&quot;tražilac&quot;] += t
+        if not poruka.tool_calls:
+            return poruka.content or &quot;&quot;
+        poruke.append(poruka)
+        for poziv in poruka.tool_calls:
+            argumenti = json.loads(poziv.function.arguments or &quot;{}&quot;)
+            rezultat = str(trazi_u_korpusu(**argumenti))
+            print(f&quot;    [alat] trazi_u_korpusu({argumenti[&#39;pojam&#39;]!r})&quot;)
+            poruke.append({&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: poziv.id,
+                           &quot;content&quot;: rezultat})
+    return &quot;GREŠKA: tražilac nije završio (max_koraka).&quot;
+
+def sastavljac(client, model, cilj, izvodi, trag) -&gt; str:
+    &quot;&quot;&quot;Kontekst za sastavljača: SAMO izvodi — ne cela istorija tražioca.
+
+    Ovo je sekcija 3 u jednoj liniji: između agenata putuje zadatak,
+    kontekst (izvodi) i rezultat — ne dnevnik rada prethodnika.
+    &quot;&quot;&quot;
+    poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_SASTAVLJAC},
+              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;:
+               f&quot;Tema: {cilj}\n\nIzvodi iz korpusa:\n{izvodi}&quot;}]
+    poruka, t = pozovi(client, model, poruke)
+    trag[&quot;sastavljač&quot;] += t
+    return poruka.content or &quot;&quot;
+
+def orkestruj(client, model, cilj: str) -&gt; str:
+    &quot;&quot;&quot;Petlja orkestratora: plan → dodela → izvodi → sastavljanje.&quot;&quot;&quot;
+    trag = {&quot;planer&quot;: 0, &quot;tražilac&quot;: 0, &quot;sastavljač&quot;: 0}
+    plan = planer(client, model, cilj, trag)
+    print(f&quot;[planer] {len(plan)} koraka, {trag[&#39;planer&#39;]} tokena&quot;)
+    izvodi = []
+    for k in plan:
+        r = trazilac(client, model, k[&quot;pitanje&quot;], trag)
+        print(f&quot;  [tražilac {k[&#39;redni&#39;]}] {(r.splitlines() or [&#39;&#39;])[0][:60]}&quot;)
+        if not r.startswith(&quot;NEMA&quot;):
+            izvodi.append(r)
+    pregled = (sastavljac(client, model, cilj, &quot;\n\n&quot;.join(izvodi), trag)
+               if izvodi else f&quot;NEMA: o temi {cilj!r} u korpusu nema ničega.&quot;)
+    print(f&quot;[trag] tokeni po ulozi: {trag} (ukupno {sum(trag.values())})&quot;)
+    return pregled
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo &quot;
+                 &quot;pokrenite.&quot;)
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;,
+                                            &quot;https://api.z.ai/api/paas/v4&quot;))
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+    cilj = &quot; &quot;.join(sys.argv[1:]) or &quot;petlja agenta&quot;
+    print(orkestruj(client, model, cilj))
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Pokrenite (uz ključ):</p>
+<pre><code class="language-bash">python 08c_sistem.py &quot;kako agenti koriste alate&quot;
+python 08c_sistem.py &quot;kontekst i tokeni&quot;
+</code></pre>
+<p>U izlazu čitajte trag: koliko je koraka planer napravio, šta je tražilac potražio (linije <code>[alat]</code> su pozivi alata unutar tražiočeve petlje), i koliko je ko koštao. Dve stvari da proverite: (1) da li sastavljač citira izvore <code>[izvor N]</code> — ako ne, prompt mu je previše mekan; (2) da li je neka uloga jasno previše skupa za ono što pravi — na šest članaka tražilac ne bi trebalo da troši više od planera, a dešava se: njegova petlja (alat → odgovor → alat…) nosi celu istoriju svog koraka. Tu se vidi celokupna poenta sekcije 5 — na malom korpusu, mereno.</p>
+<h3 id="6-4-zadatak-4-jedan-protiv-sistema-mereno-ne-osecajski">6.4 Zadatak 4: jedan protiv sistema — mereno, ne osećajski</h3>
+<p>Ovaj zadatak je razlog što modul ima modul 07 kao preduslov. Pitanje „da li mi treba više agenata&quot; ne odgovara se mišljenjem nego A/B merenjem na istom scenario-skupu: strana A je <strong>jedan agent</strong> kojem se ceo korpus ubaci u jedan prompt; strana B je <strong>sistem iz 08c</strong>. Provere su determinističke (modul 07): navođenje izvora, pokrivenost pojmova, odbijanje kad nema ničega. Sačuvajte kao <code>08d_ab.py</code> (korpus, pretragu i tri uloge duplirate iz 08a/08c — obrazac iz modula 04):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 8.4 — A/B: jedan agent naspram sistema planer+tražilac+sastavljač.
+
+Isti scenario-skup, iste provere, dva dizajna — pa tabela: stopa,
+tokeni, pozivi, vreme. Odgovor na „za i protiv&quot; iz ishoda modula.
+
+  Z_AI_API_KEY   — obavezno: vaš API ključ
+  Z_AI_BASE_URL  — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL     — opciono: model za razgovor (podrazumevano glm-4.6)
+
+Upotreba: python 08d_ab.py
+&quot;&quot;&quot;
+
+import json
+import os
+import sys
+import time
+
+from openai import OpenAI
+
+# --- iz 08a/08c (duplirano): CORPUS, trazi_u_korpusu, SH_ALAT,
+# --- SYSTEM_PLANER, SYSTEM_TRAZILAC, SYSTEM_SASTAVLJAC ---------------------
+CORPUS = []  # nalepite iz 08a; zatim funkcije i prompte iz 08c
+
+# --- scenario-skup: tri scenarija, determinističke provere -------------------
+SCENARIJI = [
+    {&quot;id&quot;: &quot;dva-pojma&quot;, &quot;cilj&quot;: &quot;token i kontekstni prozor&quot;,
+     &quot;provere&quot;: {&quot;citira izvor&quot;: lambda o: &quot;[izvor&quot; in o,
+                 &quot;spominje tokene&quot;: lambda o: &quot;token&quot; in o.lower(),
+                 &quot;spominje kontekst&quot;: lambda o: &quot;kontekst&quot; in o.lower()}},
+    {&quot;id&quot;: &quot;sinteza&quot;, &quot;cilj&quot;: &quot;kako se agent pravi i kako se meri&quot;,
+     &quot;provere&quot;: {&quot;citira izvor&quot;: lambda o: &quot;[izvor&quot; in o,
+                 &quot;petlja&quot;: lambda o: &quot;petlj&quot; in o.lower(),
+                 &quot;evaluacija&quot;: lambda o: &quot;evaluac&quot; in o.lower()}},
+    {&quot;id&quot;: &quot;van-korpusa&quot;, &quot;cilj&quot;: &quot;kvantno računarstvo&quot;,
+     &quot;provere&quot;: {&quot;odbija&quot;: lambda o: o.strip().startswith(&quot;NEMA&quot;)}},
+]
+
+def korpus_u_prompt() -&gt; str:
+    &quot;&quot;&quot;Ceo korpus kao tekst — za stranu A (jedan agent).&quot;&quot;&quot;
+    return &quot;\n&quot;.join(f&#39;[izvor {c[&quot;id&quot;]}] {c[&quot;naslov&quot;]}: {c[&quot;tekst&quot;]}&#39;
+                     for c in CORPUS)
+
+def strana_a_jedan(client, model, cilj: str) -&gt; tuple[str, dict]:
+    &quot;&quot;&quot;Jedan agent: ceo korpus u promptu, model sam planira i piše.&quot;&quot;&quot;
+    poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;:
+               &quot;Pišeš kratke preglede (do 5 rečenica) na osnovu datih izvoda &quot;
+               &quot;iz korpusa, sa citatima [izvor N]. Ako u izvodima nema ničega &quot;
+               &quot;o temi, odgovoriš samo: NEMA. Ne izmišljaš.&quot;},
+              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;:
+               f&quot;Tema: {cilj}\n\nIzvodi:\n{korpus_u_prompt()}&quot;}]
+    poc = time.perf_counter()
+    odg = client.chat.completions.create(
+        model=model, messages=poruke, temperature=0.2)
+    t = odg.usage.total_tokens if odg.usage else 0
+    return (odg.choices[0].message.content or &quot;&quot;,
+            {&quot;tokeni&quot;: t, &quot;pozivi&quot;: 1, &quot;sekundi&quot;: time.perf_counter() - poc})
+
+def strana_b_sistem(client, model, cilj: str) -&gt; tuple[str, dict]:
+    &quot;&quot;&quot;Sistem iz 08c, sažeto orkestriran: plan → tražilac → sastavljač.&quot;&quot;&quot;
+    poc = time.perf_counter()
+    mera = {&quot;tokeni&quot;: 0, &quot;pozivi&quot;: 0}
+
+    def pozovi(poruke, tools=None):
+        odg = client.chat.completions.create(
+            model=model, messages=poruke, tools=tools, temperature=0.2)
+        mera[&quot;pozivi&quot;] += 1
+        mera[&quot;tokeni&quot;] += odg.usage.total_tokens if odg.usage else 0
+        return odg.choices[0].message
+
+    poruka = pozovi([{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_PLANER},
+                     {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: f&quot;Tema pregleda: {cilj}&quot;}])
+    koraci = json.loads(poruka.content or &quot;{}&quot;).get(&quot;koraci&quot;, [])[:4]
+    izvodi, odbio = [], True
+    for k in koraci:
+        poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_TRAZILAC},
+                  {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: str(k.get(&quot;pitanje&quot;, &quot;&quot;))}]
+        for _ in range(3):
+            poruka = pozovi(poruke, tools=[SH_ALAT])
+            if not poruka.tool_calls:
+                break
+            poruke.append(poruka)
+            for poziv in poruka.tool_calls:
+                argumenti = json.loads(poziv.function.arguments or &quot;{}&quot;)
+                poruke.append({&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: poziv.id,
+                               &quot;content&quot;: str(trazi_u_korpusu(**argumenti))})
+        tekst = poruka.content or &quot;&quot;
+        if not tekst.startswith(&quot;NEMA&quot;):
+            izvodi.append(tekst)
+            odbio = False
+    if odbio:
+        return (&quot;NEMA: u korpusu nema ničega o temi.&quot;,
+                {**mera, &quot;sekundi&quot;: time.perf_counter() - poc})
+    poruka = pozovi([{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_SASTAVLJAC},
+                      {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;:
+                       f&quot;Tema: {cilj}\n\nIzvodi:\n&quot; + &quot;\n\n&quot;.join(izvodi)}])
+    return poruka.content or &quot;&quot;, {**mera, &quot;sekundi&quot;: time.perf_counter() - poc}
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo &quot;
+                 &quot;pokrenite.&quot;)
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;,
+                                            &quot;https://api.z.ai/api/paas/v4&quot;))
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+
+    print(f&quot;{&#39;scenario&#39;:14s} {&#39;A&#39;:&gt;4s} {&#39;B&#39;:&gt;4s}   tokeni A/B    pozivi A/B   sekundi A/B&quot;)
+    stopa = {&quot;A&quot;: 0, &quot;B&quot;: 0}
+    for sc in SCENARIJI:
+        red = {&quot;A&quot;: strana_a_jedan(client, model, sc[&quot;cilj&quot;]),
+               &quot;B&quot;: strana_b_sistem(client, model, sc[&quot;cilj&quot;])}
+        prolaz = {}
+        for strana in &quot;AB&quot;:
+            odgovor, mera = red[strana]
+            prosao = all(p(odgovor) for p in sc[&quot;provere&quot;].values())
+            prolaz[strana] = prosao
+            stopa[strana] += prosao
+            if not prosao:
+                print(f&quot;  [{strana}] pao {sc[&#39;id&#39;]}: {odgovor[:80]!r}&quot;)
+        a, b = red[&quot;A&quot;][1], red[&quot;B&quot;][1]
+        print(f&quot;{sc[&#39;id&#39;]:14s} {&#39;✔&#39; if prolaz[&#39;A&#39;] else &#39;✘&#39;:&gt;4s}&quot;
+              f&quot; {&#39;✔&#39; if prolaz[&#39;B&#39;] else &#39;✘&#39;:&gt;4s}&quot;
+              f&quot;   {a[&#39;tokeni&#39;]:&gt;6}/{b[&#39;tokeni&#39;]:&lt;6} {a[&#39;pozivi&#39;]:&gt;6}/{b[&#39;pozivi&#39;]:&lt;6}&quot;
+              f&quot; {a[&#39;sekundi&#39;]:&gt;7.1f}/{b[&#39;sekundi&#39;]:&lt;5.1f}&quot;)
+    print(f&quot;\nstopa: A {stopa[&#39;A&#39;]}/{len(SCENARIJI)} · B {stopa[&#39;B&#39;]}/{len(SCENARIJI)}&quot;)
+    print(&quot;Čitaj kao u modulu 07: agregat odlučuje, primeri objašnjavaju.&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>(Napomena o poštenju eksperimenta: u <code>strana_b_sistem</code> plan se ne proverava sa retry-em kao u 08b — prenesite tu proveru kad budete pokretali ozbiljno; ovde je skraćeno da tabela ostane čitljiva. I jedna sitnica iz 08c koja je ovde namerno izostavljena: trag po ulogama — dodajte ga u domaćem.)</p>
+<p>Pokrenite dva-tri puta (nedeterminizam! — modul 07):</p>
+<pre><code class="language-bash">python 08d_ab.py
+</code></pre>
+<p>I sada pravi posao zadatka — čitanje rezultata. Očekivano (ali proverite na svojim pokretanjima): strana <strong>B</strong> troši više tokena i više poziva — planer i sastavljač su dva poziva kojih A nema — a stopa uspeha je <strong>slična</strong>, jer korpus od šest članaka staje u jedan prozor, pa je dijagnoza 1 iz sekcije 1 odsutna i podela nema šta da izleči. To je pouka: <strong>na ovom korpusu, jedan agent je pravi izbor — i sada to znate iz merenja, ne iz ukusa.</strong> Zatim promenite uslove i ponovite argument: u domaćem se traži da procenite šta se dešava kad korpus poraste sto puta (pogotovo: koja strana puca prva, i kroz koji zid — tokeni, prozor, ili cenu) — tada dijagnoza 1 stupa na scenu i tabela se okreće.</p>
+<h3 id="6-5-zadatak-5-domaci-kriticar-sa-granicom-paralelna-pretraga-i-cena-pete-uloge">6.5 Zadatak 5 (domaći): kriticar sa granicom, paralelna pretraga, i cena pete uloge</h3>
+<ol>
+<li><strong>Kriticar — do jedne popravke.</strong> Dodajte u sistem iz 08c četvrtu ulogu: kriticar koji dobija sastavljačev pregled i rubriku („citira li izvore? izmišlja li nešto? je li preko 5 rečenica?&quot;) i vraća <code>{&quot;prolaz&quot;: true/false, &quot;razlog&quot;: &quot;...&quot;}</code>. Orkestrator na <code>false</code> traži jednu (i samo jednu!) popravku od sastavljača, sa kriticarevim razlogom kao kontekstom — pa prihvata šta god da je izašlo. Granica je deo zadatka, ne dekor: proverite šta se dešava sa stopom i troškom kad je granica 2 ili 3 popravke, i zapišite nalaz.</li>
+<li><strong>Paralelna pretraga.</strong> Potpitanja iz plana su međusobno nezavisna (dijagnoza 3 iz sekcije 1), pa ih tražilac može raditi istovremeno — <code>concurrent.futures.ThreadPoolExecutor</code> sa 3-4 niti je dovoljan za vežbu. Izmerite razliku u vremenu naspram sekvencijalne verzije iz 08c. (Napomena iz prakse: API kvote (modul 09 to obrađuje detaljno) paralelnost ne prašta — krenite od malog broja niti.)</li>
+<li><strong>Trag celog sistema u jednom pregledu.</strong> Dovršite ono što je 08d izbacio: svaki agent upisuje u jedan spisak (ko, zadatak, ulaz u kratko, izlaz u kratko, tokeni). Kad sistem padne — a padaće — spisak mora da pokaže <strong>ko je pogrešio</strong> bez ponovnog pokretanja. To je pitanje 5 iz sekcije 5, sada u kodu.</li>
+<li><strong>Peta uloga — po meri, s dokazom.</strong> Dodajte ulogu po svom nahođenju (prevodilac? proveravač činjenica? arhivar izvora?) — i dokazite merenjem iz 08d (stopa, tokeni, vreme pre i posle) da je <strong>vredela</strong>… ili da <strong>nije</strong>. Oba odgovora vrede pun poen: ovo je jedini zadatak kursa u kome je „dokazao sam da ne treba&quot; potpuno uspešan ishod.</li>
+</ol>
+<h2 id="7-tipicne-greske-i-dijagnoza">7. Tipične greške — i dijagnoza</h2>
+<table>
+<thead>
+<tr>
+<th>Simptom</th>
+<th>Uzrok</th>
+<th>Lek</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Agenti se šalju u krug beskonačno</td>
+<td>nema uslova za kraj; kriticar uvek nađe grešku</td>
+<td>čvrsta granica iteracija (1 popravka); eksplicitan uslov „kraj&quot;</td>
+</tr>
+<tr>
+<td>Izlaz sve lošiji nizom koraka (gluvi telefon)</td>
+<td>prepisuje se istorija umesto rezultata</td>
+<td>ugovor: artefakt + samo potreban kontekst (sekcija 3)</td>
+</tr>
+<tr>
+<td>Orkestrator radi posao izvršioca</td>
+<td>uloge bez odgovornosti</td>
+<td>orkestrator odlučuje i dodeljuje; ako piše sam — nije mu mesto</td>
+</tr>
+<tr>
+<td>„Multi-agent&quot; sistem, a kvalitet kao kod jednog</td>
+<td>podela bez dijagnoze (moda, ne terapija)</td>
+<td>A/B iz 08d; vratiti se na pitanje 1 iz sekcije 5</td>
+</tr>
+<tr>
+<td>Ne zna se ko je pogrešio</td>
+<td>trag se ne vodi kroz agente</td>
+<td>jedan spisak: ko, zadatak, ulaz, izlaz, tokeni (domaći 3)</td>
+</tr>
+<tr>
+<td>Plan od 20 koraka za zadatak od 2</td>
+<td>planer bez osećaja cene</td>
+<td>ograničiti plan u ugovoru (max N koraka) i proveriti</td>
+</tr>
+<tr>
+<td>Trošak posle podele skočio 4×</td>
+<td>svaki agent nosi kontekst svih prethodnih</td>
+<td>modul 05: sledećem agentu samo ono što treba</td>
+</tr>
+<tr>
+<td>Retry petlja na lošem planu ne pomaže</td>
+<td>replan, ne ponavljanje</td>
+<td>korak (5) iz sekcije 4: novi plan sa saznanjem pada</td>
+</tr>
+</tbody></table>
+<p>Redosled provere pri dijagnostici pada: <strong>koji je scenario pao (id) → trag sistema (ko je poslednji radio) → izlaz tog agenta reč po reč → tek onda prompt/model</strong>. Isti redosled kao u modulu 07, samo je trag sad duži — i još važniji.</p>
+<h2 id="8-pitanja-za-samoproveru">8. Pitanja za samoproveru</h2>
+<ol>
+<li>Nabrojite pet dijagnoza iz sekcije 1. Zašto „dodaj agenta&quot; bez imenovane dijagnoze nije terapija nego moda?</li>
+<li>Uloga je sistemski prompt + alati + podaci do kojih se sme. Zašto „novi agent&quot; koji menja samo ton nije nov agent? Kada je razdvajanje na dva poziva istog agenta dobar dizajn?</li>
+<li>Šta sve putuje između agenata, a šta se namerno ne šalje? Objasnite „gluvi telefon&quot; i zašto se kontekst ne prepisuje ceo.</li>
+<li>„Multi-agent sistem je petlja agenta čiji je alat drugi agent.&quot; Raščlanite tu rečenicu kroz petlju iz modula 03: šta je cilj, šta akcija, šta posmatranje, i gde je replaniranje?</li>
+<li>Vaš sistem od tri agenta troši 4× više tokena od jednog agenta, a stopa uspeha je ista. Nabrojite tri moguća uzroka i lek za svaki.</li>
+<li>Koja su pet pitanja pre dodavanja drugog agenta? Zašto je prvo pitanje uvek „može li jedan&quot; i kojim merenjem se na njega odgovara?</li>
+<li>U zadatku 4: zašto na korpusu od šest članaka jedan agent pobeđuje, a na šest stotina gubi? Koja dijagnoza iz sekcije 1 menja stranu?</li>
+</ol>
+<h2 id="sta-sledi">Šta sledi</h2>
+<p>Sistem je sada podeljen, orkestriran i izmeren — ali sve je to i dalje na vašem računaru, sa vašim ključem i vašim logovima. <a href="../09-u-produkciju/"><strong>Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi</strong></a> vodi agenta u svet u kome radi za druge: ograničenja i potvrde umesto poverenja, beleženje i praćenje umesto gledanja preko ramena, i troškovi koji se mere po koraku, po zadatku i po mesecu. 🚀</p>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/moduli/modul-08-multi-agent-sistemi.md" rel="noopener">moduli/modul-08-multi-agent-sistemi.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <a href="../07-evaluacija-agenata/"><span class="dir">← Prethodni modul</span>Evaluacija agenata</a>
+  <a class="pager-next" href="../09-u-produkciju/"><span class="dir">Sledeći modul →</span>U produkciju</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

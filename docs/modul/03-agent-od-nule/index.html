@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modul 03 — Agent od nule: petlja odlučivanja bez frameworka — AI i agenti na srpskom</title>
+<meta name="description" content="Ovo je srce puta. U modulu 02 napisali ste mini-petlju pokreni(...) koja odgovara na pitanja uz pomoć alata — mehaniku. Sada iz nje pravimo agenta: sistem kome se ne postavlja pitanje, nego">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/modul/03-agent-od-nule/">
+<meta property="og:title" content="Modul 03 — Agent od nule: petlja odlučivanja bez frameworka — AI i agenti na srpskom">
+<meta property="og:description" content="Ovo je srce puta. U modulu 02 napisali ste mini-petlju pokreni(...) koja odgovara na pitanja uz pomoć alata — mehaniku. Sada iz nje pravimo agenta: sistem kome se ne postavlja pitanje, nego">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/modul/03-agent-od-nule/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="../../radionice/">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#1-od-pitanja-ka-zadatku">1. Od pitanja ka zadatku</a></li><li><a href="#2-anatomija-petlje">2. Anatomija petlje</a></li><li><a href="#3-vezba-agent-arhivista-od-nule">3. Vežba: agent „Arhivista", od nule</a></li><li><a href="#4-citanje-traga-autopsija-jednog-trajekta">4. Čitanje traga: autopsija jednog trajekta</a></li><li><a href="#5-kocnice-bezbednost-i-budzet-kao-deo-dizajna">5. Kočnice: bezbednost i budžet kao deo dizajna</a></li><li><a href="#6-petlja-ili-framework">6. Petlja ili framework?</a></li><li><a href="#7-pitanja-za-samoproveru">7. Pitanja za samoproveru</a></li><li><a href="#sta-sledi">Šta sledi</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Modul 03 — Agent od nule: petlja odlučivanja bez frameworka</h1>
+    <div class="meta-chips"><span class="chip modnum">modul 03</span><span class="chip ">⏱ 6–8 časova</span></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Vreme:</strong> 6–8 časova rada · <strong>Preduslovi:</strong> <a href="../01-osnove-llm/">moduli 01</a> i <a href="../02-alati-tool-use/">02</a> · <strong>Stanje:</strong> prva radna verzija</p>
+</blockquote>
+<p>Ovo je srce puta. U modulu 02 napisali ste mini-petlju <code>pokreni(...)</code> koja odgovara na pitanja uz pomoć alata — mehaniku. Sada iz nje pravimo <strong>agenta</strong>: sistem kome se ne postavlja pitanje, nego <strong>zadatak</strong> („sredi ovaj direktorijum&quot;), koji sam planira redosled koraka, sam se koriguje kada nešto krene naopako, i ume da stane. Bez frameworka, bez biblioteka — <strong>oko 100 linija Pythona</strong> koje ćete razumeti liniju po liniju. Nakon ovog modula, frameworki za agente prestaju da budu magija: postaju izbor.</p>
+<hr>
+<h2 id="1-od-pitanja-ka-zadatku">1. Od pitanja ka zadatku</h2>
+<p>Podsetimo radnu definiciju iz modula 00: agent je sistem u kome model <strong>odlučuje i deluje</strong> — koristi alate, pravi korake ka cilju, koriguje sebe. Šta to, tehnički, razlikuje bota iz modula 02 od agenta?</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Bot iz modula 02</th>
+<th>Agent iz ovog modula</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ulaz</td>
+<td>pitanje (jedan odgovor)</td>
+<td>zadatak sa ciljem („uradi ovo&quot;)</td>
+</tr>
+<tr>
+<td>Broj koraka</td>
+<td>1–3 runde, obično po jednom alatu</td>
+<td>desetine koraka, sam bira redosled</td>
+</tr>
+<tr>
+<td>Plan</td>
+<td>ne postoji — odgovara onim redom kako pita</td>
+<td>eksplicitno planira, pa izvršava (i preplanira)</td>
+</tr>
+<tr>
+<td>Korekcija</td>
+<td>ponekad, slučajno</td>
+<td>sistematski: greška alata → novi zahtev → novi pokušaj</td>
+</tr>
+<tr>
+<td>Zaštita</td>
+<td><code>max_rundi</code> kao tehnički detalj</td>
+<td>kočnice su deo dizajna: koraci, budžet, dozvole</td>
+</tr>
+</tbody></table>
+<p>Mehanika je ista (poruke + alati + petlja). Ono što se menja je <strong>obim odgovornosti</strong>: botu verujemo jedno pitanje, agentu posao. Zato agentu moramo dati i <strong>cilj</strong> (jasno rečen zadatak), i <strong>kočnice</strong> (šta sme, dokle sme, koliko sme da košta), i <strong>trag</strong> (zapis svakog koraka, da bismo posle razumeli šta se desilo).</p>
+<p>Ciklus po kome agent radi je star koliko i oblast veštačke inteligencije — <strong>opažaj → razmišljaj → deluj</strong> (eng. <em>perceive–think–act</em>):</p>
+<ul>
+<li><strong>opažaj</strong> (perceive): agent prikuplja stanje sveta — kroz alate koji <em>čitaju</em> (<code>listaj_fajlove</code>, <code>procitaj_fajl</code>), poruku korisnika, rezultate prethodnih koraka;</li>
+<li><strong>razmišljaj</strong> (think): model, gledajući cilj i sve dosad opaženo, bira sledeću akciju (i argumente) ili zaključuje da je gotovo;</li>
+<li><strong>deluj</strong> (act): naš kod izvršava traženi alat i svet (ili naš uvid u svet) se menja — rezultat ide nazad u kontekst, i ciklus se ponavlja.</li>
+</ul>
+<p>Uz to ide i <strong>korekcija</strong>: kada akcija vrati grešku, agent ne staje nego menja pristup — to je peti element petlje agenta (eng. <em>agent loop</em>).</p>
+<h2 id="2-anatomija-petlje">2. Anatomija petlje</h2>
+<p>Petlja agenta, u pseudokodu — zapamtite je, jer je to ceo modul:</p>
+<pre><code class="language-text">zadatak = jasan cilj + uspeh izražen merljivo
+ponavljaj dok ne sledi jedan od tri izlaza:
+    1. FINALNI ODGOVOR — model kaže &quot;gotovo je&quot; (uspeh ili iskreno &quot;ne može&quot;)
+    2. KOČNICA         — prekoračen broj koraka, budžet tokena ili zabranjena akcija
+    3. AKCIJA          — model traži alat → izvrši → rezultat u kontekst → nastavi
+</code></pre>
+<p>Tri izlaza menjaju sve. Bez kočnica, agent koji se pogrešno razume sa sobom može da vrti u krug dok ne potroši račun; bez jasnog merljivog cilja, „gotovo&quot; je stvar ukusa modela. Kada kasnije budete čitali dokumentaciju frameworka, naći ćete u njemu upravo ove delove — samo lepše zapakovane.</p>
+<h2 id="3-vezba-agent-arhivista-od-nule">3. Vežba: agent „Arhivista&quot;, od nule</h2>
+<p>Zadatak agenta: <strong>srediti neuredan direktorijum.</strong> Pregleda fajlove, pročita svaki, predloži uređena imena — i upiše plan u fajl. Namerno je dizajniran da bude moćan a bezopasan: najveća „akcija&quot; koju sme je da <em>upiše jedan novi fajl sa predlozima</em>. Pravi agent bi preimenovao fajlove — to ostavljamo za domaći, uz potvrdu čoveka.</p>
+<h3 id="3-1-priprema-sandbox-a">3.1 Priprema sandbox-a</h3>
+<pre><code class="language-bash">mkdir -p sandbox
+cat &gt; &quot;sandbox/DOKUMENTACIJA-final-FINAL2.md&quot; &lt;&lt;&#39;KRAJ&#39;
+# API vodič — verzija 2.3 (mart 2025)
+Sve krajnje tačke servisa koriste JSON. Autentifikacija: zaglavlje `Authorization`.
+Kvote: 100 zahteva po minutu. Promene od 2.2: novi endpoint /izvestaji.
+KRAJ
+cat &gt; &quot;sandbox/beleške sa sastanka 3.txt&quot; &lt;&lt;&#39;KRAJ&#39;
+Sastanak 14.02.2025. — prisutni ceo tim.
+Odluke: (1) migracija baze u aprilu; (2) novi endpoint /izvestaji do kraja marta;
+(3) Ivana vodi dokumentaciju. Rok za prvu verziju plana: 28. februar 2025.
+KRAJ
+cat &gt; &quot;sandbox/cene_2024.csv&quot; &lt;&lt;&#39;KRAJ&#39;
+mesec,plan,cena_rsd
+januar,basic,1200
+februar,basic,1200
+mart,pro,2400
+KRAJ
+</code></pre>
+<h3 id="3-2-kompletan-agent">3.2 Kompletan agent</h3>
+<p>Sačuvajte kao <code>03_agent_od_nule.py</code> — i pročitajte ga pre nego što pokrenete; svaki deo je objašnjen u komentarima:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 3.1 — agent „Arhivista&quot;: sređuje direktorijum, u ~100 linija, bez frameworka.
+
+Ključ i konfiguracija dolaze isključivo iz environment varijabli:
+  Z_AI_API_KEY   — obavezno: vaš API ključ
+  Z_AI_BASE_URL  — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL     — opciono: naziv modela po vašem planu
+&quot;&quot;&quot;
+
+import json
+import os
+import sys
+from pathlib import Path
+
+from openai import OpenAI
+
+SANDBOX = Path(__file__).parent / &quot;sandbox&quot;
+
+# --- 1. ALATI: šta agent SME (sve ostalo naš kod odbija) --------------------
+
+def listaj_fajlove() -&gt; str:
+    &quot;&quot;&quot;Opažaj: spisak fajlova u sandbox-u (bez samog plana).&quot;&quot;&quot;
+    imena = sorted(p.name for p in SANDBOX.iterdir()
+                   if p.is_file() and p.name != &quot;plan-sredjivanja.md&quot;)
+    return &quot;\n&quot;.join(imena) or &quot;(direktorijum je prazan)&quot;
+
+def procitaj_fajl(ime: str) -&gt; str:
+    &quot;&quot;&quot;Opažaj: sadržaj jednog fajla, ograničen na sandbox.&quot;&quot;&quot;
+    fajl = (SANDBOX / ime).resolve()
+    if not fajl.is_relative_to(SANDBOX.resolve()):
+        return &quot;GREŠKA: putanja izlazi van sandbox direktorijuma.&quot;
+    try:
+        return fajl.read_text(encoding=&quot;utf-8&quot;)[:2000]
+    except FileNotFoundError:
+        return f&quot;GREŠKA: fajl &#39;{ime}&#39; ne postoji.&quot;
+
+def upisi_plan(sadrzaj: str) -&gt; str:
+    &quot;&quot;&quot;Deluj: JEDINA akcija koja menja svet — novi fajl sa predlozima.&quot;&quot;&quot;
+    (SANDBOX / &quot;plan-sredjivanja.md&quot;).write_text(sadrzaj, encoding=&quot;utf-8&quot;)
+    return &quot;Plan je upisan u plan-sredjivanja.md.&quot;
+
+FUNKCIJE = {
+    &quot;listaj_fajlove&quot;: listaj_fajlove,
+    &quot;procitaj_fajl&quot;: procitaj_fajl,
+    &quot;upisi_plan&quot;: upisi_plan,
+}
+
+SH_ALATI = [
+    {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+        &quot;name&quot;: &quot;listaj_fajlove&quot;,
+        &quot;description&quot;: &quot;Vraća imena svih fajlova u radnom direktorijumu, po jedan u redu. &quot;
+                       &quot;Prvi korak svakog pregleda.&quot;,
+        &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {}, &quot;required&quot;: []},
+    }},
+    {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+        &quot;name&quot;: &quot;procitaj_fajl&quot;,
+        &quot;description&quot;: &quot;Čita sadržaj fajla iz radnog direktorijuma (najviše 2000 znakova). &quot;
+                       &quot;Ime mora biti tačno onako kako ga je vratio listaj_fajlove.&quot;,
+        &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+            &quot;ime&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Ime fajla iz spiska.&quot;},
+        }, &quot;required&quot;: [&quot;ime&quot;]},
+    }},
+    {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+        &quot;name&quot;: &quot;upisi_plan&quot;,
+        &quot;description&quot;: &quot;Upisuje konačan plan sređivanja u fajl plan-sredjivanja.md. &quot;
+                       &quot;Koristi TEK kada si pregledao sve fajlove — ne pre.&quot;,
+        &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+            &quot;sadrzaj&quot;: {&quot;type&quot;: &quot;string&quot;,
+                        &quot;description&quot;: &quot;Kompletan plan u markdown-u: tabela staro ime → &quot;
+                                       &quot;predloženo novo ime + po jedna rečenica obrazloženja.&quot;},
+        }, &quot;required&quot;: [&quot;sadrzaj&quot;]},
+    }},
+]
+
+# --- 2. PETLJA AGENTA: opažaj → razmišljaj → deluj, sa kočnicama -------------
+
+SYSTEM_PROMPT = (
+    &quot;Ti si &#39;Arhivista&#39;, agent za sređivanje direktorijuma. Radiš SAMO kroz alate. &quot;
+    &quot;Postupak: (1) izlistaj fajlove; (2) pročitaj svaki; (3) za svaki predloži novo &quot;
+    &quot;ime — mala slova, reči spojene crticom, bez sufiksa &#39;final&#39;, sa godinom iz &quot;
+    &quot;sadržaja ako se vidi; (4) upiši plan. Ako alat vrati GREŠKA, promeni zahtev. &quot;
+    &quot;Kada je plan upisan, odgovori kratkim rezimeom i završi.&quot;
+)
+
+def agent(client, model, zadatak: str, max_koraka: int = 15) -&gt; str:
+    poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_PROMPT},
+              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: zadatak}]
+    potroseno = 0
+    for korak in range(1, max_koraka + 1):            # kočnica 1: broj koraka
+        odgovor = client.chat.completions.create(
+            model=model, messages=poruke, tools=SH_ALATI, temperature=0.2,
+        )
+        potroseno += getattr(odgovor.usage, &quot;total_tokens&quot;, 0)
+        poruka = odgovor.choices[0].message
+
+        if not poruka.tool_calls:                     # izlaz 1: finalni odgovor
+            print(f&quot;—— gotovo u koraku {korak} · ukupno {potroseno} tokena ——&quot;)
+            return poruka.content or &quot;&quot;
+
+        poruke.append(poruka)                         # model razmišlja → traži akciju
+        for poziv in poruka.tool_calls:
+            try:
+                argumenti = json.loads(poziv.function.arguments or &quot;{}&quot;)
+                rezultat = str(FUNKCIJE[poziv.function.name](**argumenti))
+            except KeyError:
+                rezultat = f&quot;GREŠKA: nepoznat alat &#39;{poziv.function.name}&#39;.&quot;
+            except Exception as g:                    # greška ide modelu (korekcija)
+                rezultat = f&quot;GREŠKA: {g}&quot;
+            print(f&quot;[korak {korak}] {poziv.function.name}({argumenti}) &quot;
+                  f&quot;→ {rezultat[:60]}...&quot;)            # trag: vidimo svaki korak
+            poruke.append({&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: poziv.id,
+                           &quot;content&quot;: rezultat})
+    return f&quot;Zaustavljen: dostignut max_koraka ({max_koraka}).&quot;   # izlaz 2: kočnica
+
+# --- 3. Pokretanje -----------------------------------------------------------
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo pokrenite.&quot;)
+
+    client = OpenAI(
+        api_key=api_key,
+        base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;),
+    )
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+
+    zadatak = (&quot;Pregledaj sve fajlove u direktorijumu i sredi imena: za svaki fajl &quot;
+               &quot;odredi šta sadrži, pa upiši plan novih imena preko alata upisi_plan. &quot;
+               &quot;Uspeh je: svaki fajl obrađen, plan upisan, rezime dat.&quot;)
+    print(agent(client, model, zadatak))
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Pokrenite: <code>python 03_agent_od_nule.py</code>, pa otvorite <code>sandbox/plan-sredjivanja.md</code>. Zatim pogledajte terminal još jednom — tu je najvredniji deo.</p>
+<h3 id="3-3-sta-ste-upravo-napravili">3.3 Šta ste upravo napravili</h3>
+<p>Prođimo mapiranje petlje na kod, korak po korak:</p>
+<ul>
+<li><strong>zadatak</strong> → prva <code>user</code> poruka, sa uspehom izraženim merljivo („svaki fajl obrađen, plan upisan&quot;);</li>
+<li><strong>opažaj</strong> → alati <code>listaj_fajlove</code> i <code>procitaj_fajl</code> (samo čitaju svet);</li>
+<li><strong>razmišljaj</strong> → model bira sledeći alat i argumente (to je ceo njegov posao u petlji);</li>
+<li><strong>deluj</strong> → naš kod izvršava funkciju i rezultat ide u kontekst kao <code>tool</code> poruka;</li>
+<li><strong>korekcija</strong> → <code>except</code> grana: greška se vraća modelu kao tekst, i on menja zahtev;</li>
+<li><strong>kočnice</strong> → <code>max_koraka</code> (proširite budžetom tokena u domaćem);</li>
+<li><strong>trag</strong> → <code>print</code> po koraku: broj, alat, argumenti, rezultat.</li>
+</ul>
+<p>Ukoliko agent zapne, simptom ćete videti u trag: isto ime fajla traži više puta? Opis alata mu ne kaže da imena dolaze iz <code>listaj_fajlove</code>. Piše plan pre čitanja? Sistemski prompt je previše mek — podvucite „TEK kada si pregledao sve&quot;.</p>
+<h3 id="3-4-zadatak-2-tri-promene-tri-lekcije">3.4 Zadatak 2: tri promene, tri lekcije</h3>
+<ol>
+<li><strong>Lekcija planiranja:</strong> promenite zadatak u „preimenuj fajlove&quot; (ne postoji takav alat). Posmatrajte trag: agent traži nepostojeći alat, dobija grešku — i šta radi? Dobar agent će predložiti najbliže što može (upisati plan). Loš će se vrteti. Oba ishoda su poučna.</li>
+<li><strong>Lekcija kočnica:</strong> postavite <code>max_koraka=3</code> i pokrenite originalni zadatak. Kočnica je radila — ali je li rezultat upotrebljiv? Kočnica koja preseca pre cilja je bug, ne bezbednost: usklađite je sa zadatkom.</li>
+<li><strong>Lekcija cilja:</strong> izbacite iz zadatka poslednju rečenicu („Uspeh je...&quot;). Pokrenite par puta. Razlikuje li se ponašanje? Merljiv kriterijum uspeha najjeftinija je „evaluacija&quot; koju imate — piše se jednom, a štedi rundu svaki put.</li>
+</ol>
+<h3 id="3-5-zadatak-3-domaci-pravo-preimenovanje-uz-coveka-u-petlji">3.5 Zadatak 3 (domaći): pravo preimenovanje, uz čoveka u petlji</h3>
+<p>Dodajte alat <code>preimenuj(staro_ime, novo_ime)</code> koji zaista menja ime fajla — ali uz <strong>potvrdu čoveka u petlji</strong> (eng. <em>human in the loop</em>): funkcija prvo <code>input()</code>-om pita „preimenovati X u Y? [d/N]&quot; i vraća modelu „korisnik odbio&quot; ako je ne. Pravila: samo unutar sandbox-a, nikad preko postojećeg fajla, nikad brisanje. Zatim:</p>
+<ol>
+<li>pokrenite agenta koji prvo piše plan, pa onda, korak po korak, traži preimenovanja iz plana — sa vašom potvrdom na svakom;</li>
+<li>pokrenite ga na tri različita direktorijuma (napravite „neuredne&quot; podatke po uzoru na 3.1) i zapišite gde je odstupio od plana i zašto;</li>
+<li>napredni: dodajte „budžet tokena&quot; — ukupni <code>potroseno</code> iznad praga (npr. 20.000) prekida petlju pre novog poziva; i prvi susret sa modulom 05: kada istorija pređe ~30.000 tokena, zamenite starije <code>tool</code> poruke jednim sažetkom.</li>
+</ol>
+<h2 id="4-citanje-traga-autopsija-jednog-trajekta">4. Čitanje traga: autopsija jednog trajekta</h2>
+<p>Trag (eng. <em>trace</em>) — ispisan niz koraka, odluka i rezultata — je vaš crni sanduk. Veština koja se ne preskače: posle svakog pokretanja, pročitajte trag i pitajte tri pitanja:</p>
+<ol>
+<li><strong>Je li svaki korak bio potreban?</strong> Agent je ponekad pročitao fajl koji je već pročitao, ili listao dva puta. Svaki suvišni korak = tokeni, vreme i šansa za grešku.</li>
+<li><strong>Jesu li argumenti bili tačni — i odakle su došli?</strong> Ime fajla iz spiska (dobro) ili izmišljeno (loše → opis alata).</li>
+<li><strong>Gde je doneta ključna odluka?</strong> Kada je agent „shvatio&quot; šta je u direktorijumu — i je li to tačno?</li>
+</ol>
+<p>Primer jednog realnog traga (skraćeno), sa zapažanjima u zagradi:</p>
+<pre><code class="language-text">[korak 1] listaj_fajlove({}) → DOKUMENTACIJA-final-FINAL2.md... (opažaj: dobro prvo kretanje)
+[korak 2] procitaj_fajl({&#39;ime&#39;: &#39;DOKUMENTACIJA-final-FINAL2.md&#39;}) → # API vodič... (argument iz spiska: tačno)
+[korak 3] procitaj_fajl({&#39;ime&#39;: &#39;beleške sa sastanka 3.txt&#39;}) → Sastanak 14.02.2025... (tačno)
+[korak 4] procitaj_fajl({&#39;ime&#39;: &#39;cene_2024.csv&#39;}) → mesec,plan,cena_rsd... (tačno)
+[korak 5] upisi_plan({&#39;sadrzaj&#39;: &#39;# Plan sređivanja...&#39;}) → Plan je upisan... (akcija tek posle pregleda: po proceduri)
+—— gotovo u koraku 6 · ukupno 3147 tokena ——
+</code></pre>
+<p>Pet koraka, bez ponavljanja, ~3.000 tokena — to je dobar trajekat. Kada vidite trag sa 15 koraka od kojih je 8 suvišnih, znate <em>tačno</em> gde se traži štednja — i to je najava modula 05 (inženjering konteksta) i 07 (merenje). U produkciji (modul 09) trag postaje struktuiran log — ali čita se isto.</p>
+<h2 id="5-kocnice-bezbednost-i-budzet-kao-deo-dizajna">5. Kočnice: bezbednost i budžet kao deo dizajna</h2>
+<p>Petlja koja sama sebi bira akcije je moćna baš zato što je i rizična. Kočnice koje smo ugradili, i još koje treba:</p>
+<ol>
+<li><strong><code>max_koraka</code></strong> — najgrublja: štiti od beskonačnog vrtenja („izgubljeno u petlji&quot; je najčešći način da agent zaprvo ne uspe).</li>
+<li><strong>Budžet tokena</strong> — koraka može biti malo, a svaki skup: ukupan zbir tokena preko praga prekida rad pre novog poziva.</li>
+<li><strong>Allow-lista akcija</strong> — model sme da traži samo alate iz <code>FUNKCIJE</code>; sve ostalo vraćamo kao grešku. To važi i za tip operacije: naš Arhivista ima <em>jednu</em> akciju koja menja svet, i to najbezopasniju moguću (novi fajl).</li>
+<li><strong>Čovek u petlji</strong> za destruktivno — preimenovanje, brisanje, slanje: potvrda <code>input()</code>-om pre izvršenja (domaći 3.5).</li>
+<li><strong>Dry-run prvo</strong> — agent prvo piše <em>plan</em>, čovek odobrava, pa se izvršava. Za skupocene ili nepovratne operacije ovaj obrazac vredi i kada vam se ne sviđa.</li>
+</ol>
+<p>Pravilo koje pamti celi kurs: <strong>agent predlaže, kočnice raspolažu.</strong> Svaka linija koda koju niste sami napisali — u frameworku ili u tuđem primeru — zaslužuje pitanje: „a ko ga zaustavlja?&quot;</p>
+<h2 id="6-petlja-ili-framework">6. Petlja ili framework?</h2>
+<p>Napisali ste agenta; sada možete pošteno da odgovorite na pitanje iz modula 00: šta framework stvarno radi?</p>
+<p>Framework (biblioteka tipa onih za orkestraciju agenata) daje: gotove petlje i strukturu poruka, integracije (veze ka bazama, pretragama, MCP serverima iz modula 06), obezbeđeno izvršavanje alata, praćenje i logovanje, ponekad i evaluaciju. Sve to je ~100 linija kod vas — plus još sto, i još sto.</p>
+<table>
+<thead>
+<tr>
+<th>Kada je čist kod bolji</th>
+<th>Kada framework ima smisla</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>učite oblast (kao sad)</td>
+<td>tim gradi više agenata i traži zajedničke delove</td>
+</tr>
+<tr>
+<td>jedan do tri agenta, poznati zadatak</td>
+<td>desetine integracija i alata koje treba „utaknuti&quot;</td>
+</tr>
+<tr>
+<td>dijagnoza do poslednjeg tokena mora biti vaša</td>
+<td>brzina integracije vredi više od dubine kontrole</td>
+</tr>
+<tr>
+<td>mala ekipa, kratak život prototipa</td>
+<td>dugotrajni proizvod, mnogo ljudi, standardi</td>
+</tr>
+</tbody></table>
+<p>Iskustveno pravilo: <strong>prvi prototip agenta uvek u čistom kodu</strong> — da biste osetili gde model pomaže, a gde buni. Framework uvodite kada ponavljate isti kod treći put, ne ranije. A kada ga uvedete, bićete korisnik koji čita dokumentaciju sa poverenjem proizvođača: jer ispod svake biblioteke je petlja koju ste sami napisali.</p>
+<h2 id="7-pitanja-za-samoproveru">7. Pitanja za samoproveru</h2>
+<ol>
+<li>Nacrtajte petlju agenta iz sekcije 2 i označite gde u kodu iz 3.2 stoji svaki od tri izlaza.</li>
+<li>Preslikajte „opažaj → razmišljaj → deluj&quot; na konkretne linije koda agenta. Koja dva alata su „opažaji&quot;, a koja akcija? Zašto ta podela ima bezbednosni značaj?</li>
+<li>Zašto grešku vraćamo modelu kao <code>tool</code> poruku, a ne prekidamo program? Šta bi se desilo sa <code>max_koraka</code> kada bismo prekidali na prvoj grešci?</li>
+<li>Agent se zaustavio sa porukom „dostignut max_koraka&quot;. Nabrojite tri moguća uzroka i za svaki promenu koja bi pomogla (u zadatku, promptu, kočnici).</li>
+<li>Šta je trag (trace) i zašto ga čitamo i kada je agent <em>uspeo</em>? Koja tri pitanja postavljamo pri čitanju?</li>
+<li>Kada biste sutra izabrali framework za agenta, koja tri pitanja biste mu prva postavili — a da odgovore znate iz sopstvenog koda?</li>
+</ol>
+<h2 id="sta-sledi">Šta sledi</h2>
+<p>Agent vidi samo ono što stane u kontekst — a kontekst je novčanik. <a href="../04-memorija-i-rag/"><strong>Modul 04 — Memorija i RAG</strong></a> daje agentu trajnu memoriju: ugnežđene reprezentacije (eng. <em>embeddings</em>), vektorsku bazu i pretragu po smislu nad vašim dokumentima. Uživo ovaj modul možete odrađivati na <a href="../../radionice/03-agent-od-nule/">radionici 03</a>. 🚀</p>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/moduli/modul-03-agent-od-nule.md" rel="noopener">moduli/modul-03-agent-od-nule.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <a href="../02-alati-tool-use/"><span class="dir">← Prethodni modul</span>Alati</a>
+  <a class="pager-next" href="../04-memorija-i-rag/"><span class="dir">Sledeći modul →</span>Memorija i RAG</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

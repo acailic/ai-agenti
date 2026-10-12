@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa učenja: AI i agenti na srpskom — AI i agenti na srpskom</title>
+<meta name="description" content="Dobro došli! Ova mapa je vaš kompas kroz celo gradivo. Polazimo od nule (šta je uopšte agent i kako radi veliki jezički model, eng. large language model, LLM) i stićemo do ozbiljnih tema:">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/mapa/">
+<meta property="og:title" content="Mapa učenja: AI i agenti na srpskom — AI i agenti na srpskom">
+<meta property="og:description" content="Dobro došli! Ova mapa je vaš kompas kroz celo gradivo. Polazimo od nule (šta je uopšte agent i kako radi veliki jezički model, eng. large language model, LLM) i stićemo do ozbiljnih tema:">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/mapa/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="./">Mapa kursa</a>
+  <a href="../radionice/">Radionice</a>
+  <a href="../recnik/">Rečnik</a>
+  <form class="nav-search" action="../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Sadržaj mape</div><ol><li><a href="#pregled-puta">Pregled puta</a></li><li><a href="#moduli">Moduli</a></li><li><a href="#kako-raditi-kroz-mapu">Kako raditi kroz mapu</a></li><li><a href="#spremnost-za-pocetak">Spremnost za početak</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Mapa učenja: AI i agenti na srpskom</h1>
+    
+  </header>
+  <article class="searchable" data-searchable="">
+<blockquote>
+<p>Put od prvog poziva API-ju do sopstvenog agenta u produkciji — korak po korak, na srpskom, sa praksom na svakom koraku.</p>
+</blockquote>
+<p>Dobro došli! Ova mapa je vaš kompas kroz celo gradivo. Polazimo od nule (šta je uopšte agent i kako radi veliki jezički model, eng. <em>large language model</em>, LLM) i stićemo do ozbiljnih tema: alata, memorije, protokola, evaluacije i produkcije. Nigde ne preskačemo praktičan rad — svaki modul završava vežbama u kojima sami pišete kod. Pojmove sa kojima se prvi put srećete proverite u <a href="../recnik/">REČNIK-u</a> — srpsko-engleskom rečniku celog kursa.</p>
+<p><strong>Za koga je ova mapa?</strong></p>
+<ul>
+<li>za developere (i studente poslednjih godina) koji znaju osnove programiranja — najbolje Pythona — a žele da ozbiljno uđu u svet AI agenata (eng. <em>AI agents</em>);</li>
+<li>za one koji su već „muckali&quot; sa ChatGPT-om ili sličnim alatima i žele da razumeju šta se dešava ispod haube;</li>
+<li>za timove koje žele zajednički plan učenja.</li>
+</ul>
+<p>Nije potreban prethodni iz uređaja mašinskog učenja — matematika koja vam treba je uglavnom zdrav razum i malo strpljenja.</p>
+<hr>
+<h2 id="pregled-puta">Pregled puta</h2>
+<pre><code>                        ┌─────────────────────────────────────────┐
+                        │  MODUL 10 — završni projekat (portfolio) │
+                        └───────────────▲─────────────────────────┘
+                                        │
+  produkcija ┌─────────────────────────┴───────────────┐
+   ┌─────────┴─────────┐  ┌──────────────┐  ┌──────────┴────────┐
+   │ 09 — u produkciju │  │ 08 — multi-  │  │ 07 — evaluacija   │
+   │                   │  │ agent sistemi│  │                   │
+   └─────────▲─────────┘  └──────▲───────┘  └─────────▲─────────┘
+             └───────────────┬───┴────────────────────┘
+   ┌─────────┴─────────┐  ┌──┴─────────────┐  ┌────────┴──────────┐
+   │ 06 — protokoli    │  │ 05 — inženjer. │  │ 04 — memorija i   │
+   │ (MCP, A2A)        │  │    konteksta   │  │    RAG            │
+   └─────────▲─────────┘  └──────▲─────────┘  └─────────▲─────────┘
+             └───────────────┬───┴──────────────────────┘
+   ┌─────────┴───────────────┴──┐
+   │ 03 — agent od nule          │◄──── srce puta
+   └─────────▲──────────────────┘
+   ┌─────────┴─────────┐
+   │ 02 — alati (tools)│
+   └─────────▲─────────┘
+   ┌─────────┴─────────┐
+   │ 01 — osnove LLM-a │
+   └─────────▲─────────┘
+   ┌─────────┴─────────┐
+   │ 00 — uvod u agente│
+   └───────────────────┘
+</code></pre>
+<p><strong>Legenda statusa:</strong> ✅ napisano · 🔜 planirano (radna verzija uskoro)</p>
+<hr>
+<h2 id="moduli">Moduli</h2>
+<h3 id="modul-00-uvod-u-agente">Modul 00 — Uvod u agente ✅</h3>
+<p><strong>Vreme:</strong> 2–3 časa rada (jedno popodne)
+<strong>Preduslovi:</strong> nema — samo radoznalost</p>
+<p>Šta je agent, zašto ova oblast bukti baš sada i kako se kroz ovaj kurs najbolje uči. Postavljamo radnu definiciju agenta, razlikujemo chatbot od agenta i dogovaramo način rada: ruke na tastaturi od prve nedelje.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>objasnite svojim rečima šta je AI agent i po čemu se razlikuje od običnog razgovora sa modelom;</li>
+<li>nabrojite tri ključna razloga zašto su agenti sada relevantni;</li>
+<li>znate kako je kurs organizovan i šta vam treba za početak.</li>
+</ul>
+<p>→ <a href="../modul/00-uvod-u-agente/">Modul 00: Uvod u agente</a> · povezana <a href="../radionice/01-prvi-koraci/">radionica 01</a></p>
+<hr>
+<h3 id="modul-01-osnove-rada-sa-llm-ovima">Modul 01 — Osnove rada sa LLM-ovima ✅</h3>
+<p><strong>Vreme:</strong> 5–7 časova rada (1–2 nedelje)
+<strong>Preduslovi:</strong> modul 00; osnovni Python (promenljive, funkcije, pokretanje skripte)</p>
+<p>Kako veliki jezički model zapravo radi: tokeni (eng. <em>tokens</em>), kontekstni prozor (eng. <em>context window</em>) i prompt kao program (eng. <em>prompt as a program</em>). Prva vežba sa pravim API-jem — ključ se čuva u environment varijabli, nikad u kodu.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>objasnite šta su tokeni i zašto su bitni za cenu, brzinu i ograničenja;</li>
+<li>procenite šta ulazi u kontekst i šta se dešava kada se prenapuni;</li>
+<li>napišete strukturiran, verzionisan prompt (uloga, zadatak, kontekst, format izlaza, ograničenja);</li>
+<li>samostalno napravite prvi poziv API-ju iz Pythona i eksperimentišete sa parametrima.</li>
+</ul>
+<p>→ <a href="../modul/01-osnove-llm/">Modul 01: Osnove rada sa LLM-ovima</a> · povezana <a href="../radionice/01-prvi-koraci/">radionica 01</a></p>
+<hr>
+<h3 id="modul-02-alati-kako-agent-deluje-u-svetu">Modul 02 — Alati: kako agent deluje u svetu ✅</h3>
+<p><strong>Vreme:</strong> 4–6 časova rada
+<strong>Preduslovi:</strong> modul 01</p>
+<p>Kako model iz „razgovarača&quot; postaje „učesnik&quot;: definisanje alata (eng. <em>tools</em>), shema funkcija, poziv alata (eng. <em>tool call</em>) i sigurno izvršavanje. Prvi mali bot koji zna da pročita fajl, pozove API i sabere rezultate.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>opišete alat modelu tako da ga koristi tačno i pouzdano;</li>
+<li>implementirate petlju „model traži — kod izvršava — rezultat vraća modelu&quot;;</li>
+<li>prepoznate tipične greške u korišćenju alata i znate kako da ih izbegnete.</li>
+</ul>
+<p>→ <a href="../modul/02-alati-tool-use/">Modul 02: Alati</a> · povezana <a href="../radionice/02-alati-i-tool-use/">radionica 02</a></p>
+<hr>
+<h3 id="modul-03-agent-od-nule">Modul 03 — Agent od nule ✅</h3>
+<p><strong>Vreme:</strong> 6–8 časova rada
+<strong>Preduslovi:</strong> moduli 01 i 02</p>
+<p>Srce puta: gradimo kompletnog agenta „od nule&quot;, bez frameworka — petlja agenta (eng. <em>agent loop</em>): cilj, plan, akcija, posmatranje, korekcija. Na kraju ovog modula razumećete šta frameworki (kao što postojeći open-source biblioteke) zapravo rade umesto vas.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>napišete sopstvenu petlju agenta u ~100 linija Pythona;</li>
+<li>objasnite ciklus opažaj → razmišljaj → deluj (eng. <em>perceive–think–act</em>);</li>
+<li>odlučite kada vam framework treba, a kada je čist kod bolji.</li>
+</ul>
+<p>→ <a href="../modul/03-agent-od-nule/">Modul 03: Agent od nule</a> · povezana <a href="../radionice/03-agent-od-nule/">radionica 03</a></p>
+<hr>
+<h3 id="modul-04-memorija-i-rag">Modul 04 — Memorija i RAG ✅</h3>
+<p><strong>Vreme:</strong> 6–8 časova rada
+<strong>Preduslovi:</strong> moduli 01 i 03</p>
+<p>Kako agent pamti: radna memorija kroz razgovor, sažimanje istorije i generisanje podržano pretragom (eng. <em>retrieval-augmented generation</em>, RAG). Gradi se mini pretraživač nad sopstvenim dokumentima.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>podelite dokumente, izračunate ugnežđene reprezentacije (eng. <em>embeddings</em>) i sačuvate ih u vektorskoj bazi (eng. <em>vector database</em>);</li>
+<li>implementirate RAG cevovod (eng. <em>pipeline</em>): pitanje → pretraga → kontekst → odgovor;</li>
+<li>objasnite kada RAG pomaže, a kada pravi nove probleme.</li>
+</ul>
+<p>→ <a href="../modul/04-memorija-i-rag/">Modul 04: Memorija i RAG</a> · povezana <a href="../radionice/04-rag-memorija/">radionica 04</a></p>
+<hr>
+<h3 id="modul-05-inzenjering-konteksta">Modul 05 — Inženjering konteksta ✅</h3>
+<p><strong>Vreme:</strong> 5–7 časova rada
+<strong>Preduslovi:</strong> moduli 03 i 04</p>
+<p>Kontekst je najskuplji resurs agenta. Upravljanje onim što model vidi u svakom trenutku: šta ulazi u prozor, šta se sažima (eng. <em>summarization</em>), šta se pamti van prozora, kompaktni formati i prioritet informacija.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>dizajnirate šta agent zna u svakom koraku, a ne samo šta kaže;</li>
+<li>smanjite troškove i kašnjenje bez gubitka kvaliteta;</li>
+<li>prepoznate „trovanje kontekstom&quot; i znate kako da ga izbegnete.</li>
+</ul>
+<p>→ <a href="../modul/05-inzenjering-konteksta/">Modul 05: Inženjering konteksta</a></p>
+<hr>
+<h3 id="modul-06-protokoli-mcp-i-a2a">Modul 06 — Protokoli: MCP i A2A ✅</h3>
+<p><strong>Vreme:</strong> 4–6 časova rada
+<strong>Preduslovi:</strong> moduli 02 i 03</p>
+<p>Šta protokoli rešavaju: N×M integracija postaje N+M jednim dogovorom o obliku poruka. Anatomija protokola konteksta modela (eng. <em>Model Context Protocol</em>, MCP): host, klijent i server, tri primitiva (alati, resursi, promptovi), JSON-RPC poruke i transporti. Vežbe: MCP-šema alata iz ruke, mali server sa rukovanjem (mock transport), klijent sa pravim modelom. Plus ideja protokola A2A (agent–agent) i bezbednost povezivanja: trovanje alatom i pravila poverenja.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>objasnite problem koji protokoli rešavaju (N puta M → N plus M) i osnovne delove MCP veze;</li>
+<li>napišete MCP-šemu alata, mali server sa rukovanjem i klijenta koji šeme sa servera koristi u pozivu modela;</li>
+<li>objasnite ideju protokola A2A (agent-kartica, zadatak, artefakti) i kada agent–agent umesto agent–alat;</li>
+<li>procenite bezbednosne rizike povezivanja agenta na spoljne sisteme (trovanje alatom, rug pull, odbrane).</li>
+</ul>
+<p>→ <a href="../modul/06-protokoli-mcp-a2a/">Modul 06: Protokoli: MCP i A2A</a> · povezana <a href="../radionice/06-protokoli/">radionica 06</a></p>
+<hr>
+<h3 id="modul-07-evaluacija-agenata">Modul 07 — Evaluacija agenata ✅</h3>
+<p><strong>Vreme:</strong> 5–7 časova rada
+<strong>Preduslovi:</strong> moduli 03 i 04</p>
+<p>Bez merenja, svaki rad na agentu je nagađanje. Zašto se evaluacija razlikuje od jediničnih testova (više prihvatljivih odgovora, nedeterminizam, postepeno propadanje), scenario-skupovi sa determinističkim proverama, prolaz/pad sa pragom kao kapijom, razmišljanje u razlikama (dif pregled dva pokretanja) — i ocenjivanje pomoću modela (eng. <em>LLM-as-a-judge</em>) sa kalibracijom.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>sastavite mali scenario-skup za sopstveni agent, sa graničnim slučajevima;</li>
+<li>definišete metrike koje nešto zaista mere i provere koje padaju glasno;</li>
+<li>postavite pokretač sa pragom (izlazni kod) i dif pregled umesto pogađanja;</li>
+<li>kalibrišete sudiju-model na primerima koje ste sami ocenili.</li>
+</ul>
+<p>→ <a href="../modul/07-evaluacija-agenata/">Modul 07: Evaluacija agenata</a> · povezana <a href="../radionice/05-evaluacija/">radionica 05</a></p>
+<hr>
+<h3 id="modul-08-multi-agent-sistemi">Modul 08 — Multi-agent sistemi ✅</h3>
+<p><strong>Vreme:</strong> 4–6 časova rada
+<strong>Preduslovi:</strong> moduli 03 i 07</p>
+<p>Kada jedan agent nije dovolj: podele uloga, komunikacija između agenata, orkestracija i — najvažnije — kada multi-agent sistem <em>nije</em> rešenje.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>dizajnirate sistem od više agenata sa jasnim ulogama i protokom informacija;</li>
+<li>implementirate jednostavnu orkestraciju (planer + izvršilac);</li>
+<li>argumentujete za i protiv multi-agent pristupa za konkretan zadatak.</li>
+</ul>
+<p>→ <a href="../modul/08-multi-agent-sistemi/">Modul 08: Multi-agent sistemi</a></p>
+<hr>
+<h3 id="modul-09-u-produkciju-bezbednost-opservabilnost-troskovi">Modul 09 — U produkciju: bezbednost, opservabilnost, troškovi ✅</h3>
+<p><strong>Vreme:</strong> 5–7 časova rada
+<strong>Preduslovi:</strong> moduli 03 i 07</p>
+<p>Agent koji radi na vašem računaru i agent koji radi kod klijenta — dva različita sveta. Bezbednosni obrasci (ograničenja alata, potvrde korisnika, čuvanje tajni), praćenje rada (eng. <em>observability</em>), upravljanje troškovima i otpornost na greške.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>primenite osnovne bezbednosne obrasce za agente sa pristupom alatima;</li>
+<li>postavite beleženje (eng. <em>logging</em>) i praćenje ponašanja agenta;</li>
+<li>procenite i kontrolišete troškove po koraku, po zadatku i po mesecu.</li>
+</ul>
+<p>→ <a href="../modul/09-u-produkciju/">Modul 09: U produkciju: bezbednost, opservabilnost, troškovi</a></p>
+<hr>
+<h3 id="modul-10-zavrsni-projekat-portfolio-agent">Modul 10 — Završni projekat: portfolio agent ✅</h3>
+<p><strong>Vreme:</strong> 8–12 časova rada
+<strong>Preduslovi:</strong> svi prethodni moduli</p>
+<p>Samostalan projekat koji spaja sve: agent koji rešava stvaran problem vašeg okruženja, sa evaluacijom, bezbednošću i kratkim tekstom „šta i kako&quot;. Namenjen i portfolio-u — neka radi za vas i posle kursa. Šest delova sa kontrolnim tačkama: dosije, alati i šeme, petlja, evaluacija, oklop, isporuka i objava — plus rubrika samovrednovanja i primeri portfolio prezentacije.</p>
+<p><strong>Nakon ovog modula moći ćete da:</strong></p>
+<ul>
+<li>od ideje dođete do isporučenog agenta kroz sve faze;</li>
+<li>dokumentujete projekat tako da ga drugi (i budući poslodavci) razumeju;</li>
+<li>nastavite dalje sami: čitati dokumentaciju, pratiti oblast, učiti brzo.</li>
+</ul>
+<p>→ <a href="../modul/10-zavrsni-projekat/">Modul 10: Završni projekat: portfolio agent</a></p>
+<hr>
+<h2 id="kako-raditi-kroz-mapu">Kako raditi kroz mapu</h2>
+<ol>
+<li><strong>Redosled ima smisla.</strong> Moduli 00–03 grade temelj — ne preskačite ih. Kasnije module (05–09) možete donekle prilagoditi svom kontekstu, ali evaluacija (07) ne preskače se nikada: bez nje ne znate šta ste napravili.</li>
+<li><strong>Tempo:</strong> računajte 3–6 časova nedeljno. Celokupna mapa je realno 2–4 meseca rada; brži tempo je moguć, ali iskustvo kaže da vežbe stvarno „sednu&quot; tek nakon spavanja.</li>
+<li><strong>Svaki modalitet ima tri dela:</strong> objašnjenje (teorija), vežbe (kod) i domaći (dublje). Domaći nije opciona dekoracija — njime se gradite osećaj.</li>
+<li><strong>Radite javno.</strong> Napravite repozitorijum za svoje vežbe od prvog dana. Na kraju puta to je vaš portfolio.</li>
+<li><strong>Ne morate sve sami.</strong> Radionice su prilika da materijal prođete uživo, sa pitanjima i razmenom.</li>
+</ol>
+<h2 id="spremnost-za-pocetak">Spremnost za početak</h2>
+<ul>
+<li>računar na kome možete pokrenuti Python 3.10+;</li>
+<li>pristup jednom komercijalnom API-ju velikog modela (dovoljan je najjeftiniji plan; u modulu 01 koristimo z.ai/GLM jer je pristupačan, ali vežbe rade sa bilo kojim OpenAI-kompatibilnim API-jem, eng. <em>OpenAI-compatible API</em>);</li>
+<li>Git i GitHub nalog (za portfolio);</li>
+<li>oko 2–4 časa nedeljno.</li>
+</ul>
+<p>Kada ste spremni — počnite <a href="../modul/00-uvod-u-agente/">modulom 00</a>. Srećno! 🚀</p>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/MAPA-UCENJA.md" rel="noopener">MAPA-UCENJA.md na GitHubu ↗</a></p>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

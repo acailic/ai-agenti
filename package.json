@@ -1,0 +1,15 @@
+{
+  "name": "ai-agenti-srb",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kurs o AI agentima na srpskom. Sajt (GitHub Pages, docs/) se generiše iz markdown izvora.",
+  "type": "module",
+  "scripts": {
+    "build": "node site/build.mjs",
+    "check": "node site/build.mjs --check",
+    "serve": "node site/build.mjs --serve"
+  },
+  "devDependencies": {
+    "marked": "18.1.0"
+  }
+}

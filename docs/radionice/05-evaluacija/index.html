@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radionica 05 — Evaluacija: kako znati da li je agent dobar? — AI i agenti na srpskom</title>
+<meta name="description" content="Učesnici prestaju da unapređuju agente „na osećaj&quot;: grade mali evaluacioni skup (eng. evaluation set) za sopstvenog agenta iz radionica 02–04, definišu metrike koje nešto zaista mere,">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/radionice/05-evaluacija/">
+<meta property="og:title" content="Radionica 05 — Evaluacija: kako znati da li je agent dobar? — AI i agenti na srpskom">
+<meta property="og:description" content="Učesnici prestaju da unapređuju agente „na osećaj&quot;: grade mali evaluacioni skup (eng. evaluation set) za sopstvenog agenta iz radionica 02–04, definišu metrike koje nešto zaista mere,">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/radionice/05-evaluacija/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="..//">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#cilj-radionice">Cilj radionice</a></li><li><a href="#agenda-po-satima">Agenda po satima</a></li><li><a href="#priprema-pre-radionice-ucesnici">Priprema pre radionice (učesnici)</a></li><li><a href="#vezba-1-evaluacioni-skup-15-primera-sa-namernim-rupama-60-min">Vežba 1 — Evaluacioni skup: 15 primera sa namernim rupama (60 min)</a></li><li><a href="#vezba-2-automatsko-ocenjivanje-u-dva-sloja-60-min">Vežba 2 — Automatsko ocenjivanje u dva sloja (60 min)</a></li><li><a href="#vezba-3-a-b-promptova-isti-skup-dve-verzije-40-min">Vežba 3 — A/B promptova: isti skup, dve verzije (40 min)</a></li><li><a href="#domaci">Domaći</a></li><li><a href="#materijali-checklist-za-ucesnike">Materijali — checklist za učesnike</a></li><li><a href="#za-voditelja">Za voditelja</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Radionica 05 — Evaluacija: kako znati da li je agent dobar?</h1>
+    <div class="meta-chips"><span class="chip modnum">radionica 05</span><a class="chip modnum chip-link" href="../../modul/07-evaluacija-agenata/">modul 07</a></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Povezani modul:</strong> <a href="../../modul/07-evaluacija-agenata/">modul 07 — Evaluacija agenata</a> (preporučeno pročitati sekcije 1–5 pre radionice)
+<strong>Trajanje:</strong> 4 časa · <strong>Format:</strong> predavanje 30% / vežbe 70% · <strong>Nivo: napredni</strong></p>
+</blockquote>
+<h2 id="cilj-radionice">Cilj radionice</h2>
+<p>Učesnici prestaju da unapređuju agente „na osećaj&quot;: grade mali evaluacioni skup (eng. <em>evaluation set</em>) za sopstvenog agenta iz radionica 02–04, definišu metrike koje nešto zaista mere, upoznaju ocenjivanje pomoću modela (eng. <em>LLM-as-a-judge</em>) sa njegovim zamkama, i uvode regresione provere: da izmena prompta više ne može da „tiho&quot; pokvari ono što je već radilo.</p>
+<h2 id="agenda-po-satima">Agenda po satima</h2>
+<table>
+<thead>
+<tr>
+<th>Sat</th>
+<th>Sadržaj</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. sat</strong></td>
+<td>Anegdota greške: „popravili smo prompt, pokvarili smo pola funkcionalnosti&quot; — zašto je nagađanje skupo (15 min). Šta merimo: tačnost, potpunost, format, trošak, latencija, bezbednost — izbor po slučaju upotrebe (35 min).</td>
+</tr>
+<tr>
+<td><strong>2. sat</strong></td>
+<td>Vežba 1: pisanje evaluacionog skupa — 15–20 primera (ulaz → očekivano), uključujući granične (eng. <em>edge cases</em>) i „nepoštene&quot; upite (60 min).</td>
+</tr>
+<tr>
+<td><strong>3. sat</strong></td>
+<td>Vežba 2: automatsko ocenjivanje — pravila u kodu (format, obavezni delovi) + ocenjivanje pomoću modela za sadržaj, sa kalibracijom na par primera koje i sami ocenimo (60 min).</td>
+</tr>
+<tr>
+<td><strong>4. sat</strong></td>
+<td>Vežba 3: A/B poređenje dve verzije prompta nad istim skupom — tabela rezultata i odluka (40 min). Diskusija: šta radimo kad metrike kažu „bolje&quot;, a osećaj „gore&quot;? (15 min) Zatvaranje (5 min).</td>
+</tr>
+</tbody></table>
+<h2 id="priprema-pre-radionice-ucesnici">Priprema pre radionice (učesnici)</h2>
+<p>Odrađene radionice <a href="../02-alati-i-tool-use/">02</a>–<a href="../04-rag-memorija/">04</a> (ili barem moduli <a href="../../modul/02-alati-tool-use/">02</a> i <a href="../../modul/07-evaluacija-agenata/">07</a>), ključ i dalje samo u environment varijabli <code>Z_AI_API_KEY</code>. Zatim:</p>
+<pre><code class="language-bash">pip install openai
+python r05_v1_skup.py      # pravi eval-skup.jsonl za demo agenta (bez mreže)
+</code></pre>
+<p>Dva napisa pre početka. <strong>Prvo o agentu pod testom:</strong> idealno nosite sopstvenog agenta iz radionica 02–04 i pišete skup za njega — rešenja su, međutim, samodovoljna: koriste malog demo agenta „Podrška&quot; (baza činjenica o fiktivnoj firmi, jedan alat za pretragu), ugrađenog u rešenje vežbe 3; ako pišete za svog, samo zamenite njegov poziv na jednom jasno označenom mestu. <strong>Drugo o novcu:</strong> vežba 1 i prvi sloj vežbe 2 ne koštaju ništa (bez mreže); sudija i A/B troše po nekoliko hiljada tokena — izdvojite taj budžet svesno, jer ćete bez toga preskočiti baš taj korak (to je, nažalost, i nauka).</p>
+<p>Napomena o formatu: skup pišemo kao <strong>JSONL</strong> (eng. <em>JSON Lines</em> — jedna JSON vrednost po redu fajla), a ne kao jedan veliki JSON niz iz modula 07. Razlika je mala, a razlog praktičan: po jedan scenario u redu znači da se izmene skupa lepo vide u <code>git diff</code>-u (dodao red — dodao scenario), i da fajl raste bez prepravljanja celog niza.</p>
+<hr>
+<h2 id="vezba-1-evaluacioni-skup-15-primera-sa-namernim-rupama-60-min">Vežba 1 — Evaluacioni skup: 15 primera sa namernim rupama (60 min)</h2>
+<p><strong>Zadatak:</strong> napišite evaluacioni skup za agenta pod testom: najmanje 15 scenarija po anatomiji iz sekcije 3 modula 07 — <code>id</code>, <code>ulaz</code>, <code>ocekivano</code>, <code>provere</code> (i <code>kategorija</code>, za statistiku) — od kojih svaki treći mora biti „nepošten&quot;: van domena, sa pogrešnom pretpostavkom, sa šumom, sa zahtevom za nemoguću akciju. Rešenje ispod je demo skup za agenta „Podrška&quot; + mala skripta koja skup <strong>valjda</strong> (format, jedinstvenost id-jeva, pokrivenost kategorija) — jer skup koji niko ne proverava je samo lista želja.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r05_v1_skup.py</code> (bez mreže — čist Python):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 05, vežba 1 — evaluacioni skup (JSONL) + validacija formata.
+
+Pokretanje bez mreže: pravi eval-skup.jsonl ako ga nema, pa ga valjda.
+Demo skup je za agenta &#39;Podrška&#39; (ugrađen u r05_v4_ab.py); za sopstvenog
+agenta menjajte scenarije, ne skriptu.
+&quot;&quot;&quot;
+
+import json
+from pathlib import Path
+
+SKUP_FAJL = Path(__file__).parent / &quot;eval-skup.jsonl&quot;
+
+# --- demo skup: 15 scenarija za &#39;Podršku&#39; (činjenice 1-4 su u r05_v4_ab.py) ----
+
+SCENARIJI = [
+    {&quot;id&quot;: &quot;radno-vreme&quot;, &quot;kategorija&quot;: &quot;direktno&quot;,
+     &quot;ulaz&quot;: &quot;Do kada mogu da zovem vašu podršku?&quot;,
+     &quot;ocekivano&quot;: &quot;Navodi radno vreme podrške (radnim danima, do 17) sa izvorom.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;17&quot;},
+                 {&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;činjenica\\s*1&quot;}]},
+    {&quot;id&quot;: &quot;rok-tiketa&quot;, &quot;kategorija&quot;: &quot;direktno&quot;,
+     &quot;ulaz&quot;: &quot;Za koliko dana odgovarate na tiket?&quot;,
+     &quot;ocekivano&quot;: &quot;Rok od 24 časa radnim danima, sa izvorom.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;24&quot;},
+                 {&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;činjenica\\s*2&quot;}]},
+    {&quot;id&quot;: &quot;obnova-pretplate&quot;, &quot;kategorija&quot;: &quot;direktno&quot;,
+     &quot;ulaz&quot;: &quot;Kada se pretplata obnavlja?&quot;,
+     &quot;ocekivano&quot;: &quot;Svakog 1. u mesecu, sa izvorom.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;1\\.\\s*u\\s*mesecu&quot;},
+                 {&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;činjenica\\s*4&quot;}]},
+    {&quot;id&quot;: &quot;sve-o-pretplati&quot;, &quot;kategorija&quot;: &quot;direktno&quot;,
+     &quot;ulaz&quot;: &quot;Šta sve treba da znam o pretplati?&quot;,
+     &quot;ocekivano&quot;: &quot;Obnavljanje 1. u mesecu i otkaz do 25., sa izvorom.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;25&quot;},
+                 {&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;činjenica\\s*4&quot;}]},
+    {&quot;id&quot;: &quot;vikend-zovem&quot;, &quot;kategorija&quot;: &quot;direktno&quot;,
+     &quot;ulaz&quot;: &quot;Da li vas mogu da zovem u nedelju ujutru?&quot;,
+     &quot;ocekivano&quot;: &quot;Podrška radi radnim danima — bez odbijanja, jer činjenica postoji.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;radn&quot;},
+                 {&quot;tip&quot;: &quot;ne_sadrzi&quot;, &quot;vrednost&quot;: &quot;NE ZNAM&quot;}]},
+    {&quot;id&quot;: &quot;parafraza-tiketa&quot;, &quot;kategorija&quot;: &quot;parafraza&quot;,
+     &quot;ulaz&quot;: &quot;Poslala sam tiket u petak uveče — da li da čekam odgovor do subote ujutru?&quot;,
+     &quot;ocekivano&quot;: &quot;Objašnjava radne dane i rok od 24 časa, bez novog izmišljanja.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;radn&quot;},
+                 {&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;24&quot;}]},
+    {&quot;id&quot;: &quot;ljubazno-pitanje&quot;, &quot;kategorija&quot;: &quot;parafraza&quot;,
+     &quot;ulaz&quot;: &quot;Hvala vam na pomoći do sad! Inače, do kada mogu da vratim licencu?&quot;,
+     &quot;ocekivano&quot;: &quot;Uljudno dalje: rok 14 dana od kupovine, sa izvorom.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;14&quot;},
+                 {&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;činjenica\\s*3&quot;}]},
+    {&quot;id&quot;: &quot;van-domena-kurs&quot;, &quot;kategorija&quot;: &quot;van domena&quot;,
+     &quot;ulaz&quot;: &quot;Koja je danas kursna lista evra?&quot;,
+     &quot;ocekivano&quot;: &quot;Odbija: NE ZNAM, bez navođenja bilo koje činjenice.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;NE ZNAM&quot;},
+                 {&quot;tip&quot;: &quot;ne_sadrzi&quot;, &quot;vrednost&quot;: &quot;činjenica&quot;}]},
+    {&quot;id&quot;: &quot;van-domena-parking&quot;, &quot;kategorija&quot;: &quot;van domena&quot;,
+     &quot;ulaz&quot;: &quot;Da li vaša kancelarija ima parking za bicikle?&quot;,
+     &quot;ocekivano&quot;: &quot;Odbija: NE ZNAM — baza podrške o tome nema ništa.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;NE ZNAM&quot;},
+                 {&quot;tip&quot;: &quot;ne_sadrzi&quot;, &quot;vrednost&quot;: &quot;činjenica&quot;}]},
+    {&quot;id&quot;: &quot;van-domena-sat&quot;, &quot;kategorija&quot;: &quot;van domena&quot;,
+     &quot;ulaz&quot;: &quot;Koliko je sati kod vas u kancelariji sada?&quot;,
+     &quot;ocekivano&quot;: &quot;Odbija: NE ZNAM — agent ne zna trenutno vreme.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;NE ZNAM&quot;},
+                 {&quot;tip&quot;: &quot;ne_sadrzi&quot;, &quot;vrednost&quot;: &quot;činjenica&quot;}]},
+]
+</code></pre>
+<pre><code class="language-python">SCENARIJI += [
+    {&quot;id&quot;: &quot;pogresna-pretpostavka&quot;, &quot;kategorija&quot;: &quot;pogrešna pretpostavka&quot;,
+     &quot;ulaz&quot;: &quot;Kupio sam licencu prošle nedelje; rok od 30 dana za vraćanje mi &quot;
+             &quot;ističe — gde da je prijavim?&quot;,
+     &quot;ocekivano&quot;: &quot;Ispravlja pretpostavku: rok je 14 dana, ne 30; navodi izvor.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;14&quot;},
+                 {&quot;tip&quot;: &quot;ne_sadrzi&quot;, &quot;vrednost&quot;: &quot;30 dana&quot;}]},
+    {&quot;id&quot;: &quot;dvodelni&quot;, &quot;kategorija&quot;: &quot;dvodelno&quot;,
+     &quot;ulaz&quot;: &quot;Koliko brzo odgovarate na tiket i do kog datuma mogu da otkažem pretplatu?&quot;,
+     &quot;ocekivano&quot;: &quot;Odgovara na oba dela: 24 časa; otkaz do 25. u mesecu.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;24&quot;},
+                 {&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;25&quot;}]},
+    {&quot;id&quot;: &quot;nemoguca-akcija&quot;, &quot;kategorija&quot;: &quot;nemoguća akcija&quot;,
+     &quot;ulaz&quot;: &quot;Otkazite mi odmah pretplatu, danas!&quot;,
+     &quot;ocekivano&quot;: &quot;Objašnjava da se ne može otkazati; kaže kako se otkaz daje &quot;
+                  &quot;(do 25. u mesecu), sa izvorom.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;25&quot;},
+                 {&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;činjenica\\s*4&quot;}]},
+    {&quot;id&quot;: &quot;sum-na-pocetku&quot;, &quot;kategorija&quot;: &quot;šum&quot;,
+     &quot;ulaz&quot;: &quot;Zovem se Milica, vodim nalog AS-2231: kakav je rok za odgovor na tiket?&quot;,
+     &quot;ocekivano&quot;: &quot;Šum ignoriše, odgovara na pitanje: 24 časa radnim danima.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;24&quot;},
+                 {&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;činjenica\\s*2&quot;}]},
+    {&quot;id&quot;: &quot;polu-informacija&quot;, &quot;kategorija&quot;: &quot;parafraza&quot;,
+     &quot;ulaz&quot;: &quot;Čula sam da se nešto obnavlja svakog prvog u mesecu — čega tačno?&quot;,
+     &quot;ocekivano&quot;: &quot;Dopunjava: pretplata, sa izvorom.&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;pretplat&quot;},
+                 {&quot;tip&quot;: &quot;regex&quot;, &quot;vrednost&quot;: &quot;činjenica\\s*4&quot;}]},
+]
+
+# --- validacija: skup koji niko ne proverava je lista želja -------------------
+
+def ucitaj_skup() -&gt; list[dict]:
+    &quot;&quot;&quot;Čita eval-skup.jsonl; pravi ga od demo skupa ako fajla nema.&quot;&quot;&quot;
+    if not SKUP_FAJL.exists():
+        SKUP_FAJL.write_text(
+            &quot;&quot;.join(json.dumps(sc, ensure_ascii=False) + &quot;\n&quot; for sc in SCENARIJI),
+            encoding=&quot;utf-8&quot;)
+        print(f&quot;(napravljen {SKUP_FAJL.name} od demo skupa — {len(SCENARIJI)} scenarija)&quot;)
+    return [json.loads(red) for red in
+            SKUP_FAJL.read_text(encoding=&quot;utf-8&quot;).splitlines() if red.strip()]
+
+def validiraj(scenariji: list[dict]) -&gt; list[str]:
+    &quot;&quot;&quot;Vraća spisak problema sa skupom; prazan spisak = skup je spreman.&quot;&quot;&quot;
+    problemi = []
+    id_jevi = [sc.get(&quot;id&quot;) for sc in scenariji]
+    if len(id_jevi) != len(set(id_jevi)):
+        problemi.append(&quot;id-jevi nisu jedinstveni&quot;)
+    for sc in scenariji:
+        for polje in (&quot;id&quot;, &quot;ulaz&quot;, &quot;ocekivano&quot;, &quot;provere&quot;):
+            if not sc.get(polje):
+                problemi.append(f&quot;scenario {sc.get(&#39;id&#39;, &#39;?&#39;)}: prazno polje &#39;{polje}&#39;&quot;)
+    if len(scenariji) &lt; 15:
+        problemi.append(f&quot;skup ima {len(scenariji)} scenarija — ispod minimuma od 15&quot;)
+    kategorije = {sc.get(&quot;kategorija&quot;, &quot;?&quot;) for sc in scenariji}
+    for obavezna in (&quot;direktno&quot;, &quot;parafraza&quot;, &quot;van domena&quot;):
+        if obavezna not in kategorije:
+            problemi.append(f&quot;nema kategorije &#39;{obavezna}&#39; — granice se ne mere&quot;)
+    return problemi
+
+def statistika(scenariji: list[dict]) -&gt; None:
+    if not scenariji:
+        return
+    brojaci: dict[str, int] = {}
+    for sc in scenariji:
+        brojaci[sc.get(&quot;kategorija&quot;, &quot;?&quot;)] = brojaci.get(sc.get(&quot;kategorija&quot;, &quot;?&quot;), 0) + 1
+    print(f&quot;scenarija: {len(scenariji)}, prosečno provera po scenariju: &quot;
+          f&quot;{sum(len(sc[&#39;provere&#39;]) for sc in scenariji) / len(scenariji):.1f}&quot;)
+    for kat, broj in sorted(brojaci.items(), key=lambda par: -par[1]):
+        print(f&quot;   {kat:24s} {broj:2d}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    scenariji = ucitaj_skup()
+    statistika(scenariji)
+    for problem in validiraj(scenariji):
+        print(f&quot;✘ {problem}&quot;)
+    print(&quot;skup spreman za vežbu 2&quot; if not validiraj(scenariji) else &quot;popraviti pa ponovo&quot;)
+</code></pre>
+<p><strong>Provere:</strong></p>
+<pre><code class="language-bash">python r05_v1_skup.py
+</code></pre>
+<p>Otvorite <code>eval-skup.jsonl</code> u editoru: petnaest redova, jedan scenario po redu — i probajte <code>git diff</code> posle dodavanja jednog scenarija: jedan promenjeni red, čitljiv bez konteksta. Zatim čitajte skup kao listač, ne kao pisac (pravilo iz modula 07): kad <code>van-domena-kurs</code> padne, da li ćete iz poruke „odgovor ne sadrži &#39;NE ZNAM&#39;&quot; znati kuda? Kad padne <code>pogresna-pretpostavka</code> na proveri <code>ne sadrži &#39;30 dana&#39;</code>? Provera koja padne a da ne kaže kuda — to je provera koju ćete vremenom početi da ignorišete.</p>
+<p><strong>Tri tačke koje moraju da sednu:</strong> (1) trećina skupa su „nepoštena&quot; pitanja — agent koji prolazi samo pristojne upite izgleda odlično dok ne izađe u svet; (2) provera <code>ne_sadrzi</code> je isto oružje kao <code>sadrzi</code>: „ne sme da ponovi pogrešnu pretpostavku&quot; je pravilo ponašanja, ne dekoracija; (3) skup je <strong>verzionisan dokument</strong>: od sad se menja kroz commit sa obrazloženjem, jer je on specifikacija ponašanja agenta, ne priključak.</p>
+<h2 id="vezba-2-automatsko-ocenjivanje-u-dva-sloja-60-min">Vežba 2 — Automatsko ocenjivanje u dva sloja (60 min)</h2>
+<p><strong>Zadatak:</strong> ocenjivanje koje nešto zaista radi ima dva sloja, i redosled je važan. <strong>Sloj 1 — pravila u kodu</strong> (deterministička provera: sadrži li odgovor obavezne delove, poštuje li format, izbegava li zabranjene): jeftina, glasna, glupa — i zato prva. <strong>Sloj 2 — sudija-model</strong> (ocenjuje sadržaj: da li je odgovor tačan prema očekivanom): pameća, skuplja, pristrasnija — i zato druga, i samo tamo gde pravila ne stignu. U ovoj vežbi gradite oba, a sloj 2 kalibrišete na primerima koje ste sami ocenili pre nego što mu poverujete.</p>
+<h3 id="sloj-1-pravila-pokretac-bez-mreze">Sloj 1 — pravila: pokretač bez mreže</h3>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r05_v2_provere.py</code> (bez mreže; koristi skup iz vežbe 1 i <strong>unapred zapisane</strong> odgovore agenta, da vidimo tabelu bez potrošenog dinara):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 05, vežba 2 (sloj 1) — determinističke provere na zapisanim odgovorima.
+
+Radi bez mreže: odgovori su konzervirani (kako je agent odgovorio jednog
+dana); zamenite ih svežim iz vežbe 3, a provere ostaju iste.
+&quot;&quot;&quot;
+
+import re
+import sys
+
+from r05_v1_skup import ucitaj_skup
+
+PRAG = 0.8
+
+# kako je agent zaista odgovorio (skraćeno) — jedan loš dan podrške
+ODGOVORI = {
+    &quot;radno-vreme&quot;: &quot;Podrška radi radnim danima od 9 do 17 časova [činjenica 1].&quot;,
+    &quot;rok-tiketa&quot;: &quot;Na tiket odgovaramo u roku od 24 časa radnim danima [činjenica 2].&quot;,
+    &quot;parafraza-tiketa&quot;: (&quot;Tikete obrađujemo samo radnim danima, a rok je 24 časa &quot;
+                         &quot;[činjenica 2] — pa od petka uveče računajte ponedeljak.&quot;),
+    &quot;van-domena-kurs&quot;: (&quot;Po današnjem kursu lista evro je oko 117 dinara, &quot;
+                        &quot;ali za precizne vrednosti pogledajte sajt banke.&quot;),
+    &quot;dvodelni&quot;: (&quot;Odgovaramo u roku od 24 časa [činjenica 2]. Pretplatu možete &quot;
+                 &quot;otkazati najkasnije do 25. u mesecu [činjenica 4].&quot;),
+    &quot;nemoguca-akcija&quot;: (&quot;NE ZNAM — to nije u bazi podrške.&quot;),
+}
+
+def pokreni_proveru(provera: dict, odgovor: str) -&gt; tuple[bool, str]:
+    &quot;&quot;&quot;Jedna deterministička provera; vraća (prolaz, opis za tabelu).&quot;&quot;&quot;
+    tip, vrednost = provera[&quot;tip&quot;], provera[&quot;vrednost&quot;]
+    if tip == &quot;sadrzi&quot;:
+        return vrednost.lower() in odgovor.lower(), f&quot;sadrži &#39;{vrednost}&#39;&quot;
+    if tip == &quot;ne_sadrzi&quot;:
+        return vrednost.lower() not in odgovor.lower(), f&quot;ne sadrži &#39;{vrednost}&#39;&quot;
+    if tip == &quot;regex&quot;:
+        found = re.search(vrednost, odgovor, re.IGNORECASE)
+        return found is not None, f&quot;regex /{vrednost}/&quot;
+    return False, f&quot;nepoznat tip provere &#39;{tip}&#39;&quot;
+
+def oceni_slojem1(scenariji: list[dict], odgovori: dict) -&gt; float:
+    print(f&quot;{&#39;scenario&#39;:22s} {&#39;ishod&#39;:6s} šta je puklo&quot;)
+    prolazi = 0
+    for sc in scenariji:
+        if sc[&quot;id&quot;] not in odgovori:
+            print(f&quot;{sc[&#39;id&#39;]:22s} PRESK  nema zapisan odgovor&quot;)
+            continue
+        neuspeli = [opis for prolaz, opis in
+                    (pokreni_proveru(p, odgovori[sc[&quot;id&quot;]]) for p in sc[&quot;provere&quot;])
+                    if not prolaz]
+        prolaz = not neuspeli
+        prolazi += prolaz
+        znak = &quot;✔&quot; if prolaz else &quot;✘&quot;
+        print(f&quot;{sc[&#39;id&#39;]:22s} {znak:6s} {&#39;; &#39;.join(neuspeli)}&quot;)
+    return prolazi / len(odgovori)
+
+if __name__ == &quot;__main__&quot;:
+    stopa = oceni_slojem1(ucitaj_skup(), ODGOVORI)
+    print(f&quot;\nstopa prolaznosti: {stopa:.0%} (prag {PRAG:.0%})&quot;)
+    sys.exit(0 if stopa &gt;= PRAG else 1)     # kapija: pad = izlazni kod 1
+</code></pre>
+<p><strong>Provere:</strong></p>
+<pre><code class="language-bash">python r05_v2_provere.py; echo &quot;izlazni kod: $?&quot;
+</code></pre>
+<p>Dva scenarija moraju pasti, i to <strong>glasno</strong>: <code>van-domena-kurs</code> (agent je nagađao kurs — upravo ono zbog čega postoji „NE ZNAM&quot;) i <code>nemoguca-akcija</code> (odbio je pitanje na koje <strong>ima</strong> odgovor: činjenica 4 pokriva otkazivanje — odbijanje je tu pogrešan izlaz). Izlazni kod 1 je kapija kako treba: skripta nije pala, skup je <strong>uhvatio grešku</strong>. Ovo je trenutak vežbe: provera od dva stringa vredi koliko i sat čitanja izlaza — ako zna šta da traži.</p>
+<p><strong>Tačke koje moraju da sednu:</strong> (1) sloj 1 ne zna šta je „tačno&quot; — zna šta je <strong>dogovoreno</strong> (NE ZNAM, činjenica N, 24, 25); dogovor se piše u sistemski prompt <em>zato</em> što se ovako meri (modul 07, sekcija 3); (2) stopa se računa nad odgovorima koji <strong>postoje</strong> — scenario bez odgovora je PRESK, ne prolaz: statistika koja prašta nepokrenute scenarije laže na gore; (3) prag od 80% sa izlaznim kodom je mini-CI: ubacite ga u <code>make check</code> i svaka izmena agenta od sad prolazi kroz ovu vratu.</p>
+<h3 id="sloj-2-sudija-model-kalibracija-pre-poverenja">Sloj 2 — sudija-model: kalibracija pre poverenja</h3>
+<p><strong>Zadatak:</strong> za odgovore koje pravila ne umeju da ocene („da li je ovo <em>tačno</em> na dato pitanje?&quot;), pozovite drugi poziv modela — sudiju (eng. <em>judge</em>) — ali po dva pravila iz modula 07: <strong>rubrika u promptu</strong> (tačno šta se ocenjuje, šta je prolaz) i <strong>izlaz u strogo dogovorenom obliku</strong> (JSON sa <code>prolaz</code> i <code>razlog</code>), na temperaturi 0. Pre puštanja u rad, sudija se <strong>kalibriše</strong>: na par primera koje ste sami ocenili, meri se slaganje; gde se ne slaže — popravlja se rubrika (ili primer, ako je on loš), ne rezultat.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r05_v3_sudija.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 05, vežba 2 (sloj 2) — sudija-model sa kalibracijom.
+
+  Z_AI_API_KEY   — obavezno: vaš API ključ
+  Z_AI_BASE_URL  — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL     — opciono: model za razgovor (podrazumevano glm-4.6)
+
+Kalibracija: pet parova odgovor-dobar / odgovor-loš na koje ZNAMO ishod;
+sudija prolazi tek kad se slaže na svih deset ocena.
+&quot;&quot;&quot;
+
+import json
+import os
+import re
+import sys
+
+from openai import OpenAI
+
+SUDIJA_PROMPT = (
+    &quot;Ti si sudija koja ocenjuje odgovore agenta korisničke podrške. Dobijaš: &quot;
+    &quot;pitanje korisnika, očekivani ishod i stvarni odgovor agenta. Rubrika: &quot;
+    &quot;(1) ODGOVOR TAČAN — agent tvrdi samo ono što sledi iz očekivanog ishoda; &quot;
+    &quot;(2) BEZ NAGAĐANJA — ako očekivani ishod kaže da treba odbiti, odgovor &quot;
+    &quot;mora odbiti (NE ZNAM) i ništa ne izmišljati; (3) NETAČAN ILI NAGAĐAN &quot;
+    &quot;NE PROLAZI. Odgovaraš SAMO JSON objektom oblika &quot;
+    &#39;{&quot;prolaz&quot;: true|false, &quot;razlog&quot;: &quot; jedna recenica&quot;} bez ikakvog drugog teksta.&#39;
+)
+
+# pet parova: (pitanje, očekivano, dobar odgovor, loš odgovor) — moje ocene su
+# u imenima polja: dobar =&gt; prolaz, loš =&gt; pad
+KALIBRACIJA = [
+    (&quot;Do kada mogu da zovem vašu podršku?&quot;,
+     &quot;Radno vreme: radnim danima do 17 [činjenica 1].&quot;,
+     &quot;Podrška radi radnim danima od 9 do 17 časova [činjenica 1].&quot;,
+     &quot;Podrška je dostupna non-stop, zovite bilo kada.&quot;),
+    (&quot;Za koliko dana odgovarate na tiket?&quot;,
+     &quot;Rok 24 časa radnim danima [činjenica 2].&quot;,
+     &quot;Odgovaramo u roku od 24 časa radnim danima [činjenica 2].&quot;,
+     &quot;Obično odgovorimo za koji dan, zavisi kako nam ide.&quot;),
+    (&quot;Koja je danas kursna lista evra?&quot;,
+     &quot;Odbijanje: NE ZNAM, bez činjenica.&quot;,
+     &quot;NE ZNAM — to nije u bazi podrške.&quot;,
+     &quot;Evro je danas oko 117 dinara, ali proverite u banci.&quot;),
+    (&quot;Kupio sam licencu; rok od 30 dana za vraćanje mi ističe?&quot;,
+     &quot;Ispravka: rok je 14 dana [činjenica 3].&quot;,
+     &quot;Mala ispravka: rok za vraćanje je 14 dana od kupovine [činjenica 3].&quot;,
+     &quot;Da, rok od 30 dana vam ističe — pošaljite prijavu.&quot;),
+    (&quot;Koliko brzo odgovarate na tiket i do kog datuma mogu da otkažem pretplatu?&quot;,
+     &quot;Oba dela: 24 časa; otkaz do 25. u mesecu.&quot;,
+     &quot;Rok za tiket je 24 časa [činjenica 2]; pretplata se otkaže do 25. u mesecu [činjenica 4].&quot;,
+     &quot;Na tiket odgovaramo brzo, a o otkazu Vas će obavestiti kolege.&quot;),
+]
+
+def sudi(client, model, pitanje: str, ocekivano: str, odgovor: str) -&gt; tuple[bool, str]:
+    &quot;&quot;&quot;Jedna presuda; vraća (prolaz, razlog).&quot;&quot;&quot;
+    poruke = [
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SUDIJA_PROMPT},
+        {&quot;role&quot;: &quot;user&quot;,
+         &quot;content&quot;: (f&quot;Pitanje korisnika: {pitanje}\n\nOčekivani ishod: {ocekivano}\n\n&quot;
+                     f&quot;Odgovor agenta: {odgovor}&quot;)},
+    ]
+    izlaz = client.chat.completions.create(
+        model=model, messages=poruke, temperature=0,
+    ).choices[0].message.content or &quot;&quot;
+    poklapanje = re.search(r&quot;\{.*\}&quot;, izlaz, re.DOTALL)      # sudija voli uvode
+    if not poklapanje:
+        return False, &quot;sudija nije vratio JSON: &quot; + izlaz[:60]
+    try:
+        presuda = json.loads(poklapanje.group(0))
+    except json.JSONDecodeError:
+        return False, &quot;sudijin JSON ne parsira: &quot; + izlaz[:60]
+    return bool(presuda.get(&quot;prolaz&quot;)), str(presuda.get(&quot;razlog&quot;, &quot;&quot;))[:80]
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo pokrenite.&quot;)
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;))
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+
+    slaganje = 0
+    for pitanje, ocekivano, dobar, los in KALIBRACIJA:
+        for odgovor, moja in ((dobar, True), (los, False)):
+            prolaz, razlog = sudi(client, model, pitanje, ocekivano, odgovor)
+            poklapa = prolaz == moja
+            slaganje += poklapa
+            znak = &quot;=&quot; if poklapa else &quot;≠&quot;
+            print(f&quot;[{znak}] {&#39;dobar&#39; if moja else &#39;loš &#39;} odgovor → sudija: &quot;
+                  f&quot;{&#39;prolaz&#39; if prolaz else &#39;pad  &#39;} · {razlog}&quot;)
+    print(f&quot;\nslaganje sudije sa mojim ocenama: {slaganje}/10&quot;)
+    print(&quot;kalibracija prošla&quot; if slaganje == 10 else
+          &quot;kalibracija NIJE prošla — popravi rubriku (ili primer), pa ponovo&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Provere:</strong></p>
+<pre><code class="language-bash">python r05_v3_sudija.py
+</code></pre>
+<p>Gledajte redove sa <code>≠</code>: to su mesta gde se sudija razilazi s vama — i svako je mala istraga. Tipični uzroci: rubrika premekka (propusti nagađanje „oko 117 dinara&quot; — dodati u rubriku: približne vrednosti su nagađanje), rubrika prekruta (kazni ispravnu dopunu jer „nije doslovno očekivano&quot;), ili loš primer (očekivano napisano maglovito — sudija nije kriv). Postupak je uvek isti: <strong>popravi rubriku ili primer, nikad rezultat</strong> — jer cilj nije da sudija potvrdi agenta, nego da bude merilo koje se poklapa s vašim.</p>
+<p><strong>Tačke koje moraju da sednu:</strong> (1) sudija je <strong>drugi sloj</strong>: prvo pravila (jeftino, glasno), pa sudija samo za scenario koje pravila ne hvataju — ko počne od sudije, potroši budžet na provere koje <code>in</code> operator radi besplatno; (2) temperatura 0 i strogi JSON nisu ukus, nego uslov ponovljivosti: sudija koja svaki put drugačije sudi nije merilo; (3) kalibracija na <strong>deset</strong> ocena (pet parova) je minimum, ne cilj — pravi skupovi idu na trideset i više pre nego što se sudiji poveruje.</p>
+<h2 id="vezba-3-a-b-promptova-isti-skup-dve-verzije-40-min">Vežba 3 — A/B promptova: isti skup, dve verzije (40 min)</h2>
+<p><strong>Zadatak:</strong> pokrenite ceo evaluacioni skup na dve verzije sistemskog prompta — staroj (A) i izmenjenoj (B) — i sastavite tabelu po scenariju. Verzija B ovde donosi jedno pravilo više (dvodelna pitanja — tačka po tačka) i jedno drugačije (odbijanje uvek prvim stavom); da li je bolja — ne odgovara se osećajem, nego tabelom i flipovima. Na kraju se piše odluka sa obrazloženjem, jer tabela bez odluke je samo lep izlaz.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r05_v4_ab.py</code> (zahteva fajlove iz vežbi 1 i 2 pored sebe; koristi skup, provere i — u sebi — demo agenta „Podrška&quot;):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 05, vežba 3 — A/B poređenje dve verzije sistemskog prompta.
+
+  Z_AI_API_KEY   — obavezno: vaš API ključ
+  Z_AI_BASE_URL  — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL     — opciono: model za razgovor (podrazumevano glm-4.6)
+
+Koristi eval-skup.jsonl iz vežbe 1 i provere iz vežbe 2.
+Rezultate piše u rezultati/a.json i rezultati/b.json za budući dif.
+&quot;&quot;&quot;
+
+import json
+import os
+import sys
+from datetime import datetime
+from pathlib import Path
+
+from openai import OpenAI
+
+from r05_v1_skup import ucitaj_skup
+from r05_v2_provere import pokreni_proveru
+
+REZULTATI = Path(__file__).parent / &quot;rezultati&quot;
+
+# --- agent pod testom: &#39;Podrška&#39; (menjajte poziv agenta za svog) --------------
+
+CINJENICE = {
+    1: &quot;Podrška radi radnim danima od 9 do 17 časova.&quot;,
+    2: &quot;Na tiket odgovaramo u roku od 24 časa radnim danima.&quot;,
+    3: &quot;Licencu možete vratiti u roku od 14 dana od kupovine.&quot;,
+    4: &quot;Pretplata se obnavlja automatski svakog 1. u mesecu; otkaz se daje &quot;
+       &quot;najkasnije do 25. u mesecu.&quot;,
+}
+KLJUCNE_RECI = {
+    &quot;radno vreme&quot;: 1, &quot;podrška&quot;: 1, &quot;podrsk&quot;: 1, &quot;zovem&quot;: 1, &quot;zovete&quot;: 1,
+    &quot;tiket&quot;: 2, &quot;odgovor&quot;: 2, &quot;rok za&quot;: 2,
+    &quot;licenc&quot;: 3, &quot;vrać&quot;: 3,
+    &quot;pretplat&quot;: 4, &quot;otkaz&quot;: 4, &quot;obnavlj&quot;: 4, &quot;mesec&quot;: 4,
+}
+SH_ALAT = {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+    &quot;name&quot;: &quot;trazi_u_bazi&quot;,
+    &quot;description&quot;: &quot;Pretražuje bazu činjenica firme Studio Dim (radno vreme, &quot;
+                   &quot;rokovi, licence, pretplata). Vraća činjenice sa brojevima &quot;
+                   &quot;ili NEMA. Za svako pitanje o firmi — prvo ovaj alat.&quot;,
+    &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+        &quot;pojam&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Tema iz pitanja, npr. &#39;radno vreme&#39;.&quot;},
+    }, &quot;required&quot;: [&quot;pojam&quot;]},
+}}
+
+def trazi_u_bazi(pojam: str) -&gt; str:
+    pojam = pojam.strip().lower()
+    nadjeni = {broj for rec, broj in KLJUCNE_RECI.items() if rec in pojam}
+    if not nadjeni:
+        return &quot;NEMA: u bazi podrške nema ničega o tome.&quot;
+    return &quot;\n&quot;.join(f&quot;[činjenica {b}] {CINJENICE[b]}&quot; for b in sorted(nadjeni))
+
+PROMPT_A = (
+    &quot;Ti si agent korisničke podrške firme Studio Dim. Pravila: (1) odgovaraš &quot;
+    &quot;SAMO na osnovu alata trazi_u_bazi — svaku tvrdnju potkrepljuješ brojem &quot;
+    &quot;činjenice u uglastim zagradama, npr. [činjenica 2]; (2) ako alat vrati &quot;
+    &quot;NEMA, odgovor počinje rečenicom &#39;NE ZNAM — to nije u bazi podrške.&#39; i ne &quot;
+    &quot;nagađaš; (3) pogrešnu pretpostavku korisnika ispravljaš i navodiš pravu &quot;
+    &quot;vrednost; (4) odgovaraš kratko, najviše tri stava.&quot;
+)
+PROMPT_B = (
+    &quot;Ti si agent korisničke podrške firme Studio Dim. Pravila: (1) odgovaraš &quot;
+    &quot;SAMO na osnovu alata trazi_u_bazi — svaku tvrdnju potkrepljuješ brojem &quot;
+    &quot;činjenice u uglastim zagradama, npr. [činjenica 2]; (2) ako alat vrati &quot;
+    &quot;NEMA, odgovor počinje rečenicom &#39;NE ZNAM — to nije u bazi podrške.&#39; i ne &quot;
+    &quot;nagađaš; (3) pogrešnu pretpostavku korisnika ispravljaš i navodiš pravu &quot;
+    &quot;vrednost; (4) na pitanje sa više delova odgovaraš tačku po tačku, po jedan &quot;
+    &quot;deo pitanja po stavu; (5) nikada ne obećavaš akciju koju ne izvršavaš &quot;
+    &quot;— umesto toga kažeš kako korisnik to radi.&quot;
+)
+</code></pre>
+<pre><code class="language-python">def agent(client, model, sistemski_prompt: str, pitanje: str,
+          max_koraka: int = 4) -&gt; str:
+    &quot;&quot;&quot;Mini-petlja iz radionice 03: jedan alat, tri do četiri koraka.&quot;&quot;&quot;
+    poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: sistemski_prompt},
+              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: pitanje}]
+    for _ in range(max_koraka):
+        odgovor = client.chat.completions.create(
+            model=model, messages=poruke, tools=[SH_ALAT], temperature=0.2)
+        poruka = odgovor.choices[0].message
+        if not poruka.tool_calls:
+            return poruka.content or &quot;&quot;
+        poruke.append(poruka)
+        for poziv_ in poruka.tool_calls:
+            try:
+                argumenti = json.loads(poziv_.function.arguments or &quot;{}&quot;)
+                rezultat = trazi_u_bazi(**argumenti)
+            except Exception as g:
+                rezultat = f&quot;GREŠKA: {g}&quot;
+            poruke.append({&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: poziv_.id,
+                           &quot;content&quot;: rezultat})
+    return &quot;GREŠKA: agent nije završio odgovor (max_koraka).&quot;
+
+def verzija(client, model, prompt: str, scenariji: list[dict],
+            oznaka: str) -&gt; dict:
+    &quot;&quot;&quot;Jedna verzija prompta kroz ceo skup; piše rezultati/&lt;oznaka&gt;.json.&quot;&quot;&quot;
+    ishodi = []
+    for sc in scenariji:
+        print(f&quot;  [{oznaka}] {sc[&#39;id&#39;]}&quot;)
+        odgovor = agent(client, model, prompt, sc[&quot;ulaz&quot;])
+        provere = [{&quot;opis&quot;: opis, &quot;prolaz&quot;: prolaz}
+                   for prolaz, opis in (pokreni_proveru(p, odgovor)
+                                        for p in sc[&quot;provere&quot;])]
+        ishodi.append({&quot;id&quot;: sc[&quot;id&quot;], &quot;prolaz&quot;: all(p[&quot;prolaz&quot;] for p in provere),
+                       &quot;provere&quot;: provere, &quot;odgovor&quot;: odgovor})
+    REZULTATI.mkdir(exist_ok=True)
+    fajl = REZULTATI / f&quot;{oznaka}.json&quot;
+    fajl.write_text(json.dumps(
+        {&quot;vreme&quot;: datetime.now().isoformat(timespec=&quot;minutes&quot;),
+         &quot;stopa&quot;: sum(1 for i in ishodi if i[&quot;prolaz&quot;]) / len(ishodi),
+         &quot;scenariji&quot;: ishodi}, ensure_ascii=False, indent=2), encoding=&quot;utf-8&quot;)
+    return {&quot;ishodi&quot;: {i[&quot;id&quot;]: i[&quot;prolaz&quot;] for i in ishodi},
+            &quot;stopa&quot;: sum(1 for i in ishodi if i[&quot;prolaz&quot;]) / len(ishodi),
+            &quot;fajl&quot;: fajl}
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo pokrenite.&quot;)
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;))
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+    scenariji = ucitaj_skup()
+
+    print(&quot;== verzija A (stari prompt) ==&quot;)
+    a = verzija(client, model, PROMPT_A, scenariji, &quot;a&quot;)
+    print(&quot;== verzija B (izmenjeni prompt) ==&quot;)
+    b = verzija(client, model, PROMPT_B, scenariji, &quot;b&quot;)
+
+    print(f&quot;\n{&#39;scenario&#39;:22s} {&#39;A&#39;:^4s} {&#39;B&#39;:^4s}  promena&quot;)
+    for sc in scenariji:
+        pre, posle = a[&quot;ishodi&quot;][sc[&quot;id&quot;]], b[&quot;ishodi&quot;][sc[&quot;id&quot;]]
+        strelica = &quot;&quot; if pre == posle else (&quot;  ← gubitak!&quot; if pre else &quot;  ← popravljen&quot;)
+        print(f&quot;{sc[&#39;id&#39;]:22s} {&#39;✔&#39; if pre else &#39;✘&#39;:^4s} {&#39;✔&#39; if posle else &#39;✘&#39;:^4s}{strelica}&quot;)
+    print(f&quot;stopa: A {a[&#39;stopa&#39;]:.0%} · B {b[&#39;stopa&#39;]:.0%}   &quot;
+          f&quot;(rezultati: {a[&#39;fajl&#39;].name}, {b[&#39;fajl&#39;].name})&quot;)
+    print(&quot;\nodluka: [ A / B ] obrazloženje: [ dva-tri stavka: stopa, flipovi, &quot;
+          &quot;utisak čitanja odgovora ]&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Provere:</strong></p>
+<pre><code class="language-bash">python r05_v4_ab.py
+</code></pre>
+<p>Čitajte izlaz u tri prolaza. Prvi prolaz — <strong>flipovi</strong> (<code>← gubitak!</code>, <code>← popravljen</code>): svaki je priča za sebe; otvorite <code>rezultati/b.json</code> i pročitajte odgovor reč po reč (tamo stoje svi odgovori obe verzije — zato se i pišu). Drugi prolaz — <strong>dvodelni</strong> scenario: da li ga je pravilo (4) u B stvarno popravilo, ili je sreća? Pokrenite još jednom — agenti su nedeterministični, pa se A/B gleda na više od jednog pokretanja kad je razlika mala. Treći prolaz — <strong>odluka</strong>: popunite šablon iz poslednjeg reda; „stopa nepromenjena, ali jedan gubitak i jedan popravak&quot; je legitimna situacija — i tada se odlučuje čitanjem tih dva odgovora, ne bacanjem novčića.</p>
+<p><strong>Tabela dijagnoze (rešenje za tablu):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Simptom u A/B</th>
+<th>Prvo proveriti</th>
+<th>Tipičan lek</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B bolja na dvodelnim, ista svuda</td>
+<td>da li je pravilo (4) krivo ili sreća</td>
+<td>još pokretanja; pa pročitati odgovore</td>
+</tr>
+<tr>
+<td>B izgubila scenario koji je A prolazio</td>
+<td>odgovor u rezultatima: šta se promenilo</td>
+<td>pravilo koje je suviše usko; kalibracija sudije</td>
+</tr>
+<tr>
+<td>Stopa ista, odgovori različiti</td>
+<td>dif po odgovorima, ne po ✔/✘</td>
+<td>odluka po čitljivosti i trošku, ne samo stopi</td>
+</tr>
+<tr>
+<td>Sve pada u obe verzije</td>
+<td>skup (preteške provere?) ili agent</td>
+<td>jedan scenario ručno, pa presudit ko laže</td>
+</tr>
+<tr>
+<td>Rezultati se razlikuju svakim pokretanjem</td>
+<td>temperatura; mali broj scenarija</td>
+<td>smanjiti temperaturu, povećati skup, više pokretanja</td>
+</tr>
+</tbody></table>
+<h2 id="domaci">Domaći</h2>
+<ul>
+<li>Ponoviti A/B sa promenom <em>modela</em> umesto prompta (npr. dva modela po izboru) — razlika u ceni naspram kvaliteta na istom skupu.</li>
+<li>Dodati metrike troška: prosečan broj tokena po primeru; odgovor na pitanje „isplati li se poboljšanje od 5% tačnosti za 40% skuplji poziv?&quot;.</li>
+<li>Uvesti evaluaciju kao CI korak: skripta koja pada ako tačnost padne ispod praga (makar i samo lokalni <code>make check</code>).</li>
+<li>Za napredne: dif režim po obrascu iz modula 07 — <code>--diff rezultati/a.json rezultati/b.json</code> na fajlovima koje je vežba 3 već upisala.</li>
+</ul>
+<h2 id="materijali-checklist-za-ucesnike">Materijali — checklist za učesnike</h2>
+<ul>
+<li><input disabled="" type="checkbox"> sopstveni agent iz ranijih radionica (ili bar jedna skripta sa sistemskim promptom);</li>
+<li><input disabled="" type="checkbox"> izdvojen budžet od par hiljada tokena za ocenjivačke pozive (zaboravićete na njega — to je poenta);</li>
+<li><input disabled="" type="checkbox"> Git repozitorijum sa istorijom promptova (da imate šta da A/B uporedite);</li>
+<li><input disabled="" type="checkbox"> sveska/tabela za rezultate — brojevi koje ne zapišete su brojevi koje nemate;</li>
+<li><input disabled="" type="checkbox"> četiri fajla radionice: <code>r05_v1_skup.py</code> do <code>r05_v4_ab.py</code> — rastu iz vežbe u vežbu, <code>eval-skup.jsonl</code> i <code>rezultati/</code> nastaju uz njih.</li>
+</ul>
+<h2 id="za-voditelja">Za voditelja</h2>
+<ul>
+<li>Najvažniji trenutak radionice: kada učesniku metrika kaže nešto suprotno od osećaja. Ne rešavati — pustiti grupu da ispita <em>zašto</em>; tu se uči najviše.</li>
+<li>Ocenjivač-model kalibrisati javno, na primeru celoj grupi, pre puštanja u samostalan rad.</li>
+<li>Vežba 1 je bez mreže — iskoristiti je da svi imaju <code>eval-skup.jsonl</code> pre drugog sata, čak i ako kasne sa pripremom.</li>
+<li>A/B pokretanja traju (15 scenarija × 2 verzije × poziv ili dva): pokrenuti vežbu 3 na projektoru rano, pa pričati kroz tabelu dok se završava — paralelno vreme, ne čekanje.</li>
+<li>Ako grupa zaostaje: sloj 2 svesti na prva dva para kalibracije, A/B na prvih osam scenarija skupa. Ne skraćivati čitanje flipova — ono je srce.</li>
+<li>Poruka za kraj: <strong>izmena bez dif pregleda je vera, ne inženjerstvo</strong> — i zato svaka izmena agenta od sad ide kroz skup.</li>
+</ul>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/radionice/radionica-05-evaluacija.md" rel="noopener">radionice/radionica-05-evaluacija.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <a href="../04-rag-memorija/"><span class="dir">← Prethodni</span>undefined</a>
+  <a class="pager-next" href="../06-protokoli/"><span class="dir">Sledeći →</span>undefined</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

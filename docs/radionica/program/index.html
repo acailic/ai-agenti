@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radionica „AI agenti za dev timove&quot; — AI i agenti na srpskom</title>
+<meta name="description" content="Ovo je paket za plaćenu radionicu od dva časa, namenjen razvojnim timovima (eng. dev teams) koji žele praktičan uvod u AI agente — ne slajdove, nego kod koji tim sam piše. Ovaj dokument je">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/radionica/program/">
+<meta property="og:title" content="Radionica „AI agenti za dev timove&quot; — AI i agenti na srpskom">
+<meta property="og:description" content="Ovo je paket za plaćenu radionicu od dva časa, namenjen razvojnim timovima (eng. dev teams) koji žele praktičan uvod u AI agente — ne slajdove, nego kod koji tim sam piše. Ovaj dokument je">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/radionica/program/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="../../radionice/">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#za-koga-je-i-za-koga-nije">Za koga je (i za koga nije)</a></li><li><a href="#cilj-radionice">Cilj radionice</a></li><li><a href="#agenda-120-minuta">Agenda (120 minuta)</a></li><li><a href="#priprema-pre-radionice">Priprema (pre radionice)</a></li><li><a href="#scenario-dana-podrska-fiktivnog-proizvoda-kratak-spoj">Scenario dana: podrška fiktivnog proizvoda „Kratak spoj"</a></li><li><a href="#vezba-1-agent-od-nule-sortiranje-tiketa-40-min">Vežba 1 — Agent od nule: sortiranje tiketa (40 min)</a></li><li><a href="#vezba-2-evaluacija-da-li-agent-stvarno-sortira-dobro-30-min">Vežba 2 — Evaluacija: da li agent stvarno sortira dobro? (30 min)</a></li><li><a href="#vezba-3-tim-agenata-pregledac-i-popravljac-25-min">Vežba 3 — Tim agenata: pregledač i popravljač (25 min)</a></li><li><a href="#zatvaranje-sta-tim-ima-u-rukama-i-gde-dalje-10-min">Zatvaranje — šta tim ima u rukama i gde dalje (10 min)</a></li><li><a href="#za-voditelja-facilitatorske-beleske">Za voditelja (facilitatorske beleške)</a></li><li><a href="#materijali-checklist">Materijali — checklist</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Radionica „AI agenti za dev timove&quot;</h1>
+    <p class="lead" style="margin:0"><a href="..//">← Nazad na ponudu</a></p>
+  </header>
+  <article class="searchable" data-searchable="">
+<blockquote>
+<p><strong>Trajanje:</strong> 2 časa · <strong>Format:</strong> 20% priča / 80% praksa · <strong>Učesnici:</strong> 4–12, u parovima ili sami
+<strong>Materijal:</strong> <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE">CC BY 4.0</a> — posle radionice ostaje timu
+<strong>Povezani moduli kursa:</strong> pre — <a href="../../modul/00-uvod-u-agente/">modul 00</a>, <a href="../../modul/02-alati-tool-use/">modul 02</a> (sekcije 1–3); posle — <a href="../../modul/03-agent-od-nule/">modul 03</a>, <a href="../../modul/07-evaluacija-agenata/">modul 07</a>, <a href="../../modul/08-multi-agent-sistemi/">modul 08</a>
+<strong>Javni rep kursa:</strong> <a href="https://github.com/acailic/ai-agenti-srb">https://github.com/acailic/ai-agenti-srb</a></p>
+</blockquote>
+<p>Ovo je paket za plaćenu radionicu od dva časa, namenjen razvojnim timovima (eng. <em>dev teams</em>) koji žele praktičan uvod u AI agente — ne slajdove, nego kod koji tim sam piše. Ovaj dokument je materijal za izvođenje: agenda, tri vežbe sa rešenjima i facilitatorske beleške. Komercijalni jednostrani pregled (za koga, šta, cena) je u <a href="..//">PONUDA.md</a>.</p>
+<h2 id="za-koga-je-i-za-koga-nije">Za koga je (i za koga nije)</h2>
+<p><strong>Za koga je:</strong> razvojni tim od 4 do 12 ljudi koji je čuo za agente, možda već koristi Copilot ili ChatGPT, ali nije sam napisao petlju agenta (eng. <em>agent loop</em>) i ne zna kako se takav sistem proverava. Pretpostavke po učesniku: osnovni Python (promenljive, funkcije, pokretanje skripte, ugađanje u JSON). Iskustvo sa mašinskim učenjem nije potrebno.</p>
+<p><strong>Za koga nije:</strong> tim koji traži pregled komercijalnih platformi i poređenje ponuđača; tim bez ijednog učesnika koji ume da pokrene Python skriptu (tada prvo samostalno odrađiti <a href="../../modul/00-uvod-u-agente/">modul 00</a> i <a href="../../modul/01-osnove-llm/">modul 01</a>); pojedinci van tima (format je namerno timski).</p>
+<h2 id="cilj-radionice">Cilj radionice</h2>
+<p>Za dva časa tim <strong>sam piše</strong>, a ne gleda: (1) petlju agenta od nule, bez frameworka, sa alatima i tri izlaza; (2) mali evaluacioni skup (eng. <em>evaluation set</em>) koji meri da li agent stvarno radi, sa stopom prolaznosti (eng. <em>pass rate</em>); (3) jedan višeagentski scenario (eng. <em>multi-agent scenario</em>) — pregledač i popravljač u rundama, sa granicom rundi. Poruka koja se ponavlja celu radionicu: <strong>nije magija, petlja je.</strong> Kad je tim jednom napiše, frameworki i platforme postaju izbor, a ne misterija.</p>
+<p>Sve tri vežbe rade <strong>bez mreže i bez API ključa</strong>, na lažnom modelu (eng. <em>mock</em>) — identične poruke kao pravi API, samo skriptirane. Ko ima ključ, na kraju vežbe 1 zamenjuje mozak pravim pozivom modela u nekoliko linija.</p>
+<h2 id="agenda-120-minuta">Agenda (120 minuta)</h2>
+<table>
+<thead>
+<tr>
+<th>Vreme</th>
+<th>Sadržaj</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0:00–0:15</strong></td>
+<td>Uvod (15 min): šta je agent u odnosu na chatbot — petlja opažaj → razmišljaj → deluj; zašto prvo bez frameworka. Živi demo voditelja: agent sortira tiket pred očima tima.</td>
+</tr>
+<tr>
+<td><strong>0:15–0:55</strong></td>
+<td><strong>Vežba 1 (40 min):</strong> agent od nule — sortiranje dolaznih tiketa (eng. <em>ticket triage</em>). Alati, petlja, tri izlaza; na lažnom modelu, pa ko ima ključ — live.</td>
+</tr>
+<tr>
+<td><strong>0:55–1:25</strong></td>
+<td><strong>Vežba 2 (30 min):</strong> evaluacija — da li agent stvarno sortira dobro? Evaluacioni skup od 12 scenarija, provere u kodu, stopa prolaznosti, prag za odluku.</td>
+</tr>
+<tr>
+<td><strong>1:25–1:50</strong></td>
+<td><strong>Vežba 3 (25 min):</strong> tim agenata — pregledač i popravljač pregledaju „patch&quot;, razmena poruka u rundama, granica rundi, konačni verdikt.</td>
+</tr>
+<tr>
+<td><strong>1:50–2:00</strong></td>
+<td>Zatvaranje (10 min): šta tim ima u rukama, mapa kursa za dalje (moduli 03, 07, 08), dogovor o prvom sopstvenom slučaju upotrebe.</td>
+</tr>
+</tbody></table>
+<p>Priča je 25 od 120 minuta (~20%); praksa je 95 minuta (~80%). Vremenske granice su čvrste, sadržaj unutar njih fleksibilan — vidi <a href="#za-voditelja-facilitatorske-bele%C5%A1ke">facilitatorske beleške</a>.</p>
+<h2 id="priprema-pre-radionice">Priprema (pre radionice)</h2>
+<p><strong>Učesnici</strong> (odraditi zajedno na početku, 3 minuta): Python 3.10+, kloniran <a href="https://github.com/acailic/ai-agenti-srb">javni rep kursa</a> ili raspoređen ZIP, jedan terminal po učesniku (ili paru). Instalacija: <code>pip install openai</code> — <strong>samo</strong> za opcioni live blok na kraju vežbe 1; sve ostalo je čist Python. API ključ <code>Z_AI_API_KEY</code> je opcion: bez njega radi sve, sa njim i live deo.</p>
+<p><strong>Voditelj:</strong> vidi <a href="#za-voditelja-facilitatorske-bele%C5%A1ke">beleške za voditelja</a> — minimum opreme, offline varijanta i najčešći kvarovi.</p>
+<h2 id="scenario-dana-podrska-fiktivnog-proizvoda-kratak-spoj">Scenario dana: podrška fiktivnog proizvoda „Kratak spoj&quot;</h2>
+<p>Fiktivni mali SaaS prima tikete na jednu adresu, a tri tima ih preuzimaju: <strong>Backend</strong> (kvarovi), <strong>Proizvod</strong> (poboljšanja) i <strong>Podrška</strong> (pitanja korisnika). Sortiranje dolaznih tiketa (eng. <em>ticket triage</em>) je dosadan, ponovljiv posao s jasnim pravilima — tačno ono što je dobar prvi agent: koristan, mali i merljiv. Na istom scenariju rade sve tri vežbe: vežba 1 gradi agenta koji sortira, vežba 2 meri koliko dobro sortira, vežba 3 spaja dva agenta koja pregledaju i poprave zakrpu (eng. <em>patch</em>) pre nego što stigne u glavnu granu.</p>
+<hr>
+<h2 id="vezba-1-agent-od-nule-sortiranje-tiketa-40-min">Vežba 1 — Agent od nule: sortiranje tiketa (40 min)</h2>
+<p><strong>Zadatak:</strong> napišite agenta koji jedan dolazni tiket pročita, kategorizuje i dodeli timu — bez frameworka, u jednom fajlu. Agent ima <strong>dva alata</strong>: <code>procitaj_tiket(id)</code> (čita iz baze tiketa u kodu) i <code>dodeli_timu(id, tim)</code> (upisuje dodelu). Petlja je ista kao u pravom sistemu: pošaljete poruke modelu, model traži poziv alata (eng. <em>tool call</em>), vi izvršite alat i vratite rezultat, model nastavlja — dok ne da konačan odgovor. <strong>Tri izlaza:</strong> konačan odgovor, prekoračen broj koraka (eng. <em>max steps</em>), greška alata.</p>
+<p>Mozak je lažni model: funkcija koja prima iste poruke kao pravi API i vraća isti oblik odgovora, ali odlučuje po jednostavnom pravilu (ključne reči u tekstu tiketa). To nam omogućava da petlju napišemo i testiramo <strong>bez mreže</strong> — a kasnije zamenimo mozak pravim pozivom, bez dodirivanja petlje.</p>
+<p>Radite u parovima: jedna osoba piše alate i bazu, druga petlju; pa zamenite. Ko zapne na redu, celo rešenje je ispod — čitanje rešenja uz pisanje je legitimna tehnika, kopiranje bez čitanja nije.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>v1_agent.py</code> (čist Python, bez mreze):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 1 — agent od nule: sortiranje tiketa za &#39;Kratak spoj&#39;.
+
+Pokretanje: python v1_agent.py t-101
+Radi bez mreze i bez API kljuca: mozak je lažni model (mock).
+&quot;&quot;&quot;
+
+import json
+import sys
+from types import SimpleNamespace
+
+# --- baza tiketa: 12 ulaznih tiketa (ista za celu grupu) -----------------------
+
+TIKETI = {
+    &quot;t-101&quot;: {&quot;naslov&quot;: &quot;Login pada na iOS 17&quot;,
+              &quot;tekst&quot;: &quot;Od jutrasnje verzije aplikacija pada cim korisnik dodje na login.&quot;},
+    &quot;t-102&quot;: {&quot;naslov&quot;: &quot;Dodajte izvoz u PDF&quot;,
+              &quot;tekst&quot;: &quot;Zeleo bih mogucnost izvoza izvestaja u PDF, ne samo CSV.&quot;},
+    &quot;t-103&quot;: {&quot;naslov&quot;: &quot;Kako se menja cena pretplate?&quot;,
+              &quot;tekst&quot;: &quot;Da li se cena menja automatski ili je moram ja da promenim?&quot;},
+    &quot;t-104&quot;: {&quot;naslov&quot;: &quot;API vraca 500 pri pretrazi&quot;,
+              &quot;tekst&quot;: &quot;Pretraga po tagovima baca 500 gresku od juce.&quot;},
+    &quot;t-105&quot;: {&quot;naslov&quot;: &quot;Export podataka ne radi&quot;,
+              &quot;tekst&quot;: &quot;Kad kliknem na Export, nista se ne desi. Radilo je prošle nedelje.&quot;},
+    &quot;t-106&quot;: {&quot;naslov&quot;: &quot;Tamna tema&quot;,
+              &quot;tekst&quot;: &quot;Zeleo bih tamnu temu u pregledu izvestaja.&quot;},
+    &quot;t-107&quot;: {&quot;naslov&quot;: &quot;Gde se vidi istorija faktura?&quot;,
+              &quot;tekst&quot;: &quot;Ne mogu da nadem istoriju faktura u novom dizajnu.&quot;},
+    &quot;t-108&quot;: {&quot;naslov&quot;: &quot;Webhook stiže dva puta&quot;,
+              &quot;tekst&quot;: &quot;Isti webhook nam stize po dva puta, pravimo duplikate.&quot;},
+    &quot;t-109&quot;: {&quot;naslov&quot;: &quot;Dupli naplatni podaci&quot;,
+              &quot;tekst&quot;: &quot;Kartica nam je naplacena dvaput za isti mesec, molim ispravku.&quot;},
+    &quot;t-110&quot;: {&quot;naslov&quot;: &quot;Podsetnik za obnovu licence&quot;,
+              &quot;tekst&quot;: &quot;Zeleo bih automatski podsetnik mesec dana pre isteka licence.&quot;},
+    &quot;t-111&quot;: {&quot;naslov&quot;: &quot;Nedovoljno jasno&quot;,
+              &quot;tekst&quot;: &quot;Nesto ne valja, ali ne znam tacno sta; kod nas u firmi sve sporije radi.&quot;},
+    &quot;t-112&quot;: {&quot;naslov&quot;: &quot;Mobile app se zatvara sama&quot;,
+              &quot;tekst&quot;: &quot;Aplikacija na telefonu se zatvori nakon nekoliko sekundi.&quot;},
+}
+
+TIMOVI = (&quot;Backend&quot;, &quot;Proizvod&quot;, &quot;Podrška&quot;)
+DODELE = []  # trag svih dodela u ovoj sesiji
+
+# --- alati: jedan opažaj (čitanje) i jedna potvrđena akcija (upis) ------------
+
+def procitaj_tiket(tid: str) -&gt; dict:
+    if tid not in TIKETI:
+        return {&quot;greska&quot;: f&quot;NEZNAM: nema tiketa {tid}&quot;}
+    t = TIKETI[tid]
+    return {&quot;id&quot;: tid, &quot;naslov&quot;: t[&quot;naslov&quot;], &quot;tekst&quot;: t[&quot;tekst&quot;]}
+
+def dodeli_timu(tid: str, tim: str) -&gt; dict:
+    if tid not in TIKETI:
+        return {&quot;greska&quot;: f&quot;NEZNAM: nema tiketa {tid}&quot;}
+    if tim not in TIMOVI:
+        return {&quot;greska&quot;: f&quot;NEZNAM: tim mora biti jedan od {TIMOVI}&quot;}
+    DODELE.append({&quot;tiket&quot;: tid, &quot;tim&quot;: tim})
+    return {&quot;ok&quot;: True, &quot;tiket&quot;: tid, &quot;tim&quot;: tim}
+</code></pre>
+<pre><code class="language-python"># --- lažni model: poruke istog oblika kao pravi API ---------------------------
+
+BUG_RECI = (&quot;pada&quot;, &quot;gresk&quot;, &quot;ne radi&quot;, &quot;500&quot;, &quot;dupl&quot;, &quot;zatvor&quot;)
+FEATURE_RECI = (&quot;zeleo&quot;, &quot;dodajte&quot;, &quot;mogucnost&quot;, &quot;temu&quot;, &quot;podsetnik&quot;)
+
+def _kategorisi(tiket: dict) -&gt; str:
+    tekst = (tiket[&quot;naslov&quot;] + &quot; &quot; + tiket[&quot;tekst&quot;]).lower()
+    if any(r in tekst for r in BUG_RECI):
+        return &quot;bug&quot;
+    if any(r in tekst for r in FEATURE_RECI):
+        return &quot;poboljšanje&quot;
+    return &quot;pitanje&quot;
+
+KATEGORIJA_U_TIM = {&quot;bug&quot;: &quot;Backend&quot;, &quot;poboljšanje&quot;: &quot;Proizvod&quot;, &quot;pitanje&quot;: &quot;Podrška&quot;}
+
+def _poziv_alata(poziv_id: str, ime: str, argumenti: str) -&gt; dict:
+    &quot;&quot;&quot;Pomoćnik: poruka assistant sa jednim tool_calls, kao iz pravog API-ja.&quot;&quot;&quot;
+    return {&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: None,
+            &quot;tool_calls&quot;: [{&quot;id&quot;: poziv_id, &quot;type&quot;: &quot;function&quot;,
+                            &quot;function&quot;: {&quot;name&quot;: ime, &quot;arguments&quot;: argumenti}}]}
+
+def lazni_model(poruke: list) -&gt; SimpleNamespace:
+    &quot;&quot;&quot;Mozak: gleda dosadasnju razmenu i bira sledeci korak po pravilu.&quot;&quot;&quot;
+    prosli = [p for p in poruke if p.get(&quot;role&quot;) == &quot;tool&quot;]
+    tiket_id = json.loads(poruke[0][&quot;content&quot;])  # prva user poruka je id
+
+    if not prosli:  # korak 1: prvo procitaj tiket
+        return SimpleNamespace(choices=[SimpleNamespace(
+            message=_poziv_alata(&quot;a1&quot;, &quot;procitaj_tiket&quot;, json.dumps({&quot;tid&quot;: tiket_id})))])
+
+    citanje = next((p for p in prosli if &quot;naslov&quot; in p[&quot;content&quot;]), None)
+    dodela = next((p for p in prosli if &#39;&quot;ok&quot;&#39; in p[&quot;content&quot;]), None)
+
+    if citanje is None:  # alat je vratio NEZNAM — uredno odustani
+        return SimpleNamespace(choices=[SimpleNamespace(
+            message={&quot;role&quot;: &quot;assistant&quot;,
+                     &quot;content&quot;: f&quot;Tiket {tiket_id} ne postoji u bazi &quot;
+                                f&quot;(NEZNAM); vratiti pošiljaocu na proveru.&quot;})])
+
+    if not dodela:  # korak 2: kategorisi i dodeli
+        tiket = json.loads(citanje[&quot;content&quot;])
+        tim = KATEGORIJA_U_TIM[_kategorisi(tiket)]
+        return SimpleNamespace(choices=[SimpleNamespace(
+            message=_poziv_alata(&quot;a2&quot;, &quot;dodeli_timu&quot;,
+                                 json.dumps({&quot;tid&quot;: tiket_id, &quot;tim&quot;: tim})))])
+
+    # korak 3: konačan odgovor
+    d = json.loads(dodela[&quot;content&quot;])
+    return SimpleNamespace(choices=[SimpleNamespace(
+        message={&quot;role&quot;: &quot;assistant&quot;,
+                 &quot;content&quot;: f&quot;Tiket {d[&#39;tiket&#39;]} je kategorizovan i dodeljen &quot;
+                            f&quot;timu {d[&#39;tim&#39;]}.&quot;})])
+
+# --- petlja agenta: tri izlaza — odgovor, max koraka, nepoznat alat ------------
+
+MAX_KORAKA = 5
+ALATI = {&quot;procitaj_tiket&quot;: procitaj_tiket, &quot;dodeli_timu&quot;: dodeli_timu}
+
+def u_recnik(poruka) -&gt; dict:
+    &quot;&quot;&quot;Poruka kao običan rečnik — kakav god mozak vratio (dict sa mock-a ili
+    objekat iz pravog SDK-a); petlja uvek radi sa istim oblikom.&quot;&quot;&quot;
+    if isinstance(poruka, dict):
+        return poruka
+    pozivi = [{&quot;id&quot;: p.id, &quot;type&quot;: &quot;function&quot;,
+               &quot;function&quot;: {&quot;name&quot;: p.function.name,
+                            &quot;arguments&quot;: p.function.arguments}}
+              for p in (poruka.tool_calls or [])]
+    return {&quot;role&quot;: poruka.role, &quot;content&quot;: poruka.content,
+            &quot;tool_calls&quot;: pozivi}
+
+def pokreni_petlju(mozak, tid: str) -&gt; str:
+    poruke = [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: json.dumps(tid)}]
+    for korak in range(1, MAX_KORAKA + 1):
+        odgovor = u_recnik(mozak(poruke).choices[0].message)
+        poruke.append(odgovor)
+        pozivi = odgovor.get(&quot;tool_calls&quot;)
+        if not pozivi:
+            return odgovor[&quot;content&quot;]  # izlaz 1: konačan odgovor
+        for poziv in pozivi:
+            ime = poziv[&quot;function&quot;][&quot;name&quot;]
+            argumenti = json.loads(poziv[&quot;function&quot;][&quot;arguments&quot;])
+            if ime not in ALATI:
+                return f&quot;GREŠKA: nepoznat alat {ime}&quot;  # izlaz 3
+            poruke.append({&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: poziv[&quot;id&quot;],
+                           &quot;content&quot;: json.dumps(ALATI[ime](**argumenti),
+                                                 ensure_ascii=False)})
+    return &quot;GREŠKA: prekoračen broj koraka&quot;  # izlaz 2
+
+def pokreni(tid: str) -&gt; str:
+    return pokreni_petlju(lazni_model, tid)
+
+if __name__ == &quot;__main__&quot;:
+    print(pokreni(sys.argv[1] if len(sys.argv) &gt; 1 else &quot;t-101&quot;))
+</code></pre>
+<p>Pokrenite sa <code>python v1_agent.py t-104</code>, pa probajte <code>t-111</code> (namerno mutan: nema jasnih ključnih reči, pa pravilo pada na „pitanje&quot; i tim Podrška — razumna odbrana od nagađanja) i <code>t-109</code> (dupla naplata: po ključnoj reči „dupl-&quot; agent kaže Backend, a čovek iz podrške preusmerio bi ga sebi — zapamtite taj tiket, vraćamo mu se u vežbi 2). Zatim pokvarite nešto namerno: <code>python v1_agent.py t-999</code> — alat vraća NEZNAM, i agent ipak završi uredno.</p>
+<p><strong>Debrief (5 min, na kraju vežbe):</strong> gde u kodu je „agent&quot;? Samo funkcija <code>pokreni_petlju</code> — petnaestak linija. Sve ostalo su alati i mozak. Tri izlaza nisu ukras: bez <code>MAX_KORAKA</code> agent koji se zaglavi troši novac zauvek, a bez greške na nepoznat alat pucate na prvoj promeni imena. Argumenti alata stižu kao <strong>JSON tekst</strong> koji vi parsirate — zato model ume da „pogreši&quot; argument: to je string, ne poziv funkcije (detaljno u <a href="../../modul/02-alati-tool-use/">modulu 02</a>).</p>
+<p><strong>Live varijanta (ko ima ključ, ~10 min):</strong> zamenite samo <code>lazni_model</code> pravim pozivom; petlja i alati ostaju netaknuti:</p>
+<pre><code class="language-python"># v1_live.py — mozak pravog modela, ista petlja iz v1_agent.py
+import json, os
+from openai import OpenAI
+from v1_agent import pokreni_petlju
+
+klijent = OpenAI(api_key=os.environ[&quot;Z_AI_API_KEY&quot;],
+                 base_url=os.getenv(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;))
+
+def pravi_model(poruke):
+    return klijent.chat.completions.create(
+        model=os.getenv(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;),
+        messages=poruke,
+        tools=[{&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+            &quot;name&quot;: &quot;procitaj_tiket&quot;,
+            &quot;description&quot;: &quot;Vraca naslov i tekst tiketa po identifikatoru.&quot;,
+            &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;,
+                           &quot;properties&quot;: {&quot;tid&quot;: {&quot;type&quot;: &quot;string&quot;}},
+                           &quot;required&quot;: [&quot;tid&quot;]}}},
+               {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+            &quot;name&quot;: &quot;dodeli_timu&quot;,
+            &quot;description&quot;: &quot;Dodeljuje tiket jednom od timova.&quot;,
+            &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;,
+                           &quot;properties&quot;: {&quot;tid&quot;: {&quot;type&quot;: &quot;string&quot;},
+                                          &quot;tim&quot;: {&quot;type&quot;: &quot;string&quot;}},
+                           &quot;required&quot;: [&quot;tid&quot;, &quot;tim&quot;]}}}])
+
+print(pokreni_petlju(pravi_model, &quot;t-111&quot;))
+</code></pre>
+<p>Petlja prima mozak kao argument, a svaku njegovu poruku provlači kroz <code>u_recnik</code> — mock već vraća rečnik, a objekat pravog SDK-a (<code>choices[0].message</code>) pretvara u isti običan rečnik sa <code>role</code>, <code>content</code> i <code>tool_calls</code>, pa je razmena sa pravim API-jem istog oblika kao sa lažnim. Prava lekcija zamene: <strong>petlja ne zna koji je mozak</strong> — nijedno ime mozga nije ukucano u nju (eng. <em>hard-code</em>), ona ga samo prima kao argument i traži jednu stvar: da poruka stigne u obliku koji razume. To je podela koju vredi osetiti rukama.</p>
+<hr>
+<h2 id="vezba-2-evaluacija-da-li-agent-stvarno-sortira-dobro-30-min">Vežba 2 — Evaluacija: da li agent stvarno sortira dobro? (30 min)</h2>
+<p><strong>Zadatak:</strong> napišite evaluacioni skup (eng. <em>evaluation set</em>) za agenta iz vežbe 1: 12 scenarija — po jedan za svaki tiket — gde svaki scenario ima <code>id</code>, <code>ulaz</code> (identifikator tiketa), <code>ocekivano</code> (tim kome tiket zaista pripada po dogovorenoj tabeli tima) i <code>provere</code> (mehanička pravila nad izlaznom rečenicom: sadrži ime tima, ne sadrži GREŠKA). Zatim runner: pokrene agenta na svakom scenariju, primeni provere, izračuna stopu prolaznosti i uporedi je sa pragom — <strong>izlazni kod 0 ili 1</strong>, da bi se moglo uklopiti u CI.</p>
+<p>Pravilo „očekivano&quot; donosi tim, ne pisac prompta: uzorak ispod sadrži dogovorenu istinu podrške „Kratkog spoja&quot;, u kojoj naplatne tikete (uključujući <code>t-109</code>) preuzima Podrška. Setite se šta je agent uradio sa <code>t-109</code> u vežbi 1 — upravo to merimo.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>v2_eval.py</code> (bez mreze — agent je lažni, pa je i merenje besplatno i ponovljivo):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 2 — evaluacija agenta za sortiranje tiketa.
+
+Pokretanje: python v2_eval.py
+Izlazni kod: 0 ako je stopa prolaznosti iznad praga, inače 1.
+Zahteva v1_agent.py u istom direktorijumu.
+&quot;&quot;&quot;
+
+import sys
+from v1_agent import pokreni
+
+PRAG = 0.80  # ispod ovoga ne bismo pustili agenta u probni režim
+
+SCENARIJI = [
+    {&quot;id&quot;: &quot;kvar-login&quot;, &quot;ulaz&quot;: &quot;t-101&quot;, &quot;ocekivano&quot;: &quot;Backend&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Backend&quot;}]},
+    {&quot;id&quot;: &quot;izvoz-pdf&quot;, &quot;ulaz&quot;: &quot;t-102&quot;, &quot;ocekivano&quot;: &quot;Proizvod&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Proizvod&quot;}]},
+    {&quot;id&quot;: &quot;cena-pretplate&quot;, &quot;ulaz&quot;: &quot;t-103&quot;, &quot;ocekivano&quot;: &quot;Podrška&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Podrška&quot;}]},
+    {&quot;id&quot;: &quot;api-500&quot;, &quot;ulaz&quot;: &quot;t-104&quot;, &quot;ocekivano&quot;: &quot;Backend&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Backend&quot;}]},
+    {&quot;id&quot;: &quot;export-tiho&quot;, &quot;ulaz&quot;: &quot;t-105&quot;, &quot;ocekivano&quot;: &quot;Backend&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Backend&quot;}]},
+    {&quot;id&quot;: &quot;tamna-tema&quot;, &quot;ulaz&quot;: &quot;t-106&quot;, &quot;ocekivano&quot;: &quot;Proizvod&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Proizvod&quot;}]},
+    {&quot;id&quot;: &quot;istorija-faktura&quot;, &quot;ulaz&quot;: &quot;t-107&quot;, &quot;ocekivano&quot;: &quot;Podrška&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Podrška&quot;}]},
+    {&quot;id&quot;: &quot;webhook-dvaput&quot;, &quot;ulaz&quot;: &quot;t-108&quot;, &quot;ocekivano&quot;: &quot;Backend&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Backend&quot;}]},
+    {&quot;id&quot;: &quot;dupla-naplata&quot;, &quot;ulaz&quot;: &quot;t-109&quot;, &quot;ocekivano&quot;: &quot;Podrška&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Podrška&quot;}]},
+    {&quot;id&quot;: &quot;podsetnik-licenca&quot;, &quot;ulaz&quot;: &quot;t-110&quot;, &quot;ocekivano&quot;: &quot;Proizvod&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Proizvod&quot;}]},
+    {&quot;id&quot;: &quot;muto-nejasno&quot;, &quot;ulaz&quot;: &quot;t-111&quot;, &quot;ocekivano&quot;: &quot;Podrška&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Podrška&quot;}]},
+    {&quot;id&quot;: &quot;app-se-zatvara&quot;, &quot;ulaz&quot;: &quot;t-112&quot;, &quot;ocekivano&quot;: &quot;Backend&quot;,
+     &quot;provere&quot;: [{&quot;tip&quot;: &quot;sadrzi&quot;, &quot;vrednost&quot;: &quot;Backend&quot;}]},
+]
+for s in SCENARIJI:  # svakom scenariju dodajemo i ne_sadrzi proveru
+    s[&quot;provere&quot;].append({&quot;tip&quot;: &quot;ne_sadrzi&quot;, &quot;vrednost&quot;: &quot;GREŠKA&quot;})
+
+def provera_je_ok(izlaz: str, p: dict) -&gt; bool:
+    if p[&quot;tip&quot;] == &quot;sadrzi&quot;:
+        return p[&quot;vrednost&quot;] in izlaz
+    if p[&quot;tip&quot;] == &quot;ne_sadrzi&quot;:
+        return p[&quot;vrednost&quot;] not in izlaz
+    raise ValueError(f&quot;nepoznat tip provere: {p[&#39;tip&#39;]}&quot;)
+
+def main() -&gt; int:
+    prosli = 0
+    for s in SCENARIJI:
+        izlaz = pokreni(s[&quot;ulaz&quot;])
+        padovi = [p for p in s[&quot;provere&quot;] if not provera_je_ok(izlaz, p)]
+        status = &quot;OK &quot; if not padovi else &quot;PAD&quot;
+        print(f&quot;[{status}] {s[&#39;id&#39;]}: {izlaz}&quot;)
+        if padovi:
+            print(f&quot;       =&gt; pala provera: {padovi}&quot;)
+        prosli += not padovi
+    stopa = prosli / len(SCENARIJI)
+    print(f&quot;\nStopa prolaznosti: {prosli}/{len(SCENARIJI)} ({stopa:.0%}), prag {PRAG:.0%}&quot;)
+    return 0 if stopa &gt;= PRAG else 1
+
+if __name__ == &quot;__main__&quot;:
+    sys.exit(main())
+</code></pre>
+<p>Pokrenite <code>python v2_eval.py; echo &quot;izlazni kod: $?&quot;</code>. Očekivano: jedanaest zelenih i <strong>jedan crveni — <code>dupla-naplata</code></strong>: agent kaže Backend, a dogovor tima kaže Podrška. Stopa 11/12 (92%) je iznad praga, pa je izlazni kod 0 — ali crveni scenario je razlog zašto ovaj skup postoji: bez njega bi greška živela tiho u produkciji.</p>
+<p><strong>Popravka u jednom potezu (A/B, 10 min, za brže timove):</strong> otvorite <code>v1_agent.py</code> i zamenite celu funkciju <code>_kategorisi</code> ovom verzijom (novo je samo prvo pravilo — naplatni tekstovi idu podršci pre bilo koje ključne reči):</p>
+<pre><code class="language-python">def _kategorisi(tiket: dict) -&gt; str:
+    tekst = (tiket[&quot;naslov&quot;] + &quot; &quot; + tiket[&quot;tekst&quot;]).lower()
+    if &quot;napla&quot; in tekst:
+        return &quot;pitanje&quot;  # naplatne tikete preuzima Podrška, ne bug red
+    if any(r in tekst for r in BUG_RECI):
+        return &quot;bug&quot;
+    if any(r in tekst for r in FEATURE_RECI):
+        return &quot;poboljšanje&quot;
+    return &quot;pitanje&quot;
+</code></pre>
+<p>Pokrenite <code>v2_eval.py</code> ponovo: 12/12. To je cela ideja evaluacije u malom — izmena bez skupa je kocka, izmena sa skupom je potez koji se <strong>vidi</strong>: jedanaest starih scenarija su i dalje zeleni, a jedini crveni je ozelenio. U pravom timu tu tabelu rezultata čuvate verzionisanu pored koda, pa <code>git diff</code> pokazuje i šta se promenilo i po ceni (detalji i regresione provere: <a href="../../modul/07-evaluacija-agenata/">modul 07</a>).</p>
+<p><strong>Debrief (3 min):</strong> provere su namerno glupe i jeftine — <code>sadrzi</code> ime tima. To nije lenjost: prvo mehaničko, pa tek onda pametno (ocenjivanje pomoću modela, eng. <em>LLM-as-a-judge</em>). I najgluplja provera koja postoji vredi više od utiska „deluje dobro&quot;.</p>
+<hr>
+<h2 id="vezba-3-tim-agenata-pregledac-i-popravljac-25-min">Vežba 3 — Tim agenata: pregledač i popravljač (25 min)</h2>
+<p><strong>Zadatak:</strong> dva agenta pregledaju i poprave zakrpu (eng. <em>patch</em>) pre nego što stigne u glavnu granu. <strong>Pregledač</strong> čita zakrpu i vraća primedbe; <strong>Popravljač</strong> čita primedbe i vraća izmenjenu zakrpu; <strong>vodilja</strong> (eng. <em>orchestrator</em>) vodi razmenu u rundama: dok ima primedbi — popravi pa pregledaj opet, najviše tri runde, pa verdikt: odobreno ili vraćamo čoveku. Poruke imaju oblik pravog višeagentskog sistema: pošiljalac, primalac, tekst — u procesu, bez mreže (isti oblik razmišljanja kao protokoli iz <a href="../../modul/06-protokoli-mcp-a2a/">modula 06</a>, a uloge i granice rundi su iz <a href="../../modul/08-multi-agent-sistemi/">modula 08</a>).</p>
+<p>Radite u istim parovima: jedna osoba Pregledač, druga Popravljač, petlja na zajedničkom ekranu. Rok je kratak namerno: rok rundi je deo vežbe, ne smetnja.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>v3_tim.py</code> (bez mreze):</p>
+<pre><code class="language-python">&quot;&quot;&quot;Vežba 3 — tim agenata: Pregledač i Popravljač u rundama.
+
+Pokretanje: python v3_tim.py
+Mozgovi su pravila u kodu (bez mreze), ali razmena poruka ima oblik
+pravog višeagentskog sistema: pošiljalac, primalac, tekst, runde, trag.
+&quot;&quot;&quot;
+
+PATCH = &#39;&#39;&#39;\
+def obradi_zahtev(podatak):
+    print(&quot;debug: usao u obradi_zahtev&quot;)   # DEBUG
+    if podatak is None:
+        raise ValueError(&quot;prazan podatak&quot;)
+    # TODO: dodati logovanje kad bude potrebno
+    return podatak.upper()
+&#39;&#39;&#39;
+
+PRAVILA = [
+    (&quot;TODO&quot;, &quot;u zakrpi je ostalo TODO obeležje — rad je nedovršen&quot;),
+    (&quot;print(&quot;, &quot;u zakrpi je ostao debug print umesto logovanja&quot;),
+]
+
+OPIS_U_FIKS = {
+    &quot;u zakrpi je ostalo TODO obeležje — rad je nedovršen&quot;:
+        (&quot;    # TODO: dodati logovanje kad bude potrebno\n&quot;,
+         &quot;    # logovanje: dogovoreno za sledecu iteraciju\n&quot;),
+    &quot;u zakrpi je ostao debug print umesto logovanja&quot;:
+        (&#39;    print(&quot;debug: usao u obradi_zahtev&quot;)   # DEBUG\n&#39;, &quot;&quot;),
+}
+
+def mozak_pregledaca(patch: str) -&gt; list:
+    &quot;&quot;&quot;Pregledač: cita zakrpu i vraca primedbe po pravilima.&quot;&quot;&quot;
+    return [opis for marker, opis in PRAVILA if marker in patch]
+
+def mozak_popravljaca(patch: str, primedbe: list) -&gt; str:
+    &quot;&quot;&quot;Popravljač: cita primedbe i uklanja njihove uzroke iz zakrpe.&quot;&quot;&quot;
+    for opis in primedbe:
+        staro, novo = OPIS_U_FIKS[opis]
+        patch = patch.replace(staro, novo)
+    return patch
+
+def poruka(od: str, ka: str, tekst: str) -&gt; dict:
+    return {&quot;od&quot;: od, &quot;ka&quot;: ka, &quot;tekst&quot;: tekst}
+
+def vodilja(patch: str, max_rundi: int = 3):
+    &quot;&quot;&quot;Vodi razmenu do verdikta; vraca (verdikt, trag razmene).&quot;&quot;&quot;
+    trag = []
+    for runda in range(1, max_rundi + 1):
+        primedbe = mozak_pregledaca(patch)
+        if not primedbe:
+            trag.append(poruka(&quot;Pregledač&quot;, &quot;Vodilja&quot;,
+                               f&quot;runda {runda}: nema primedbi.&quot;))
+            return &quot;odobreno&quot;, trag
+        trag.append(poruka(&quot;Pregledač&quot;, &quot;Popravljač&quot;,
+                           f&quot;runda {runda}: &quot; + &quot;; &quot;.join(primedbe)))
+        patch = mozak_popravljaca(patch, primedbe)
+        trag.append(poruka(&quot;Popravljač&quot;, &quot;Pregledač&quot;,
+                           f&quot;runda {runda}: uklonjene primedbe, nova verzija spremna.&quot;))
+    trag.append(poruka(&quot;Vodilja&quot;, &quot;covek&quot;,
+                       f&quot;dostignuta granica rundi ({max_rundi}).&quot;))
+    return &quot;vratiti coveku na razmatranje&quot;, trag
+
+if __name__ == &quot;__main__&quot;:
+    verdikt, trag = vodilja(PATCH)
+    for p in trag:
+        print(f&quot;{p[&#39;od&#39;]} -&gt; {p[&#39;ka&#39;]}: {p[&#39;tekst&#39;]}&quot;)
+    print(&quot;Verdikt:&quot;, verdikt)
+</code></pre>
+<p>Pokrenite <code>python v3_tim.py</code>: dve runde — prva nalazi obe primedbe, druga čistu zakrpu — i verdikt „odobreno&quot;. Zatim eksperiment za kraj: u <code>PATCH</code> vratite <code># TODO</code> red, a u <code>OPIS_U_FIKS</code> pokvarite ključ jednog opisa (dve izmenjene reči) — Popravljač pada na <code>KeyError</code>, a vi vidite zašto ugovor između agenata (oblik poruka) mora biti pod jednakom disciplinom kao ugovor alata iz vežbe 1.</p>
+<p><strong>Debrief (3 min):</strong> tri stvari su prenete iz prethodnih vežbi, samo na više strana: granica rundi je <code>MAX_KORAKA</code> iz vežbe 1; trag razmene je ono što biste logovali i na produkciji (bez traga nema otklanjanja grešaka); verdikt „vratiti čoveku&quot; je poslednja linija odbrane — sistem zna gde je njegova granica.</p>
+<hr>
+<h2 id="zatvaranje-sta-tim-ima-u-rukama-i-gde-dalje-10-min">Zatvaranje — šta tim ima u rukama i gde dalje (10 min)</h2>
+<p>Na kraju radionice tim ima tri fajla koje je sam (u parovima) napisao: petlju agenta sa alatima i tri izlaza, evaluacioni skup sa runnerom i pragom, i dvoagentsku razmenu u rundama — plus dogovor o prvom sopstvenom slučaju upotrebe. Predloženi prvi korak posle radionice (nedelju dana): izabrati <strong>jedan</strong> ponovljiv zadatak sa jasnim pravilima (kao sortiranje tiketa), prepisati petlju iz vežbe 1, napisati 15 scenarija iz vežbe 2 i pustiti u probni režim tek kad stopa pređe prag. Mapa kursa za samostalni nastavak (sve besplatno, na srpskom, u <a href="https://github.com/acailic/ai-agenti-srb">javnom repu</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Kada</th>
+<th>Modul</th>
+<th>Zašto</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pre radionice (opciono)</td>
+<td><a href="../../modul/00-uvod-u-agente/">00 — Uvod u agente</a>, <a href="../../modul/02-alati-tool-use/">02 — Alati</a> (sekcije 1–3)</td>
+<td>Zajednički rečnik i pozadina poziva alata.</td>
+</tr>
+<tr>
+<td>Odmah posle</td>
+<td><a href="../../modul/03-agent-od-nule/">03 — Agent od nule</a></td>
+<td>Vežba 1, ali punim tempom: memorija, skelet proširen, pravi model.</td>
+</tr>
+<tr>
+<td>Posle</td>
+<td><a href="../../modul/07-evaluacija-agenata/">07 — Evaluacija agenata</a></td>
+<td>Vežba 2 u veliko: JSONL skupovi, ocenjivanje pomoću modela, regresije.</td>
+</tr>
+<tr>
+<td>Posle</td>
+<td><a href="../../modul/08-multi-agent-sistemi/">08 — Multi-agent sistemi</a></td>
+<td>Vežba 3 u veliko: uloge, runde, transfer konteksta, koordinate.</td>
+</tr>
+<tr>
+<td>Pre prvog produkcijkog agenta</td>
+<td><a href="../../modul/09-u-produkciju/">09 — U produkciju</a></td>
+<td>Bezbednost, opservabilnost, troškovi — ono što se pita kad agent radi „u živo&quot;.</td>
+</tr>
+<tr>
+<td>Za portfolio</td>
+<td><a href="../../modul/10-zavrsni-projekat/">10 — Završni projekat</a></td>
+<td>Sve spojeno u sopstvenog isporučenog agenta.</td>
+</tr>
+</tbody></table>
+<h2 id="za-voditelja-facilitatorske-beleske">Za voditelja (facilitatorske beleške)</h2>
+<p><strong>Poruka koju ponoviti tri puta:</strong> nije magija, petlja je. Kad učesnici jednom napišu <code>pokreni</code>, frameworki su izbor, a ne misterija.</p>
+<p><strong>Tempo.</strong> Vežba 1 je vaš osigurani tempo: ko završi ranije, neka doda treći alat (<code>danasnji_datum</code>) i scenario u kojem lažni model zove alat pogrešnim imenom. Spori timovi: preskočite live blok vežbe 1 (dolazi na zatvaranje kao demo na vašem računaru) i vežbu 3 radite zajedno na projektoru — redosled i poruka prežive, samo se obim smanji. Pola sata po vežbi je čvrsto: na pola preostalog vremena saopštite koliko ima do kraja vežbe, i držite se toga.</p>
+<p><strong>Najčešći kvarovi i lekovi:</strong></p>
+<ul>
+<li><code>ModuleNotFoundError: v1_agent</code> — fajlovi nisu u istom direktorijumu, ili se na Windowsu fajl zove <code>v1_agent.py.txt</code> (lek: <code>dir</code> i preimenovanje).</li>
+<li><code>SyntaxError</code> u PATCH bloku — tri znaka navoda zaredom; string je sa tri navodnika, sadržaj samo obične.</li>
+<li><code>KeyError</code> u <code>OPIS_U_FIKS</code> — to je namereni eksperiment na kraju vežbe 3; ako se pojavi ranije, neko je menjao opis primedbe a ne i ključ.</li>
+<li>Live blok: environment varijabla postavljena u jednom terminalu, a pokrenut drugi; ili 401 — pogrešan ključ. Lek je uvek isti: <code>echo $Z_AI_API_KEY | head -c 8</code> u istom terminalu.</li>
+<li>Agent „ništa ne radi&quot; — proverite da li je pokrenut poslednji sačuvani fajl; najviše zbunjuje editor sa nesnimljenim baferom.</li>
+</ul>
+<p><strong>Minimum opreme:</strong> projektor i zid na kome se vidi kod (font 16pt+), jedan laptop po učesniku ili paru, struja i produžni kablovi, flipčart ili tabla za dogovor o „očekivanom&quot; u vežbi 2 (tamo se najviše diskutuje). Mreža je potrebna <strong>samo</strong> za opcioni live blok i za kloniranje repa pre radionice.</p>
+<p><strong>Offline varijanta (potpuna):</strong> sve tri vežbe rade bez mreže i bez ključa — lažni modeli su namerno takvi. Ako je mreža izdata ili nestane: live blok preskočite ili ga izvedite sa svog laptopa na projektoru; rep i dalje možete podeliti sa USB sticka (ZIP pre puta). Ako i to padne: sva rešenja su u ovom dokumentu — radionica se može odradati čitanjem i tipkanjem koda sa projektora.</p>
+<p><strong>O ključu (bezbednost):</strong> ključ samo u environment varijabli, nikad u kodu i nikad u četu. Učesnicima ne delite svoj ključ — live deo radi voditelj sa svog računara; tim koji želi svoj ključ dobije uputstvo iz <a href="../../modul/01-osnove-llm/">modula 01</a>. Trošak live bloka je nekoliko hiljada tokena — zanemarljivo.</p>
+<p><strong>Za prvi tim (pilot):</strong> posle radionice popunite sa timom tri pitanja — šta je bilo najkorisnije, gde ste zapeli, koji zadatak biste prvi dali agentu — i zapišite gde je koji par zapao u 40. minutu vežbe 1 (to je vaš najbolji pokazatelj za sledeću iteraciju paketa). Pilot je ugovoren popustom za pisanu referencu: vidi <a href="..//">PONUDA.md</a>.</p>
+<h2 id="materijali-checklist">Materijali — checklist</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Ovaj dokument (<code>ai-agenti-za-dev-timove.md</code>) otvoren kod voditelja i učesnika.</li>
+<li><input disabled="" type="checkbox"> <code>v1_agent.py</code>, <code>v2_eval.py</code>, <code>v3_tim.py</code> — pišu učesnici; rešenja su u ovom dokumentu, sekcije vežbi.</li>
+<li><input disabled="" type="checkbox"> <a href="..//">PONUDA.md</a> poslata organizatoru pre radionice (agenda i priprema učesnika).</li>
+<li><input disabled="" type="checkbox"> Za live blok (opciono): <code>pip install openai</code>, <code>Z_AI_API_KEY</code> u environment varijabli — samo na voditeljevom računaru.</li>
+<li><input disabled="" type="checkbox"> Sadržaj je licenciran <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE">CC BY 4.0</a>: tim može zadržati, prilagoditi i dalje koristiti sve materijale uz navođenje izvora.</li>
+</ul>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/radionica/ai-agenti-za-dev-timove.md" rel="noopener">radionica/ai-agenti-za-dev-timove.md na GitHubu ↗</a></p>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="..//">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

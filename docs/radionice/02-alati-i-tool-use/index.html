@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radionica 02 — Alati i tool use: dajemo modelu ruke — AI i agenti na srpskom</title>
+<meta name="description" content="Učesnici definišu alate (eng. tools) tako da ih model pouzdano koristi, implementiraju petlju „model traži — kod izvršava — rezultat se vraća modelu&quot; i stiču kritički pogled na bezbednost">
+<link rel="canonical" href="https://acailic.github.io/ai-agenti-srb/radionice/02-alati-i-tool-use/">
+<meta property="og:title" content="Radionica 02 — Alati i tool use: dajemo modelu ruke — AI i agenti na srpskom">
+<meta property="og:description" content="Učesnici definišu alate (eng. tools) tako da ih model pouzdano koristi, implementiraju petlju „model traži — kod izvršava — rezultat se vraća modelu&quot; i stiču kritički pogled na bezbednost">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://acailic.github.io/ai-agenti-srb/radionice/02-alati-i-tool-use/">
+<meta property="og:locale" content="sr_Latn">
+<meta property="og:site_name" content="AI i agenti na srpskom">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Pređi na sadržaj</a>
+<nav class="site-nav" aria-label="Sajt">
+  <a class="brand" href="../../"><span class="logo">🤖</span> AI i agenti na srpskom</a>
+  <a href="../../mapa/">Mapa kursa</a>
+  <a href="..//">Radionice</a>
+  <a href="../../recnik/">Rečnik</a>
+  <form class="nav-search" action="../../pretraga/" method="get" role="search">
+    <input type="search" name="q" placeholder="Pretraga kursa…" aria-label="Pretraga kursa">
+  </form>
+  <span class="spacer"></span>
+  <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub ↗</a>
+</nav>
+<main id="main">
+<div class="page article-layout">
+<nav class="toc" aria-label="Sadržaj strane"><div class="toc-title">Na ovoj strani</div><ol><li><a href="#cilj-radionice">Cilj radionice</a></li><li><a href="#agenda-po-satima">Agenda po satima</a></li><li><a href="#priprema-pre-radionice-ucesnici">Priprema pre radionice (učesnici)</a></li><li><a href="#vezba-1-prvi-alat-vreme-u-gradu-50-min">Vežba 1 — Prvi alat: vreme u gradu (50 min)</a></li><li><a href="#vezba-2-vise-alata-kalkulator-i-citanje-fajla-50-min">Vežba 2 — Više alata: kalkulator i čitanje fajla (50 min)</a></li><li><a href="#vezba-3-stres-test-pitanja-zamke-i-dijagnoza-45-min">Vežba 3 — Stres test: pitanja-zamke i dijagnoza (45 min)</a></li><li><a href="#domaci">Domaći</a></li><li><a href="#materijali-checklist-za-ucesnike">Materijali — checklist za učesnike</a></li><li><a href="#za-voditelja">Za voditelja</a></li></ol></nav>
+<div>
+  <header class="article-header">
+    <h1>Radionica 02 — Alati i tool use: dajemo modelu ruke</h1>
+    <div class="meta-chips"><span class="chip modnum">radionica 02</span><a class="chip modnum chip-link" href="../../modul/02-alati-tool-use/">modul 02</a></div>
+  </header>
+  <article>
+<blockquote>
+<p><strong>Povezani modul:</strong> <a href="../../modul/02-alati-tool-use/">modul 02 — Alati: kako agent deluje u svetu</a> (preporučeno pročitati sekcije 1–4 pre radionice)
+<strong>Trajanje:</strong> 4 časa · <strong>Format:</strong> predavanje 25% / vežbe 75% · <strong>Nivo: srednji</strong></p>
+</blockquote>
+<h2 id="cilj-radionice">Cilj radionice</h2>
+<p>Učesnici definišu alate (eng. <em>tools</em>) tako da ih model pouzdano koristi, implementiraju petlju „model traži — kod izvršava — rezultat se vraća modelu&quot; i stiču kritički pogled na bezbednost izvršavanja. Rezultat radionice: bot sa tri alata (vreme u gradu, bezbedan kalkulator, čitanje fajla iz sandbox-a) koji odgovara korisniku iz <strong>stvarnih podataka</strong> — i spisak dijagnoza za kad (ne kad — <em>kad</em>) model pogreši.</p>
+<h2 id="agenda-po-satima">Agenda po satima</h2>
+<table>
+<thead>
+<tr>
+<th>Sat</th>
+<th>Sadržaj</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. sat</strong></td>
+<td>Zašto alati: tri stvari koje čist model ne može (zna, vidi, sme) i demo „model pogađa vreme&quot; (25 min). Anatomija alata: ime, opis, šema parametara — zašto je <em>opis</em> interfejs ka modelu, loš vs. dobar opis na živom primeru (35 min).</td>
+</tr>
+<tr>
+<td><strong>2. sat</strong></td>
+<td>Zajedno: vežba 1 — prvi alat <code>vreme_u_gradu</code>; tok poziva alata na dijagramu; prvi „traži — izvršava — vraća&quot; kod svakog učesnika (50 min). Pauza — pitanja (10 min).</td>
+</tr>
+<tr>
+<td><strong>3. sat</strong></td>
+<td>Vežba 2: dodavanje kalkulatora (bezbedno, preko <code>ast</code> — nikad <code>eval</code>) i čitanja fajlova ograničenog na <code>sandbox/</code>; registar alata i mini-petlja (50 min). Kratki ulomak: greška ide modelu kao poruka, ne čoveku — demo samo-korekcije (10 min).</td>
+</tr>
+<tr>
+<td><strong>4. sat</strong></td>
+<td>Vežba 3: „stres test&quot; — namerna pitanja-zamke, dijagnoza (opis? šema? prompt?) i popravka dok se ponašanje ne popravi (45 min). Diskusija: bezbednost — ko sme da pokreće šta; zatvaranje i domaći (15 min).</td>
+</tr>
+</tbody></table>
+<h2 id="priprema-pre-radionice-ucesnici">Priprema pre radionice (učesnici)</h2>
+<p>Sve iz <a href="../01-prvi-koraci/">radionice 01</a> i:</p>
+<pre><code class="language-bash">pip install openai tzdata          # tzdata: baza vremenskih zona (na Windows-u obavezna)
+mkdir -p sandbox
+printf &#39;# Beleške sa sastanka\n\n- sledeći korak: napisati prvi alat\n- pitanje: kada model stvarno bira alat?\n&#39; &gt; sandbox/beleske.md
+</code></pre>
+<p>Ključ i dalje <strong>samo</strong> u environment varijabli <code>Z_AI_API_KEY</code> — pravilo iz radionice 01 važi zauvek.</p>
+<hr>
+<h2 id="vezba-1-prvi-alat-vreme-u-gradu-50-min">Vežba 1 — Prvi alat: vreme u gradu (50 min)</h2>
+<p><strong>Zadatak:</strong> napišite program koji pita model za vreme, a model — pošto ne zna koliko je sati — traži od vašeg alata. Jedna runda: poziv → <code>tool_calls</code> → izvršenje → rezultat u <code>tool</code> poruci → konačan odgovor.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r02_v1_prvi_alat.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 02, vežba 1 — prvi alat: model traži vreme, naš kod odgovara.
+
+  Z_AI_API_KEY   — obavezno: vaš API ključ
+  Z_AI_BASE_URL  — opciono: podrazumevano https://api.z.ai/api/paas/v4
+  Z_AI_MODEL     — opciono: naziv modela po vašem planu
+&quot;&quot;&quot;
+
+import json
+import os
+import sys
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+from openai import OpenAI
+
+GRADOVI = {
+    &quot;beograd&quot;: &quot;Europe/Belgrade&quot;, &quot;novi sad&quot;: &quot;Europe/Belgrade&quot;, &quot;niš&quot;: &quot;Europe/Belgrade&quot;,
+    &quot;london&quot;: &quot;Europe/London&quot;, &quot;tokio&quot;: &quot;Asia/Tokyo&quot;, &quot;new york&quot;: &quot;America/New_York&quot;,
+}
+
+def vreme_u_gradu(grad: str) -&gt; str:
+    &quot;&quot;&quot;Trenutno vreme u gradu — iz naše male &#39;suve&#39; baze vremenskih zona.&quot;&quot;&quot;
+    zona = GRADOVI.get(grad.strip().lower())
+    if zona is None:
+        poznati = &quot;, &quot;.join(sorted(GRADOVI))
+        return f&quot;GREŠKA: nepoznat grad &#39;{grad}&#39;. Podržani: {poznati}.&quot;
+    return datetime.now(ZoneInfo(zona)).strftime(&quot;%d.%m.%Y. %H:%M (%Z)&quot;)
+
+SH_VREME = {
+    &quot;type&quot;: &quot;function&quot;,
+    &quot;function&quot;: {
+        &quot;name&quot;: &quot;vreme_u_gradu&quot;,
+        &quot;description&quot;: (
+            &quot;Vraća trenutno lokalno vreme i datum u zadatom gradu. Koristi ovaj alat &quot;
+            &quot;kad te pitaju koliko je sati ili koji je datum bilo gde — sam ne znaš &quot;
+            &quot;trenutno vreme. Podržani gradovi: &quot; + &quot;, &quot;.join(sorted(GRADOVI)) + &quot;.&quot;
+        ),
+        &quot;parameters&quot;: {
+            &quot;type&quot;: &quot;object&quot;,
+            &quot;properties&quot;: {
+                &quot;grad&quot;: {&quot;type&quot;: &quot;string&quot;,
+                         &quot;description&quot;: &quot;Ime grada malim slovima, npr. &#39;beograd&#39; ili &#39;tokio&#39;.&quot;},
+            },
+            &quot;required&quot;: [&quot;grad&quot;],
+        },
+    },
+}
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo pokrenite.&quot;)
+
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;))
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+
+    pitanje = &quot; &quot;.join(sys.argv[1:]) or &quot;Koliko je sati u Beogradu?&quot;
+    poruke = [
+        {&quot;role&quot;: &quot;system&quot;,
+         &quot;content&quot;: &quot;Ti si precizan asistent. Za trenutno vreme uvek koristiš alat — nikad ne pogađaš.&quot;},
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: pitanje},
+    ]
+
+    odgovor = client.chat.completions.create(
+        model=model, messages=poruke, tools=[SH_VREME], temperature=0.2,
+    )
+    poruka = odgovor.choices[0].message
+    if not poruka.tool_calls:
+        print(poruka.content)
+        return
+
+    poruke.append(poruka)
+    for poziv in poruka.tool_calls:                 # može ih biti više odjednom!
+        print(f&quot;→ model traži: {poziv.function.name}({poziv.function.arguments})&quot;)
+        argumenti = json.loads(poziv.function.arguments)   # JSON *tekst*, ne rečnik
+        rezultat = vreme_u_gradu(**argumenti)
+        print(f&quot;  naš kod vraća: {rezultat}&quot;)
+        poruke.append({&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: poziv.id, &quot;content&quot;: rezultat})
+
+    odgovor = client.chat.completions.create(
+        model=model, messages=poruke, tools=[SH_VREME], temperature=0.2,
+    )
+    print(odgovor.choices[0].message.content)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Provere za voditelja (i učesnike):</strong></p>
+<pre><code class="language-bash">python r02_v1_prvi_alat.py                                # jedan grad
+python r02_v1_prvi_alat.py &quot;Koliko je sati u Beogradu i u Tokiu?&quot;   # paralelni pozivi
+python r02_v1_prvi_alat.py &quot;Koji je danas datum u New Yorku?&quot;
+python r02_v1_prvi_alat.py &quot;Objasni šta je vremenska zona.&quot;         # bez alata — i to je tačno
+</code></pre>
+<p>Tri tačke koje na ovoj vežbi moraju da „sednu&quot;: (1) argumenti stižu kao JSON tekst; (2) poruka sa zahtevom vraća se u istoriju, a rezultat dolazi kao <code>tool</code> poruka sa <code>tool_call_id</code>; (3) model sam bira da li mu treba alat — iz opisa.</p>
+<h2 id="vezba-2-vise-alata-kalkulator-i-citanje-fajla-50-min">Vežba 2 — Više alata: kalkulator i čitanje fajla (50 min)</h2>
+<p><strong>Zadatak:</strong> dodajte <code>izracunaj</code> (bezbedno — samo preko <code>ast</code> modula, nikad <code>eval</code>) i <code>procitaj_fajl</code> (samo unutar <code>sandbox/</code>), uvedite registar alata i mini-petlju koja podnosi više rundi.</p>
+<p><strong>Rešenje</strong> — sačuvajte kao <code>r02_v2_bot_sa_alatima.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Radionica 02, vežba 2 — bot sa tri alata i mini-petljom (rešenje).&quot;&quot;&quot;
+
+import ast
+import json
+import operator
+import os
+import sys
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+from openai import OpenAI
+
+SANDBOX = Path(__file__).parent / &quot;sandbox&quot;
+
+# ---------- alati ----------
+
+GRADOVI = {
+    &quot;beograd&quot;: &quot;Europe/Belgrade&quot;, &quot;novi sad&quot;: &quot;Europe/Belgrade&quot;, &quot;niš&quot;: &quot;Europe/Belgrade&quot;,
+    &quot;london&quot;: &quot;Europe/London&quot;, &quot;tokio&quot;: &quot;Asia/Tokyo&quot;, &quot;new york&quot;: &quot;America/New_York&quot;,
+}
+
+def vreme_u_gradu(grad: str) -&gt; str:
+    zona = GRADOVI.get(grad.strip().lower())
+    if zona is None:
+        return &quot;GREŠKA: nepoznat grad. Podržani: &quot; + &quot;, &quot;.join(sorted(GRADOVI)) + &quot;.&quot;
+    return datetime.now(ZoneInfo(zona)).strftime(&quot;%d.%m.%Y. %H:%M (%Z)&quot;)
+
+def izracunaj(izraz: str) -&gt; str:
+    &quot;&quot;&quot;Bezbedno računanje: dozvoljeni su samo brojevi i + - * / % **.&quot;&quot;&quot;
+    BINARNE = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul,
+               ast.Div: operator.truediv, ast.Mod: operator.mod, ast.Pow: operator.pow}
+    UNARNE = {ast.USub: operator.neg, ast.UAdd: operator.pos}
+
+    def evaluiraj(cvor):
+        if isinstance(cvor, ast.Constant) and isinstance(cvor.value, (int, float)):
+            return cvor.value
+        if isinstance(cvor, ast.BinOp) and type(cvor.op) in BINARNE:
+            return BINARNE[type(cvor.op)](evaluiraj(cvor.left), evaluiraj(cvor.right))
+        if isinstance(cvor, ast.UnaryOp) and type(cvor.op) in UNARNE:
+            return UNARNE[type(cvor.op)](evaluiraj(cvor.operand))
+        raise ValueError(&quot;nepodržana operacija u izrazu&quot;)
+
+    return str(evaluiraj(ast.parse(izraz, mode=&quot;eval&quot;).body))
+
+def procitaj_fajl(ime: str) -&gt; str:
+    &quot;&quot;&quot;Čitanje fajla — ali samo unutar sandbox direktorijuma.&quot;&quot;&quot;
+    fajl = (SANDBOX / ime).resolve()
+    if not fajl.is_relative_to(SANDBOX.resolve()):
+        return &quot;GREŠKA: putanja izlazi van sandbox direktorijuma.&quot;
+    try:
+        return fajl.read_text(encoding=&quot;utf-8&quot;)[:2000]
+    except FileNotFoundError:
+        return f&quot;GREŠKA: fajl &#39;{ime}&#39; ne postoji u sandbox-u.&quot;
+
+# ---------- registar i šeme ----------
+
+FUNKCIJE = {&quot;vreme_u_gradu&quot;: vreme_u_gradu,
+            &quot;izracunaj&quot;: izracunaj,
+            &quot;procitaj_fajl&quot;: procitaj_fajl}
+
+SH_ALATI = [
+    {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+        &quot;name&quot;: &quot;vreme_u_gradu&quot;,
+        &quot;description&quot;: &quot;Vraća trenutno lokalno vreme i datum u zadatom gradu. Koristi je &quot;
+                       &quot;kad te pitaju za vreme ili datum — sam ne znaš trenutno vreme. &quot;
+                       &quot;Podržani gradovi: &quot; + &quot;, &quot;.join(sorted(GRADOVI)) + &quot;.&quot;,
+        &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+            &quot;grad&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Ime grada malim slovima.&quot;},
+        }, &quot;required&quot;: [&quot;grad&quot;]},
+    }},
+    {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+        &quot;name&quot;: &quot;izracunaj&quot;,
+        &quot;description&quot;: &quot;Računa tačan rezultat matematičkog izraza sa brojevima. Podržava &quot;
+                       &quot;samo + - * / % i stepenovanje (**); ne podržava funkcije (sqrt, &quot;
+                       &quot;sin...) — koren izrazi kao stepen, npr. 2**0.5. Koristi je za svako &quot;
+                       &quot;računanje tačnih brojeva — sam grešiš u aritmetici.&quot;,
+        &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+            &quot;izraz&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Izraz, npr. &#39;(1240 + 610) * 0.2&#39;.&quot;},
+        }, &quot;required&quot;: [&quot;izraz&quot;]},
+    }},
+    {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {
+        &quot;name&quot;: &quot;procitaj_fajl&quot;,
+        &quot;description&quot;: &quot;Čita tekstualni fajl iz direktorijuma &#39;sandbox&#39; u radnom &quot;
+                       &quot;direktorijumu (md, txt, csv), najviše 2000 znakova. Koristi je kada &quot;
+                       &quot;te pitaju o sadržaju fajlova — ne smišljaš sadržaj.&quot;,
+        &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+            &quot;ime&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Ime fajla, npr. &#39;beleske.md&#39;.&quot;},
+        }, &quot;required&quot;: [&quot;ime&quot;]},
+    }},
+]
+
+SYSTEM_PROMPT = (
+    &quot;Ti si pomoćnik sa alatima. Pravila: (1) za trenutno vreme, tačno računanje i &quot;
+    &quot;sadržaj fajlova koristiš alate, nikad nagađanje; (2) ako alat vrati GREŠKA, &quot;
+    &quot;ispraviš zahtev i pokušaš drugačije; (3) konačan odgovor daješ tek kada imaš &quot;
+    &quot;sve što ti treba.&quot;
+)
+
+# ---------- mini-petlja ----------
+
+def pokreni(client, model, pitanje: str, max_rundi: int = 5) -&gt; None:
+    poruke = [{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: SYSTEM_PROMPT},
+              {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: pitanje}]
+    for _ in range(max_rundi):
+        odgovor = client.chat.completions.create(
+            model=model, messages=poruke, tools=SH_ALATI, temperature=0.2,
+        )
+        poruka = odgovor.choices[0].message
+        if not poruka.tool_calls:                    # tekst = kraj
+            print(poruka.content or &quot;&quot;)
+            return
+        poruke.append(poruka)
+        for poziv in poruka.tool_calls:
+            fn = FUNKCIJE.get(poziv.function.name)
+            try:
+                argumenti = json.loads(poziv.function.arguments or &quot;{}&quot;)
+                rezultat = str(fn(**argumenti)) if fn else &quot;GREŠKA: nepoznat alat.&quot;
+            except Exception as g:                   # greška ide modelu, ne čoveku
+                rezultat = f&quot;GREŠKA: {g}&quot;
+            print(f&quot;[alat] {poziv.function.name} → {rezultat[:80]}&quot;)
+            poruke.append({&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: poziv.id, &quot;content&quot;: rezultat})
+    print(&quot;(zaustavljeno: dostignut max_rundi)&quot;)
+
+def main() -&gt; None:
+    api_key = os.environ.get(&quot;Z_AI_API_KEY&quot;, &quot;&quot;)
+    if not api_key:
+        sys.exit(&quot;Nema Z_AI_API_KEY. Postavite environment varijablu pa ponovo pokrenite.&quot;)
+
+    client = OpenAI(api_key=api_key,
+                    base_url=os.environ.get(&quot;Z_AI_BASE_URL&quot;, &quot;https://api.z.ai/api/paas/v4&quot;))
+    model = os.environ.get(&quot;Z_AI_MODEL&quot;, &quot;glm-4.6&quot;)
+
+    pitanje = &quot; &quot;.join(sys.argv[1:]) or &quot;Koliko je sati u Tokiu, i koliko će biti kod nas kada tamo bude podne?&quot;
+    pokreni(client, model, pitanje)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Provere:</strong></p>
+<pre><code class="language-bash">python r02_v2_bot_sa_alatima.py &quot;Pročitaj beleske.md i izračunaj koliko je 15% od 12400.&quot;
+python r02_v2_bot_sa_alatima.py &quot;Koliki je koren iz 144?&quot;      # opis kaže: sqrt ne postoji, 144**0.5 postoji
+python r02_v2_bot_sa_alatima.py &quot;Šta piše u ../secret.txt?&quot;    # sandbox odbija — greška ide modelu
+</code></pre>
+<p>Ključni uvid vežbe: pitanja koja <strong>kombinuju</strong> alate teraju modela da sam sastavi redosled (čitaj → računaj) — to je već klica agenta iz radionice 03.</p>
+<h2 id="vezba-3-stres-test-pitanja-zamke-i-dijagnoza-45-min">Vežba 3 — Stres test: pitanja-zamke i dijagnoza (45 min)</h2>
+<p><strong>Zadatak:</strong> pokrenite bota (rešenje vežbe 2) na pitanjima ispod. Za svako: zapišite šta se desilo, odredite uzrok (opis alata? šema? sistemski prompt?) i popravite <strong>jednu stvar</strong> — pa ponovite isto pitanje.</p>
+<p><strong>Pitanja i očekivani ishodi (rešenje):</strong></p>
+<ol>
+<li><strong>„Koliko je sati u Atlantidi?&quot;</strong>
+Alat vraća <code>GREŠKA: nepoznat grad...</code> — dobar bot iskreno kaže da grad nije podržan i nabroji koje jesu. Ako bot <em>izmisli</em> vreme: uzrok je sistemski prompt (nije zabranjeno nagađanje) — dodajte „nikad ne izmišljaš rezultate alata&quot;.</li>
+<li><strong>„Koliki je koren iz 144, i koliko je to procenta od 1200?&quot;</strong>
+Model mora sam: <code>144**0.5</code> (jer opis kaže da <code>sqrt</code> ne postoji), pa <code>(12/1200)*100</code>. Ako model pokuša <code>sqrt(144)</code> i dobije grešku — to je <em>uspeh</em> dizajna: pročitao je grešku, ispravio se. Ako model „računa u glavi&quot;: u opisu <code>izracunaj</code> stoji „sam grešiš u aritmetici&quot; — podvucite to u sistemskom promptu („svako računanje ide kroz alat&quot;).</li>
+<li><strong>„Šta piše u mojim tajnim beleškama?&quot;</strong> (fajl <code>tajne-beleske.txt</code> ne postoji)
+Alat vraća grešku da fajl ne postoji; bot to mora reći. Ako izmisli sadržaj — klasična halucinacija; lek je u opisu alata („ne smišljaš sadržaj&quot;) i sistemskom promptu.</li>
+<li><strong>Bonus — „Kolika je 15% popusta na 12.400 dinara?&quot;</strong>
+Posmatrajte: da li model poziva <code>izracunaj</code> ili računa sam? Ako sam — dodajte u sistemski prompt „za svako tačno računanje koristi izracunaj&quot;. Pokrenite tri puta: sa i bez popravke.</li>
+</ol>
+<p><strong>Tabela dijagnoze (rešenje za table):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Simptom</th>
+<th>Prvo proveriti</th>
+<th>Tipičan lek</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Model zove pogrešan alat ili ga ne zove</td>
+<td>opis alata</td>
+<td>recite <em>kada</em> se koristi i <em>šta model sam ne zna</em></td>
+</tr>
+<tr>
+<td>Pogrešni argumenti</td>
+<td>opis parametra u šemi</td>
+<td>format primera (<code>&#39;beograd&#39;</code>, ne <code>&#39;Beograd, Srbija&#39;</code>)</td>
+</tr>
+<tr>
+<td>Model ignoriše rezultat alata</td>
+<td>sistemski prompt</td>
+<td>„odgovaraj samo iz podataka alata&quot;</td>
+</tr>
+<tr>
+<td>Model se vrti ukrug</td>
+<td>da li greška stiže do modela</td>
+<td>vratite <code>GREŠKA: ...</code> kao <code>tool</code> poruku</td>
+</tr>
+<tr>
+<td>Program pukne umesto da odgovori</td>
+<td><code>try/except</code> oko izvršenja</td>
+<td>izuzetak se pretvara u poruku modelu</td>
+</tr>
+</tbody></table>
+<p>Redosled dijagnoze koji ponavljamo do kraja kursa: <strong>opis → šema → sistemski prompt → kod.</strong></p>
+<h2 id="domaci">Domaći</h2>
+<ul>
+<li>Dodati četvrti alat po sopstvenom izboru (npr. <code>listaj_fajlove()</code>, pretraga lokalnih beleški, ili pravi mrežni alat — javni servis <code>wttr.in</code> bez ključa: <code>httpx.get(&quot;https://wttr.in/Beograd?format=3&quot;, timeout=5.0)</code>; adresa fiksirana u kodu, <code>timeout</code> obavezan, greška kao tekst) i napisati u README zašto je opis alata napisan baš tako.</li>
+<li>Zapisati tri situacije u kojima je model pogrešio i šta je pomoglo (opis? primer u opisu? validacija?) — ovo je prva „evaluacija&quot; koju radimo, samo ručna (najava modula 07).</li>
+<li>Pripremiti jedno pitanje za diskusiju na početku <a href="../03-agent-od-nule/">radionice 03</a>.</li>
+</ul>
+<h2 id="materijali-checklist-za-ucesnike">Materijali — checklist za učesnike</h2>
+<ul>
+<li><input disabled="" type="checkbox"> odrađena <a href="../01-prvi-koraci/">radionica 01</a> — umeće poziva API-ju iz Pythona;</li>
+<li><input disabled="" type="checkbox"> repozitorijum sa vežbama iz radionice 01 (ključ i dalje samo u environment varijabli);</li>
+<li><input disabled="" type="checkbox"> pročitane sekcije 1–4 <a href="../../modul/02-alati-tool-use/">modula 02</a> (tok poziva alata);</li>
+<li><input disabled="" type="checkbox"> Python 3.10+, biblioteke <code>openai</code> i <code>tzdata</code> instalirane, <code>Z_AI_API_KEY</code> postavljen;</li>
+<li><input disabled="" type="checkbox"> <code>sandbox/</code> direktorijum sa bar jednim <code>.md</code> ili <code>.txt</code> fajlom (komanda u sekciji „Priprema&quot;);</li>
+<li><input disabled="" type="checkbox"> slobodnih ~200 MB i živaca za eksperimentisanje. 🙂</li>
+</ul>
+<h2 id="za-voditelja">Za voditelja</h2>
+<ul>
+<li>„Suvi&quot; izvori podataka (zoneinfo baza umesto servisa vremena, fajlovi umesto mrežnih API-ja) drže fokus na <em>tool use</em>, a ne na registracije servisa — na internetu je samo poziv modelu.</li>
+<li>Zastavica bezbednosti: svaki primer koji dira fajl sistem radimo u zasebnom direktorijumu <code>sandbox/</code> — navika od prvog dana. <code>procitaj_fajl</code> iz rešenja već odbija putanje van sandbox-a; pokazati to namerno (<code>../secret.txt</code>).</li>
+<li>Ako grupa zaostane: vežbu 1 radite zajedno na projektoru (ona nosi 80% razumevanja), vežbu 2 skratite na dodavanje samo <code>izracunaj</code>, a stres test svedete na pitanja 1 i 2.</li>
+<li>Najčešći kvar na satu 2: environment varijabla postavljena u drugom terminalu; drugi najčešći: <code>json</code> modul uvezen van bloka ili <code>tzdata</code> nedostaje na Windows-u (<code>pip install tzdata</code>).</li>
+<li>Za vežbu 3 imajte pripremljena „loša&quot; opise (skraćeni na jednu rečenicu) za brzu demonstraciju pre-posle; razlika u ponašanju je upečatljivija od bilo kog slajda.</li>
+<li>Poruka koju ponoviti na kraju: <strong>model predlaže, kod izvršava — i kod je onaj koji sme da kaže „ne&quot;.</strong></li>
+</ul>
+
+  </article>
+  <p class="source-line">Izvor: <a href="https://github.com/acailic/ai-agenti-srb/blob/main/radionice/radionica-02-alati-i-tool-use.md" rel="noopener">radionice/radionica-02-alati-i-tool-use.md na GitHubu ↗</a></p>
+  <div class="pager">
+  <a href="../01-prvi-koraci/"><span class="dir">← Prethodni</span>undefined</a>
+  <a class="pager-next" href="../03-agent-od-nule/"><span class="dir">Sledeći →</span>undefined</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+  <span>Sadržaj pod <a href="https://github.com/acailic/ai-agenti-srb/blob/main/LICENSE" rel="noopener">CC BY 4.0</a> · sajt se generiše iz markdown izvora.</span>
+  <span><a href="../../radionica/">Radionica za dev timove</a> · <a href="https://acailic.github.io/usluge/" rel="noopener">Usluge</a> · <a href="https://github.com/acailic/ai-agenti-srb" rel="noopener">GitHub</a></span>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>
