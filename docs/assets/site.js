@@ -27,7 +27,7 @@
       index ? Promise.resolve(index) : fetch(root + 'search-index.json').then((r) => r.json())
         .then((docs) => { index = docs; return docs; });
 
-    const snippet = (text, folded, tokens, hit) => {
+    const snippet = (text, tokens, hit) => {
       const start = Math.max(0, hit - 80);
       const end = Math.min(text.length, hit + 140);
       let raw = (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
@@ -63,14 +63,14 @@
           const counts = tokens.map((t) => hay.split(t).length - 1);
           if (counts.some((c) => c === 0)) continue;
           const score = counts.reduce((a, b) => a + b, 0) + (foldQuery(d.title).includes(tokens[0]) ? 5 : 0);
-          const hitAt = hay.indexOf(tokens[0]);
-          hits.push({ d, score, hitAt, hay });
+          const hitAt = foldQuery(d.text).indexOf(tokens[0]);
+          hits.push({ d, score, hitAt });
         }
         hits.sort((a, b) => b.score - a.score);
         if (statusEl) statusEl.textContent = qs ? `${hits.length} ${hits.length === 1 ? 'rezultat' : 'rezultata'} za „${qInput.value}".` : '';
-        resultsEl.innerHTML = hits.slice(0, 30).map(({ d, hay, hitAt }) =>
+        resultsEl.innerHTML = hits.slice(0, 30).map(({ d, hitAt }) =>
           `<div class="search-result"><div class="sr-title"><a href="${(document.body.dataset.root || '') + d.url}">${esc(d.title)}</a>` +
-          `<span class="sr-kind">${esc(d.kind)}</span></div><div class="sr-snippet">${snippet(d.text, hay, tokens, hitAt)}</div></div>`
+          `<span class="sr-kind">${esc(d.kind)}</span></div><div class="sr-snippet">${snippet(d.text, tokens, hitAt)}</div></div>`
         ).join('');
       }).catch(() => { if (statusEl) statusEl.textContent = 'Indeks pretrage nije dostupan.'; });
     };

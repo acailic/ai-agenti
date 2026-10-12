@@ -222,8 +222,7 @@ mark { background: var(--mark-bg); color: inherit; border-radius: .2em; padding:
 /* ── mobilni ─────────────────────────────────────────────────── */
 @media (max-width: 55rem) {
   .article-layout { grid-template-columns: 1fr; }
-  .toc { position: static; display: none; }
-  .toc:target, .toc.open { display: block; }
+  .toc { position: static; }
   .nav-search { order: 5; width: 100%; }
   .nav-search input { width: 100%; }
 }

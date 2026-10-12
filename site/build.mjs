@@ -48,11 +48,6 @@ const slugify = (s) =>
   deSerb(decodeEntities(s).replace(/<[^>]+>/g, '').toLowerCase())
     .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'sekcija';
 
-/* normalizacija za pretragu: bez dijakritika, mala slova — "recnik" nalaže "REČNIK" */
-const foldQuery = (s) =>
-  deSerb(String(s).toLowerCase())
-    .replace(/[^a-z0-9\s]+/g, ' ').replace(/\s+/g, ' ').trim();
-
 /* dodaj id h2/h3 i vrati (html, toc) */
 function addHeadingIds(html) {
   const toc = [];
@@ -129,10 +124,15 @@ function parseDoc(file, kind) {
   const { html: withIds, toc } = addHeadingIds(html);
   html = withIds;
 
-  /* prvi pasus posle zaglavlja → meta description */
+  /* prvi pravi pasus (ne naslov, ne meta blok) → meta description;
+     poslednja reč se odseca samo ako je pasus stvarno skraćen na 190 znakova */
   const firstPara = stripTags(renderMd(
-    raw.split(/\n\n/).slice(1).find((p) => p.trim() && !p.trim().startsWith('>')) || ''));
-  const description = firstPara.slice(0, 190).replace(/\s\S*$/, '');
+    raw.split(/\n\n/).slice(1).find((p) => {
+      const t = p.trim();
+      return t && !t.startsWith('>') && !t.startsWith('#');
+    }) || ''));
+  let description = firstPara;
+  if (description.length > 190) description = description.slice(0, 190).replace(/\s\S*$/, '');
 
   /* blockquote sa metapodacima (Vreme/Preduslovi) ostaje kao meta panel */
   return { file, kind, title, html, toc, description, raw };
@@ -260,7 +260,7 @@ ${tocHtml(doc.toc)}
 ${rewriteLinks(doc.html, srcDirOf(doc.file), fromDir)}
   </article>
   ${sourceLine(doc.file, fromDir)}
-  ${pagerNav ? pagerNav(prev, next, fromDir, pagerLabel) : ''}
+  ${pagerNav(prev, next, fromDir, pagerLabel)}
 </div>
 </div>`;
   return {
