@@ -4,7 +4,7 @@
 
 ## Tekst (3 rečenice)
 
-Kompletan kurs o izgradnji AI agenata na srpskom — jedanaest modula od prvog API poziva do produkcije, sa vežbama, rešenjima i rečnikom pojmova, sve javno i besplatno pod CC BY 4.0: https://github.com/acaili/ai-agenti-srb
+Kompletan kurs o izgradnji AI agenata na srpskom — jedanaest modula od prvog API poziva do produkcije, sa vežbama, rešenjima i rečnikom pojmova, sve javno i besplatno pod CC BY 4.0: https://github.com/acailic/ai-agenti-srb
 
 Ako vam je materijal na engleskom bio prepreka, počnite od modula 00 (2–3 časa, bez preduslova).
 

@@ -12,7 +12,7 @@ Sve je javno i besplatno, pod CC BY 4.0 — slobodno ga koristite, prilagođavat
 
 Ako vam treba razlog da otvorite repozitorijum: modul 03 gradi agenta od nule, bez ijednog frameworka, i posle njega frameworki postaju izbor, a ne misterija.
 
-Pregledajte, kritikujte, doprinesite — najkorisnije mi je svako „ovo je nejasno" jer kurs živi od njih. Ako pak vaš tim traži brz, praktičan uvod, držim i dvomasatnu radionicu „AI agenti za dev timove" (80% prakse, materijali su isti javni kurs) — pišite mi na `[email]`.
+Pregledajte, kritikujte, doprinesite — najkorisnije mi je svako „ovo je nejasno" jer kurs živi od njih. Ako pak vaš tim traži brz, praktičan uvod, držim i dvosatnu radionicu „AI agenti za dev timove" (80% prakse, materijali su isti javni kurs) — pišite mi na `[email]`.
 
 ---
 
