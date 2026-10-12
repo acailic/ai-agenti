@@ -204,16 +204,18 @@ Agent koji radi na vašem računaru i agent koji radi kod klijenta — dva razli
 
 ---
 
-### Modul 10 — Završni projekat: portfolio agent 🔜
+### Modul 10 — Završni projekat: portfolio agent ✅
 **Vreme:** 8–12 časova rada
 **Preduslovi:** svi prethodni moduli
 
-Samostalan projekat koji spaja sve: agent koji rešava stvaran problem vašeg okruženja, sa evaluacijom, bezbednošću i kratkim tekstom „šta i kako". Namenjen i portfolio-u — neka radi za vas i posle kursa.
+Samostalan projekat koji spaja sve: agent koji rešava stvaran problem vašeg okruženja, sa evaluacijom, bezbednošću i kratkim tekstom „šta i kako". Namenjen i portfolio-u — neka radi za vas i posle kursa. Šest delova sa kontrolnim tačkama: dosije, alati i šeme, petlja, evaluacija, oklop, isporuka i objava — plus rubrika samovrednovanja i primeri portfolio prezentacije.
 
 **Nakon ovog modula moći ćete da:**
 - od ideje dođete do isporučenog agenta kroz sve faze;
 - dokumentujete projekat tako da ga drugi (i budući poslodavci) razumeju;
 - nastavite dalje sami: čitati dokumentaciju, pratiti oblast, učiti brzo.
+
+→ [Modul 10: Završni projekat: portfolio agent](moduli/modul-10-zavrsni-projekat.md)
 
 ---
 

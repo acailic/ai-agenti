@@ -587,4 +587,4 @@ Redosled provere pri padu u produkciji: **trag_id iz poruke korisnika → događ
 
 ## Šta sledi
 
-Agent je sada bezbedno ograničen, vidljiv u svakom koraku, otporan na prolazne greške i unutar budžeta — dakle: **spreman za svet**. [**Modul 10 — Završni projekat: portfolio agent**](../MAPA-UCENJA.md) spaja sve module u jednoj samostalnoj izgradnji: agent koji rešava stvaran problem vašeg okruženja, sa evaluacijom (modul 07), oklopom iz ovog modula i kratkim tekstom „šta i kako" — jer portfolio agent dokazuje ono što ste naučili upravo time što radi i kad vas nema. 🚀
+Agent je sada bezbedno ograničen, vidljiv u svakom koraku, otporan na prolazne greške i unutar budžeta — dakle: **spreman za svet**. [**Modul 10 — Završni projekat: portfolio agent**](modul-10-zavrsni-projekat.md) spaja sve module u jednoj samostalnoj izgradnji: agent koji rešava stvaran problem vašeg okruženja, sa evaluacijom (modul 07), oklopom iz ovog modula i kratkim tekstom „šta i kako" — jer portfolio agent dokazuje ono što ste naučili upravo time što radi i kad vas nema. 🚀
