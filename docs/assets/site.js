@@ -4,13 +4,13 @@
 (() => {
   'use strict';
 
-  /* dužinski očuvavajuće preslikavanje dijakritika (za isecanje isečaka) */
-  const foldText = (s) =>
+  /* normalizacija za pretragu: svaki znak nezavisno (dijakritika 1:1, ostalo
+     u razmak) — dužina ostaje ista, pa su indeksi u savijenom tekstu istovremeno
+     i indeksi u originalnom; bez sabijanja „dj" u „d" */
+  const fold = (s) =>
     String(s).toLowerCase()
       .replace(/[čć]/g, 'c').replace(/ž/g, 'z').replace(/š/g, 's').replace(/đ/g, 'd')
-      .replace(/[^a-z0-9\s]+/g, ' ').replace(/\s+/g, ' ');
-  /* upit dodatno „dj" → „d", da upis bez dijakritika nalaže pojam sa „đ" */
-  const foldQuery = (s) => foldText(s).replace(/dj/g, 'd');
+      .replace(/[^a-z0-9]/g, ' ');
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   /* ── pretraga sajta (/pretraga/) ─────────────────────────────── */
@@ -27,29 +27,30 @@
       index ? Promise.resolve(index) : fetch(root + 'search-index.json').then((r) => r.json())
         .then((docs) => { index = docs; return docs; });
 
+    /* isečak oko pogotka: fold je po-znakovni, pa su indeksi u savijenom
+       tekstu ujedno i indeksi u originalnom — rez i oznake su tačni */
     const snippet = (text, tokens, hit) => {
-      const start = Math.max(0, hit - 80);
-      const end = Math.min(text.length, hit + 140);
+      const start = hit >= 0 ? Math.max(0, hit - 80) : 0;
+      const end = Math.min(text.length, hit >= 0 ? hit + 140 : 140);
       const raw = (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
+      const seg = fold(raw);
       let out = '';
       let i = 0;
       while (i < raw.length) {
-        const seg = foldQuery(raw.slice(i));
-        let best = -1, bestTok = null;
+        let best = -1, bestLen = 0;
         for (const t of tokens) {
-          const at = seg.indexOf(t);
-          if (at !== -1 && (best === -1 || at < best)) { best = at; bestTok = t; }
+          const at = seg.indexOf(t, i);
+          if (at !== -1 && (best === -1 || at < best)) { best = at; bestLen = t.length; }
         }
         if (best === -1) { out += esc(raw.slice(i)); break; }
-        out += esc(raw.slice(i, i + best)) + '<mark>' + esc(raw.slice(i + best, i + best + bestTok.length)) + '</mark>';
-        i += best + bestTok.length;
+        out += esc(raw.slice(i, best)) + '<mark>' + esc(raw.slice(best, best + bestLen)) + '</mark>';
+        i = best + bestLen;
       }
       return out;
     };
 
     const search = () => {
-      const qs = foldQuery(qInput.value);
-      const tokens = qs ? qs.split(' ').filter((t) => t.length > 1) : [];
+      const tokens = qInput.value.trim() ? fold(qInput.value).split(/\s+/).filter((t) => t.length > 1) : [];
       if (!tokens.length) {
         resultsEl.innerHTML = '';
         if (statusEl) statusEl.textContent = 'Unesite pojam — npr. „petlja agenta".';
@@ -58,15 +59,15 @@
       fetchIndex().then((docs) => {
         const hits = [];
         for (const d of docs) {
-          const hay = foldQuery(d.title + ' ' + d.kind + ' ' + d.text);
+          const hay = fold(d.title + ' ' + d.kind + ' ' + d.text);
           const counts = tokens.map((t) => hay.split(t).length - 1);
           if (counts.some((c) => c === 0)) continue;
-          const score = counts.reduce((a, b) => a + b, 0) + (foldQuery(d.title).includes(tokens[0]) ? 5 : 0);
-          const hitAt = foldQuery(d.text).indexOf(tokens[0]);
+          const score = counts.reduce((a, b) => a + b, 0) + (fold(d.title).includes(tokens[0]) ? 5 : 0);
+          const hitAt = fold(d.text).indexOf(tokens[0]);
           hits.push({ d, score, hitAt });
         }
         hits.sort((a, b) => b.score - a.score);
-        if (statusEl) statusEl.textContent = qs ? `${hits.length} ${hits.length === 1 ? 'rezultat' : 'rezultata'} za „${qInput.value}".` : '';
+        if (statusEl) statusEl.textContent = `${hits.length} ${hits.length === 1 ? 'rezultat' : 'rezultata'} za „${qInput.value}".`;
         resultsEl.innerHTML = hits.slice(0, 30).map(({ d, hitAt }) =>
           `<div class="search-result"><div class="sr-title"><a href="${(document.body.dataset.root || '') + d.url}">${esc(d.title)}</a>` +
           `<span class="sr-kind">${esc(d.kind)}</span></div><div class="sr-snippet">${snippet(d.text, tokens, hitAt)}</div></div>`
@@ -94,11 +95,10 @@
     const headings = [...searchable.querySelectorAll('h2')];
 
     const apply = () => {
-      const q = foldQuery(filter.value);
-      const tokens = q ? q.split(' ').filter((t) => t.length > 1) : [];
+      const tokens = filter.value.trim() ? fold(filter.value).split(/\s+/).filter((t) => t.length > 1) : [];
       let shown = 0;
       for (const tr of rows) {
-        const hay = foldQuery(tr.textContent);
+        const hay = fold(tr.textContent);
         const ok = !tokens.length || tokens.every((t) => hay.includes(t));
         tr.toggleAttribute('data-filter-hide', !ok);
         if (ok) shown++;

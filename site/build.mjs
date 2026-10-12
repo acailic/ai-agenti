@@ -64,12 +64,8 @@ function addHeadingIds(html) {
   return { html: out, toc };
 }
 
-/* čist tekst iz renderovanog HTML-a (za pretragu i opise);
-   blok tagovi razdvajaju reči, inline tagovi se uklanjaju bez prostora */
-const stripTags = (html) => decodeEntities(
-  html.replace(/<\/?(p|li|h[1-6]|tr|td|th|table|blockquote|pre|div|ul|ol|hr)[^>]*>/gi, ' ')
-      .replace(/<[^>]+>/g, '')
-).replace(/\s+/g, ' ').trim();
+/* čist tekst iz renderovanog HTML-a (za pretragu i opise) */
+const stripTags = (html) => decodeEntities(html.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
 
 /* ── prepisivanje veza: relativne → sajtske strane ili GitHub ──── */
 
@@ -128,13 +124,12 @@ function parseDoc(file, kind) {
   const { html: withIds, toc } = addHeadingIds(html);
   html = withIds;
 
-  /* prvi pravi pasus (ne naslov, ne meta blok) → meta description;
-     poslednja reč se odseca samo ako je pasus stvarno skraćen na 190 znakova */
-  const firstPara = stripTags(renderMd(
-    raw.split(/\n\n/).slice(1).find((p) => {
-      const t = p.trim();
-      return t && !t.startsWith('>') && !t.startsWith('#');
-    }) || ''));
+  /* opis: prvi pravi pasus (ne naslov, ne meta blok), po mogućstu dovoljno
+     dug; poslednja reč se odseca samo ako je pasus stvarno skraćen na 190 znakova */
+  const prose = raw.split(/\n\n/).slice(1)
+    .filter((p) => { const t = p.trim(); return t && !t.startsWith('>') && !t.startsWith('#'); })
+    .map((p) => stripTags(renderMd(p)));
+  const firstPara = prose.find((t) => t.length >= 60) || prose[0] || title;
   let description = firstPara;
   if (description.length > 190) description = description.slice(0, 190).replace(/\s\S*$/, '');
 
