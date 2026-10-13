@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "build": "node site/build.mjs",
-    "check": "node site/build.mjs --check",
-    "serve": "node site/build.mjs --serve"
+    "check": "node --test tests/guards.test.mjs && node site/build.mjs --check",
+    "serve": "node site/build.mjs --serve",
+    "test": "node --test tests/guards.test.mjs"
   },
   "devDependencies": {
     "marked": "18.1.0"

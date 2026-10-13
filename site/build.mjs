@@ -17,6 +17,9 @@ import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { Marked } from 'marked';
+/* decodeEntities i slugify su izdvojeni u site/slug.mjs da ih build i guard
+   testovi (tests/guards.test.mjs) dele — sidra se proveravaju istim slugom */
+import { decodeEntities, slugify } from './slug.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -34,19 +37,7 @@ const renderMd = (md) => marked.parse(md);
 const escapeAttr = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
-const decodeEntities = (s) =>
-  s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-   .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'");
-
-/* srpske dijakritike u ASCII, pa slug — da sidro "Šta je agent?" bude #sta-je-agent */
-const deSerb = (s) =>
-  s.replace(/[čć]/g, 'c').replace(/Č/g, 'C').replace(/Ć/g, 'C')
-   .replace(/ž/g, 'z').replace(/Ž/g, 'Z')
-   .replace(/š/g, 's').replace(/Š/g, 'S')
-   .replace(/đ/g, 'dj').replace(/Đ/g, 'Dj');
-const slugify = (s) =>
-  deSerb(decodeEntities(s).replace(/<[^>]+>/g, '').toLowerCase())
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'sekcija';
+/* sidra naslova pravi slugify iz slug.mjs (dijakritike u ASCII) */
 
 /* dodaj id h2/h3 i vrati (html, toc) */
 function addHeadingIds(html) {
