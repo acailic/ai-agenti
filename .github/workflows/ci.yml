@@ -1,0 +1,20 @@
+# CI lanac ai-agenti-srb — isto što i lokalni `npm run check`:
+#   1. guard testovi (tests/guards.test.mjs): docs/ bez izvora (data-loss
+#      zamka iz PR #8/#10) + interni linkovi između modula i radionica
+#   2. site/build.mjs --check: generisan docs/ je svež
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run check
