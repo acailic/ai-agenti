@@ -1,6 +1,7 @@
 # CI lanac ai-agenti-srb — isto što i lokalni `npm run check`:
-#   1. guard testovi (tests/guards.test.mjs): docs/ bez izvora (data-loss
-#      zamka iz PR #8/#10) + interni linkovi između modula i radionica
+#   1. guard testovi (tests/*.test.mjs): docs/ bez izvora (data-loss
+#      zamka iz PR #8/#10), interni linkovi između modula i radionica,
+#      sitemap.xml pokrivenost svake objavljene stranice
 #   2. site/build.mjs --check: generisan docs/ je svež
 name: CI
 on:
