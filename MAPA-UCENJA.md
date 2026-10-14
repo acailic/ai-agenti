@@ -138,7 +138,7 @@ Kontekst je najskuplji resurs agenta. Upravljanje onim što model vidi u svakom 
 - smanjite troškove i kašnjenje bez gubitka kvaliteta;
 - prepoznate „trovanje kontekstom" i znate kako da ga izbegnete.
 
-→ [Modul 05: Inženjering konteksta](moduli/modul-05-inzenjering-konteksta.md)
+→ [Modul 05: Inženjering konteksta](moduli/modul-05-inzenjering-konteksta.md) · povezana [radionica 07](radionice/radionica-07-sigurnost-agenta.md)
 
 ---
 
@@ -200,7 +200,7 @@ Agent koji radi na vašem računaru i agent koji radi kod klijenta — dva razli
 - postavite beleženje (eng. *logging*) i praćenje ponašanja agenta;
 - procenite i kontrolišete troškove po koraku, po zadatku i po mesecu.
 
-→ [Modul 09: U produkciju: bezbednost, opservabilnost, troškovi](moduli/modul-09-u-produkciju.md)
+→ [Modul 09: U produkciju: bezbednost, opservabilnost, troškovi](moduli/modul-09-u-produkciju.md) · povezana [radionica 07](radionice/radionica-07-sigurnost-agenta.md)
 
 ---
 

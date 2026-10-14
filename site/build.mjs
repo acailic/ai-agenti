@@ -151,6 +151,7 @@ const RADIONICE = [
   { n: '04', slug: 'rag-memorija', file: 'radionice/radionica-04-rag-memorija.md', dir: 'radionice/04-rag-memorija/', moduli: ['04'] },
   { n: '05', slug: 'evaluacija', file: 'radionice/radionica-05-evaluacija.md', dir: 'radionice/05-evaluacija/', moduli: ['07'] },
   { n: '06', slug: 'protokoli', file: 'radionice/radionica-06-protokoli.md', dir: 'radionice/06-protokoli/', moduli: ['06'] },
+  { n: '07', slug: 'sigurnost-agenta', file: 'radionice/radionica-07-sigurnost-agenta.md', dir: 'radionice/07-sigurnost-agenta/', moduli: ['05', '09'] },
 ];
 
 /* izvorni .md → sajtska putanja (za prepisivanje veza) */

@@ -23,7 +23,7 @@ Kompletna mapa sa ishodima, preduslovima i procenom vremena po modulu je u [MAPA
 | 06 | [Protokoli: MCP i A2A](moduli/modul-06-protokoli-mcp-a2a.md) — agent povezan sa svetom po ugovoru | ✅ | 4–6 časova | [06 ✅](radionice/radionica-06-protokoli.md) |
 | 07 | [Evaluacija agenata](moduli/modul-07-evaluacija-agenata.md) — kako znati da li je agent dobar | ✅ | 5–7 časova | [05 ✅](radionice/radionica-05-evaluacija.md) |
 | 08 | Multi-agent sistemi | ✅ | 4–6 časova | — |
-| 09 | U produkciju: bezbednost, opservabilnost, troškovi | ✅ | 5–7 časova | — |
+| 09 | U produkciju: bezbednost, opservabilnost, troškovi | ✅ | 5–7 časova | [07 ✅](radionice/radionica-07-sigurnost-agenta.md) |
 | 10 | [Završni projekat: portfolio agent](moduli/modul-10-zavrsni-projekat.md) — od ideje do isporučenog agenta | ✅ | 8–12 časova | — |
 
 **Legenda:** ✅ napisano (modul / kompletna radionica sa rešenjima) · 🔜 planirano
@@ -31,7 +31,7 @@ Kompletna mapa sa ishodima, preduslovima i procenom vremena po modulu je u [MAPA
 Pored modula:
 
 - **[REČNIK.md](REČNIK.md)** — srpsko-engleski rečnik svih pojmova kursa (sto i više termina, sa uputom na modul u kome se pojavljuju).
-- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena: svih šest (01–06) je kompletno, sa rešenjima vežbi.
+- **[radionice/](radionice/)** — radionice za uživo vođen prolaz kroz ključne module, po sat vremena: svih sedam (01–07) je kompletno, sa rešenjima vežbi.
 - **[O-AUTORU.md](O-AUTORU.md)** — ko piše i zašto.
 
 ## Odakle da krenem?
@@ -62,4 +62,4 @@ Sav sadržaj u ovom repozitorijumu objavljen je pod licencom **[Creative Commons
 
 ## Status projekta
 
-Prva potpuna verzija kursa: sva jedanaest modula (00–10, uključujući završni projekat), rečnik sa sto i više pojmova i svih šest radionica (01–06) kompletnih sa rešenjima vežbi. Dobrodošli su doprinosi: dodatni primeri, ispravke i nove radionice — vidi [CONTRIBUTING.md](CONTRIBUTING.md). ⚓
+Prva potpuna verzija kursa: sva jedanaest modula (00–10, uključujući završni projekat), rečnik sa sto i više pojmova i svih sedam radionica (01–07) kompletnih sa rešenjima vežbi. Dobrodošli su doprinosi: dodatni primeri, ispravke i nove radionice — vidi [CONTRIBUTING.md](CONTRIBUTING.md). ⚓
